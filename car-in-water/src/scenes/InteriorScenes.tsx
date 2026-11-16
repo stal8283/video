@@ -6,7 +6,7 @@ import { ik, SHOULDER_L, SHOULDER_R } from "../three/Figure";
 import { Arrow, Burst, Cracks, Hammer, Label } from "../three/Props";
 import { Car } from "../three/Car";
 import { GodRays, Bubbles } from "../three/Props";
-import { clamp, ease, easeOut, FONT, mix, mix3, useTextTexture } from "../three/util";
+import { clamp, ease, easeOut, FONT, mix, mix3, snap, twos, useTextTexture } from "../three/util";
 import type { SceneProps } from "../Video";
 import { RisingExterior } from "./Exterior";
 
@@ -31,7 +31,7 @@ export const Driving: React.FC<SceneProps> = ({ dur, at }) => {
       <Interior
         t={t}
         outside="road"
-        driver={{ expr: "happy", ...WHEEL_ARMS, rotation: [0, 0, Math.sin(t * 3) * 0.03], blink: f % 75 < 3, look: [0.2, 0.3] }}
+        driver={{ expr: "happy", ...WHEEL_ARMS, rotation: [0, 0, (Math.floor(twos(f, 8) / 8) % 2 ? 1 : -1) * 0.035], look: f > fc - 2 ? [0.6, -0.8] : [0.2, 0.3], position: [-0.42, 0.78 + (Math.floor(twos(f, 8) / 8) % 2) * 0.012, -0.2] }}
         ambient="#3e4d6b"
         ambientI={0.8}
         dash="#ffa24a"
@@ -126,7 +126,7 @@ export const PhoneScene: React.FC<SceneProps> = ({ dur, at }) => {
   const fg = at("grab");
   const fd = at("dial");
   const f9 = at("911");
-  const raise = ease(clamp((f - fg + 6) / 14));
+  const raise = snap(f, fg - 3, 5);
   const idx = f < fd ? 0 : f < f9 ? 1 : f < f9 + 5 ? 2 : f < f9 + 14 ? 3 : 4;
   const k = ease(clamp(f / dur));
   const phonePos = mix3([0.05, 0.62, 0.15], [-0.18, 1.0, 0.05], raise);
@@ -144,7 +144,6 @@ export const PhoneScene: React.FC<SceneProps> = ({ dur, at }) => {
           look: raise > 0.5 ? [0.6, -0.4] : [0, 0],
           armL: WHEEL_ARMS.armL,
           armR: ik(SHOULDER_R, hand, 1),
-          blink: f % 60 < 3,
         }}
         ambient="#33496b"
         ambientI={0.7}
@@ -165,13 +164,13 @@ const RisingInterior: React.FC<{ f: number; dur: number; tex: import("three").Te
   const ear = toLocal(-0.12, 1.2);
   return (
     <Stage>
-      <Cam pos={mix3([0.4, 1.3, 1.3], [0.05, 1.12, 0.75], k)} look={mix3([-0.55, 1.08, 0], [-0.85, 1.0, 0.25], k)} fov={46} />
+      <Cam pos={mix3([0.35, 1.3, 1.55], [0.12, 1.2, 1.2], k)} look={mix3([-0.5, 1.08, -0.1], [-0.68, 1.0, 0.1], k)} fov={52} />
       <Interior
         t={t}
         outside="water"
         outsideLevel={mix(1.0, 1.45, k)}
         insideLevel={mix(0.02, 0.14, k)}
-        driver={{ expr: "worried", mouthOpen: talk(t), look: [0.8, 0.3], armL: WHEEL_ARMS.armL, armR: ik(SHOULDER_R, ear, 1) }}
+        driver={{ expr: "worried", mouthOpen: talk(twos(f, 3) / FPS), look: [0.8, 0.3], armL: WHEEL_ARMS.armL, armR: ik(SHOULDER_R, ear, 1) }}
         ambient="#2c5560"
         ambientI={0.8}
         dash="#ff9a3c"
@@ -198,7 +197,7 @@ export const Door: React.FC<SceneProps> = ({ dur, at }) => {
   const t = f / FPS;
   const k = ease(clamp(f / dur));
   const beats = [at("push"), at("won't"), at("Not")];
-  const shove = beats.reduce((s, b) => s + Math.max(0, Math.exp(-(f - b) / 5) * (f >= b ? 1 : 0)), 0);
+  const shove = beats.reduce((s, b) => s + (f >= b ? snap(f, b, 3) * Math.max(0, 1 - Math.max(0, f - b - 6) / 6) : 0), 0);
   const h = toLocal(-0.86, 0.98);
   const lean = 0.12 + shove * 0.08;
   return (
@@ -255,10 +254,10 @@ export const Rule: React.FC<SceneProps> = ({ dur, at }) => {
   const fW = at("Window");
   const fK = at("Kids");
   const fY = at("Then");
-  const belt = 1 - ease(clamp((f - fS) / 8));
+  const belt = 1 - clamp(snap(f, fS, 4));
   const win = ease(clamp((f - fW) / 14));
-  const kid = ease(clamp((f - fK) / Math.max(10, fY - fK)));
-  const me = ease(clamp((f - fY) / 18));
+  const kid = clamp(0.5 * snap(f, fK, 5) + 0.5 * snap(f, fK + Math.max(8, (fY - fK) / 2), 5), 0, 1);
+  const me = clamp(snap(f, fY, 6), 0, 1.08);
   const inside = mix(0.22, 0.6, ease(clamp((f - fW) / 60)));
   // camera beats: wide -> belt -> window -> kid -> window
   const shots: [number, [number, number, number], [number, number, number]][] = [

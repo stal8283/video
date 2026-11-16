@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 import { FONT, rand, useTextTexture } from "./util";
+import { Building, Glow } from "./World";
+import { asphaltTex } from "./Textures";
 
 /** Camera-facing text label (canvas texture on a plane). */
 export const Label: React.FC<{
@@ -377,40 +379,36 @@ export const Ambulance: React.FC<{ position: [number, number, number]; rotation?
 };
 
 /** City blocks on a grid (for the aerial). Leaves a river channel along X at z in [rz0, rz1]. */
-export const City: React.FC<{ size?: number; rz?: [number, number] }> = ({ size = 220, rz = [-12, 12] }) => {
+export const City: React.FC<{ size?: number; rz?: [number, number]; t?: number }> = ({ size = 220, rz = [-12, 12], t = 0 }) => {
   const blocks = useMemo(() => {
-    const out: { x: number; z: number; w: number; d: number; h: number; c: string; lit: boolean }[] = [];
+    const out: { x: number; z: number; w: number; d: number; h: number; seed: number }[] = [];
     let i = 0;
-    for (let x = -size / 2; x < size / 2; x += 14) {
-      for (let z = -size / 2; z < size / 2; z += 14) {
+    for (let x = -size / 2; x < size / 2; x += 16) {
+      for (let z = -size / 2; z < size / 2; z += 16) {
         i++;
-        if (z + 12 > rz[0] - 4 && z < rz[1] + 4) continue;
-        if (rand(i * 3) < 0.12) continue;
-        const h = 3 + rand(i) * rand(i * 7) * 30;
-        const c = ["#2c3c55", "#344866", "#28354a", "#3d4f6e"][Math.floor(rand(i * 5) * 4)];
-        out.push({ x: x + 7, z: z + 7, w: 9 + rand(i * 9) * 2, d: 9 + rand(i * 11) * 2, h, c, lit: rand(i * 13) > 0.3 });
+        if (z + 14 > rz[0] - 4 && z < rz[1] + 4) continue;
+        if (rand(i * 3) < 0.1) continue;
+        const h = 4 + rand(i) * rand(i * 7) * 34;
+        out.push({ x: x + 8, z: z + 8, w: 10 + rand(i * 9) * 2, d: 10 + rand(i * 11) * 2, h, seed: i });
       }
     }
     return out;
   }, [size, rz[0], rz[1]]);
+  const ground = useMemo(() => new THREE.MeshStandardMaterial({ map: asphaltTex([size / 8, size / 8]), roughness: 0.6 }), [size]);
   return (
     <group>
-      <mesh position={[0, -0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+      <mesh position={[0, -0.05, 0]} rotation={[-Math.PI / 2, 0, 0]} material={ground}>
         <planeGeometry args={[size * 1.6, size * 1.6]} />
-        <meshStandardMaterial color="#1a2230" roughness={1} />
       </mesh>
-      {blocks.map((b, i) => (
-        <group key={i} position={[b.x, b.h / 2, b.z]}>
-          <mesh>
-            <boxGeometry args={[b.w, b.h, b.d]} />
-            <meshStandardMaterial color={b.c} roughness={0.9} />
+      {blocks.map((b) => (
+        <group key={b.seed}>
+          <Building position={[b.x, 0, b.z]} w={b.w} d={b.d} h={b.h} seed={b.seed} t={t} />
+          {/* sidewalk + street lamps at block corners */}
+          <mesh position={[b.x, 0.08, b.z]}>
+            <boxGeometry args={[b.w + 2.4, 0.16, b.d + 2.4]} />
+            <meshStandardMaterial color="#5a6068" roughness={0.9} />
           </mesh>
-          {b.lit && (
-            <mesh position={[0, b.h / 2 + 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-              <planeGeometry args={[b.w * 0.5, b.d * 0.5]} />
-              <meshBasicMaterial color={rand(i) > 0.5 ? "#ffcf7a" : "#86b9ff"} toneMapped={false} transparent opacity={0.35} />
-            </mesh>
-          )}
+          {rand(b.seed * 17) > 0.5 && <Glow position={[b.x + b.w / 2 + 1.4, 4, b.z + b.d / 2 + 1.4]} size={4} color="#ffbe6b" opacity={0.8} />}
         </group>
       ))}
     </group>

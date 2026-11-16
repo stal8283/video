@@ -66,3 +66,14 @@ export function useTextTexture(
 }
 
 export const FONT = '"Montserrat", sans-serif';
+
+/** Cartoon timing: overshoot ease used for pose-to-pose snaps. */
+export const backOut = (x: number) => {
+  const c1 = 1.9;
+  const c3 = c1 + 1;
+  return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
+};
+/** 0→1 snap that starts at frame `at` and lands (with overshoot) in `n` frames. */
+export const snap = (f: number, at: number, n = 5) => backOut(clamp((f - at) / n));
+/** hold each pose for `n` frames ("animating on twos"). */
+export const twos = (f: number, n = 2) => Math.floor(f / n) * n;

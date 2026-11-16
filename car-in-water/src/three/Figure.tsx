@@ -440,7 +440,7 @@ const drawBody = (c: CanvasRenderingContext2D, shirt: string, kind: "driver" | "
 
 /* ------------------------------------------------------------------ materials */
 const cardMat = (tex: THREE.Texture) => {
-  const m = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.4, emissive: new THREE.Color("#ffffff"), emissiveMap: tex, emissiveIntensity: 0.55, side: THREE.DoubleSide });
+  const m = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.4, emissive: new THREE.Color("#ffffff"), emissiveMap: tex, emissiveIntensity: 0.3, side: THREE.DoubleSide });
   return m;
 };
 const matCache = new Map<string, THREE.Material>();

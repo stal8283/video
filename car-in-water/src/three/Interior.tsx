@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import * as THREE from "three";
 import { Figure, FigureProps } from "./Figure";
 import { rand } from "./util";
+import { fabricTex, gaugeTex, plasticTex } from "./Textures";
+import { Glow } from "./World";
 
 /**
  * Car cabin seen from the dashboard looking back at the driver (forward = +Z, toward camera).
@@ -26,9 +28,14 @@ export type InteriorProps = {
   children?: React.ReactNode;
 };
 
-const fabric = new THREE.MeshStandardMaterial({ color: "#2b3442", roughness: 0.95 });
-const plastic = new THREE.MeshStandardMaterial({ color: "#1d232c", roughness: 0.7 });
-const trim = new THREE.MeshStandardMaterial({ color: "#3a4554", roughness: 0.6 });
+let _mats: { fabric: THREE.Material; plastic: THREE.Material; trim: THREE.Material; headliner: THREE.Material } | null = null;
+const mats = () =>
+  (_mats ??= {
+    fabric: new THREE.MeshStandardMaterial({ map: fabricTex("#3a4458", [3, 3]), roughness: 0.95 }),
+    plastic: new THREE.MeshStandardMaterial({ map: plasticTex("#23292f"), roughness: 0.6, envMapIntensity: 0.4 }),
+    trim: new THREE.MeshStandardMaterial({ map: plasticTex("#47505c"), roughness: 0.55, envMapIntensity: 0.4 }),
+    headliner: new THREE.MeshStandardMaterial({ map: fabricTex("#8b8578", [4, 4]), roughness: 1 }),
+  });
 
 const Win: React.FC<{ w: number; h: number; position: [number, number, number]; rotation?: [number, number, number]; drops?: boolean; t: number; lowered?: number }> = ({
   w,
@@ -81,6 +88,7 @@ export const Interior: React.FC<InteriorProps> = ({
   rainOnGlass = true,
   children,
 }) => {
+  const { fabric, plastic, trim, headliner } = mats();
   const W = 0.92;
   const roof = 1.68;
   const winY = 1.24;
@@ -90,25 +98,20 @@ export const Interior: React.FC<InteriorProps> = ({
   const outsideView =
     outside === "road" ? (
       <group>
-        {/* passing street lamps streaking backward (toward -Z) */}
+        {/* passing street lamps (bokeh glows) streaking backward (toward -Z) */}
         {lights.map((i) => {
           const zz = 14 - (((t * 9 * roadSpeed + i * 4.5) % 60) + 60) % 60;
           return (
             <group key={i}>
-              <mesh position={[-4.5, 3.2, zz]}>
-                <sphereGeometry args={[0.18, 10, 8]} />
-                <meshBasicMaterial color="#ffc46b" toneMapped={false} />
-              </mesh>
-              <mesh position={[4.5, 3.2, zz + 2]}>
-                <sphereGeometry args={[0.18, 10, 8]} />
-                <meshBasicMaterial color="#ffc46b" toneMapped={false} />
-              </mesh>
+              <Glow position={[-4.5, 3.2, zz]} size={1.6} color="#ffbe6b" />
+              <Glow position={[4.5, 3.2, zz + 2]} size={1.6} color="#ffbe6b" />
+              <Glow position={[-9 - (i % 3) * 3, 1.5 + (i % 4), zz * 1.3]} size={0.9} color={i % 2 ? "#8fc3ff" : "#ffd59a"} opacity={0.6} />
             </group>
           );
         })}
         <mesh position={[0, -0.3, -20]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[30, 80]} />
-          <meshStandardMaterial color="#1b2027" />
+          <meshStandardMaterial color="#1b2027" roughness={0.3} />
         </mesh>
         {/* headlights of the truck behind, growing */}
         <mesh position={[0, 0.9, -12]}>
@@ -164,7 +167,7 @@ export const Interior: React.FC<InteriorProps> = ({
       <mesh position={[0, 0, -0.4]} material={fabric}>
         <boxGeometry args={[W * 2, 0.05, 3]} />
       </mesh>
-      <mesh position={[0, roof, -0.4]} material={fabric}>
+      <mesh position={[0, roof, -0.4]} material={headliner}>
         <boxGeometry args={[W * 2 + 0.1, 0.06, 3.2]} />
       </mesh>
       {/* side walls: lower door panel, pillars */}
@@ -240,10 +243,29 @@ export const Interior: React.FC<InteriorProps> = ({
       <mesh position={[0, 0.66, 0.78]} material={plastic}>
         <boxGeometry args={[W * 2, 0.22, 0.4]} />
       </mesh>
-      <mesh position={[-0.42, 0.79, 0.62]}>
-        <boxGeometry args={[0.36, 0.04, 0.05]} />
-        <meshBasicMaterial color="#ffb050" toneMapped={false} />
+      {/* instrument cluster + infotainment screen + vents */}
+      <mesh position={[-0.42, 0.77, 0.58]} rotation={[-0.35, 0, 0]}>
+        <planeGeometry args={[0.3, 0.11]} />
+        <meshBasicMaterial map={gaugeTex()} toneMapped={false} />
       </mesh>
+      <mesh position={[0.02, 0.76, 0.58]} rotation={[-0.3, 0, 0]}>
+        <planeGeometry args={[0.13, 0.08]} />
+        <meshBasicMaterial color="#1f4f95" toneMapped={false} />
+      </mesh>
+      {[-0.75, 0.3, 0.75].map((x) => (
+        <mesh key={x} position={[x, 0.73, 0.575]} material={trim}>
+          <boxGeometry args={[0.16, 0.06, 0.02]} />
+        </mesh>
+      ))}
+      {/* rear-view mirror + sun visors */}
+      <mesh position={[0.02, roof - 0.16, 0.55]} material={plastic}>
+        <boxGeometry args={[0.3, 0.09, 0.04]} />
+      </mesh>
+      {[-0.42, 0.42].map((x) => (
+        <mesh key={x} position={[x, roof - 0.06, 0.45]} rotation={[0.25, 0, 0]} material={headliner}>
+          <boxGeometry args={[0.55, 0.03, 0.22]} />
+        </mesh>
+      ))}
       {/* steering wheel */}
       <group position={[-0.42, 0.6, 0.42]} rotation={[0.9, 0, 0]} scale={0.85}>
         <mesh>

@@ -3,9 +3,10 @@ import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { useThree } from "@react-three/fiber";
 import { useLayoutEffect } from "react";
 import * as THREE from "three";
-import { LiteMaterials } from "../three/Lite";
+import { Env } from "../three/World";
+import { Post } from "../three/Post";
 
-export const Stage: React.FC<{ children: React.ReactNode; exposure?: number; style?: React.CSSProperties }> = ({ children, exposure = 1.45, style }) => {
+export const Stage: React.FC<{ children: React.ReactNode; exposure?: number; style?: React.CSSProperties; envIntensity?: number; bloom?: number }> = ({ children, exposure = 1.45, style, envIntensity = 0.35, bloom = 0.9 }) => {
   const { width, height } = useVideoConfig();
   return (
     <AbsoluteFill style={style}>
@@ -18,7 +19,8 @@ export const Stage: React.FC<{ children: React.ReactNode; exposure?: number; sty
         gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: exposure, preserveDrawingBuffer: true }}
       >
         {children}
-        <LiteMaterials />
+        <Env intensity={envIntensity} />
+        <Post bloom={bloom} />
         <Invalidate />
       </ThreeCanvas>
     </AbsoluteFill>

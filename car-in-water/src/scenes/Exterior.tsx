@@ -6,20 +6,20 @@ import { Bridge, Rain, River, Sky, Skyline, Splash } from "../three/World";
 import { Car, Truck } from "../three/Car";
 import { Ambulance, Bubbles, Burst, City, GodRays, Label } from "../three/Props";
 import { Figure } from "../three/Figure";
-import { clamp, ease, easeIn, easeOut, mix, mix3 } from "../three/util";
+import { clamp, ease, easeIn, easeOut, mix, mix3, twos } from "../three/util";
 import type { SceneProps } from "../Video";
 
 const FPS = 30;
 
 /** Rainy blue-hour night: the "normal world" before things go wrong. */
-const Dusk: React.FC<{ bright?: number }> = ({ bright = 1 }) => (
+const Dusk: React.FC<{ bright?: number; t?: number }> = ({ bright = 1, t = 0 }) => (
   <>
     <Sky top="#060b1c" mid="#2c4766" bottom="#05101a" />
     <fog attach="fog" args={["#1d3349", 28, 190]} />
     <hemisphereLight args={["#6f8fba", "#0a1820", 0.85 * bright]} />
     <directionalLight position={[-30, 40, -40]} intensity={0.9 * bright} color="#a9bfff" />
     <directionalLight position={[40, 10, 30]} intensity={0.35 * bright} color="#ffb47a" />
-    <Skyline />
+    <Skyline t={t} />
   </>
 );
 
@@ -58,8 +58,8 @@ export const Hook: React.FC<SceneProps> = ({ dur }) => {
   return (
     <Stage>
       <Cam pos={camPos} look={[2, mix(4.2, 1.6, k), 7]} fov={46} />
-      <Dusk />
-      <Bridge y={6} gapX={2} />
+      <Dusk t={t} />
+      <Bridge y={6} gapX={2} t={t} lampLights={[-4, 10]} />
       <River t={t} ripples={[{ x: 2, z: zi, t0: ti }]} />
       <Car position={pos} rotation={[0, -Math.PI / 2, -pitch]} />
       <Splash age={t - ti} position={[2, 0, zi + 1.5]} size={1.3} />
@@ -112,8 +112,8 @@ export const TruckScene: React.FC<SceneProps> = ({ dur, at }) => {
   return (
     <Stage>
       <Cam pos={camPos} look={[mix(x, 11, air * 0.5), mix(6.8, 5.5, air), mix(z, 6, air)]} fov={42} />
-      <Dusk />
-      <Bridge y={6} gapX={t > tf - 0.05 ? 11.5 : null} />
+      <Dusk t={t} />
+      <Bridge y={6} gapX={t > tf - 0.05 ? 11.5 : null} t={t} lampLights={[-4, 10]} />
       <River t={t} />
       <group rotation={[roll, 0, 0]} position={[0, 0, 0]}>
         <Car position={[x, y, z]} rotation={[0, yaw, -pitch]} />
@@ -138,12 +138,12 @@ export const Float: React.FC<SceneProps> = ({ dur, at }) => {
   return (
     <Stage>
       <Cam pos={mix3([6.2, 0.75, 7.6], [4.3, 0.95, 5.4], k)} look={[0, mix(0.55, 0.75, k), 0]} fov={42} />
-      <Dusk bright={0.9} />
+      <Dusk bright={0.9} t={t} />
       <River t={t} amp={0.12} ripples={[{ x: 0, z: 0, t0: ts }, { x: 0.5, z: 0.5, t0: ts + 1.6 }, { x: -1, z: 0.3, t0: ts + 3.2 }]} />
-      <Car position={[0, -0.62 + bob - settle * 0.4, 0]} rotation={[0.04 * Math.sin(t * 1.5), -0.65, -0.17 - settle * 0.3]} />
+      <Car position={[0, -0.62 + bob - settle * 0.4, 0]} rotation={[0.04 * Math.sin(t * 1.5), -0.65, -0.17 - settle * 0.3]} lights={false} />
       <Splash age={a} position={[0.8, 0, 0.6]} size={0.9} />
       <Rain t={t} center={[3, 5, 3]} area={[16, 12, 14]} count={700} />
-      <pointLight position={[3, 3, 3]} intensity={6} distance={12} color="#9fc0ff" />
+      <pointLight position={[3, 3, 3]} intensity={2} distance={12} color="#9fc0ff" />
     </Stage>
   );
 };
@@ -155,15 +155,15 @@ export const RisingExterior: React.FC<{ f: number; dur: number }> = ({ f, dur })
   const pop = easeOut(clamp(f / 10));
   return (
     <Stage>
-      <Cam pos={mix3([1.6, 0.8, 7.2], [0.7, 0.75, 5.2], k)} look={[0.3, 0.75, 0]} fov={40} />
+      <Cam pos={mix3([2.2, 2.0, 8.4], [1.2, 1.5, 6.4], k)} look={[0.2, 0.4, 0]} fov={40} />
       <Sky top="#04070f" mid="#1b3046" bottom="#03090d" />
       <fog attach="fog" args={["#132636", 14, 120]} />
       <hemisphereLight args={["#5f7fa8", "#06141a", 0.7]} />
       <directionalLight position={[-20, 30, 20]} intensity={0.7} color="#9fb8ff" />
       <pointLight position={[2, 3, 4]} intensity={5} distance={12} color="#8fc3ff" />
-      <Skyline />
+      <Skyline t={t} />
       <River t={t} amp={0.1} color="#0c3f45" />
-      <Car position={[0, mix(-0.72, -1.05, k) + Math.sin(t * 2) * 0.04, 0]} rotation={[0, 0, -0.12]} />
+      <Car position={[0, mix(-0.72, -1.05, k) + Math.sin(t * 2) * 0.04, 0]} rotation={[0, 0, -0.12]} lights={false} />
       <Label text="911, where are you?" bubble position={[0.5, 2.0, 0.8]} scale={1.3 * pop} />
       <Rain t={t} center={[1, 5, 3]} area={[14, 12, 12]} count={600} />
     </Stage>
@@ -190,7 +190,7 @@ export const AmbulanceScene: React.FC<SceneProps> = ({ dur }) => {
       <fog attach="fog" args={["#2a4466", 60, 380]} />
       <hemisphereLight args={["#9cb6e0", "#141c28", 1.6]} />
       <directionalLight position={[-60, 80, 40]} intensity={1.0} color="#c5d4ff" />
-      <City size={230} rz={[-12, 12]} />
+      <City size={230} rz={[-12, 12]} t={t} />
       <group position={[0, 0, 0]}>
         <River t={t} size={[420, 26]} seg={60} amp={0.12} color="#0e4652" />
       </group>
@@ -240,7 +240,7 @@ export const Escape: React.FC<SceneProps> = ({ dur, at }) => {
   const s = clamp(f / breach);
   const fy = mix(-5.6, -0.2, easeIn(s) * 0.4 + ease(s) * 0.6) + (f > breach ? Math.min(0.6, (f - breach) * 0.05) : 0);
   const fx = mix(-0.4, 0.2, ease(s));
-  const stroke = Math.sin(t * 7);
+  const stroke = Math.floor(twos(f, 5) / 5) % 2 ? 1 : -1; // pose-to-pose swim strokes
   const camY = mix(-6.2, 0.35, ease(clamp(f / (breach + 8))));
   const above = camY > 0.02;
   const carY = -7.4 - t * 0.5;
@@ -256,7 +256,7 @@ export const Escape: React.FC<SceneProps> = ({ dur, at }) => {
           <fog attach="fog" args={["#334a63", 20, 160]} />
           <hemisphereLight args={["#ffd2a6", "#0a1820", 1.2]} />
           <directionalLight position={[-20, 8, -30]} intensity={2.2} color="#ffc27a" />
-          <Skyline />
+          <Skyline t={t} />
         </>
       ) : (
         <Underwater t={t} />
