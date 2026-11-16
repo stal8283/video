@@ -286,7 +286,7 @@ place(fade(underwater(END["glass"] - S["rule"]), 0.3, 0.3), S["rule"], 0.45)
 ti = S["hook"] + 0.15 + 1.38 / 0.72
 place(screech(0.5), 0.0, 0.35, -0.3)
 place(whoosh(1.7, 200, 1400), 0.25, 0.7)
-place(splash(2.6, 1.2), ti, 1.0)
+place(splash(2.6, 1.2), ti, 0.55)
 
 # --- 2 driving: wiper thunks + soft blinker-like ticks
 for k in range(int((END["driving"] - S["driving"]) / 1.1)):
@@ -296,7 +296,7 @@ for k in range(int((END["driving"] - S["driving"]) / 1.1)):
 tc = at("clips", "truck")
 tf = at("flying", "truck")
 place(horn(0.75), tc - 0.85, 0.55, -0.4)
-place(crash(1.6), tc, 1.0)
+place(crash(1.6), tc, 0.75)
 place(screech(max(0.4, tf - tc)), tc + 0.05, 0.6)
 place(crash(1.2) * 0.8, tf - 0.08, 0.8, 0.3)
 place(whoosh(1.2, 300, 2500), tf, 0.6)
@@ -417,6 +417,10 @@ venv = lp(venv, 8)
 venv = venv / max(1e-6, venv.max())
 venv = np.pad(venv, (0, max(0, N - len(venv))))[:N]
 music *= 1 - 0.45 * np.clip(venv * 3, 0, 1)
+# duck the effects under the narration so every word stays clear
+vduck = 1 - 0.62 * np.clip(lp(np.clip(venv * 4, 0, 1), 4), 0, 1)
+L *= vduck
+R *= vduck
 place(music, 0, 0.9)
 
 # ---------------------------------------------------------------- master

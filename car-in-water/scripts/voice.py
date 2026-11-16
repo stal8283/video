@@ -17,7 +17,7 @@ SR = 24000
 parts = [np.zeros(int(0.12 * SR), np.float32)]
 for c in chunks:
     c = c.strip()
-    say = c.replace("911", "nine one one")
+    say = c.replace("911", "nine one one").replace("Seatbelt", "Seat belt")
     audio, sr = k.create(say, voice=voice, speed=speed, lang="en-us")
     # trim leading/trailing silence
     idx = np.where(np.abs(audio) > 0.01)[0]
