@@ -1,6 +1,6 @@
 {
  "audio": "voiceover.wav",
- "duration": 59.912,
+ "duration": 60.067,
  "words": [
   {
    "text": "If",
@@ -25,11 +25,11 @@
   {
    "text": "off",
    "start": 0.76,
-   "end": 1.0
+   "end": 1.02
   },
   {
    "text": "a",
-   "start": 1.0,
+   "start": 1.02,
    "end": 1.12
   },
   {
@@ -60,11 +60,11 @@
   {
    "text": "not",
    "start": 2.44,
-   "end": 2.6
+   "end": 2.62
   },
   {
    "text": "call",
-   "start": 2.6,
+   "start": 2.62,
    "end": 2.86
   },
   {
@@ -74,7 +74,7 @@
   },
   {
    "text": "Picture",
-   "start": 3.84,
+   "start": 3.86,
    "end": 4.08
   },
   {
@@ -105,21 +105,21 @@
   {
    "text": "the",
    "start": 5.7,
-   "end": 5.82
+   "end": 5.8
   },
   {
    "text": "river,",
-   "start": 5.82,
+   "start": 5.8,
    "end": 6.02
   },
   {
    "text": "rain",
    "start": 6.38,
-   "end": 6.66
+   "end": 6.68
   },
   {
    "text": "on",
-   "start": 6.66,
+   "start": 6.68,
    "end": 6.84
   },
   {
@@ -134,7 +134,7 @@
   },
   {
    "text": "coffee",
-   "start": 7.6,
+   "start": 7.58,
    "end": 7.84
   },
   {
@@ -165,11 +165,11 @@
   {
    "text": "a",
    "start": 9.0,
-   "end": 9.1
+   "end": 9.12
   },
   {
    "text": "truck",
-   "start": 9.1,
+   "start": 9.12,
    "end": 9.28
   },
   {
@@ -194,7 +194,7 @@
   },
   {
    "text": "and",
-   "start": 10.42,
+   "start": 10.4,
    "end": 10.62
   },
   {
@@ -205,11 +205,11 @@
   {
    "text": "you're",
    "start": 10.96,
-   "end": 11.2
+   "end": 11.18
   },
   {
    "text": "flying.",
-   "start": 11.2,
+   "start": 11.18,
    "end": 11.54
   },
   {
@@ -220,11 +220,11 @@
   {
    "text": "car",
    "start": 12.02,
-   "end": 12.22
+   "end": 12.24
   },
   {
    "text": "slams",
-   "start": 12.22,
+   "start": 12.24,
    "end": 12.68
   },
   {
@@ -250,7 +250,7 @@
   {
    "text": "floats.",
    "start": 13.76,
-   "end": 14.0
+   "end": 13.98
   },
   {
    "text": "You're",
@@ -359,7 +359,7 @@
   },
   {
    "text": "The",
-   "start": 21.82,
+   "start": 21.84,
    "end": 21.9
   },
   {
@@ -400,11 +400,11 @@
   {
    "text": "you're",
    "start": 23.7,
-   "end": 23.88
+   "end": 23.86
   },
   {
    "text": "trying",
-   "start": 23.88,
+   "start": 23.86,
    "end": 24.1
   },
   {
@@ -535,11 +535,11 @@
   {
    "text": "an",
    "start": 31.14,
-   "end": 31.3
+   "end": 31.32
   },
   {
    "text": "inch.",
-   "start": 31.3,
+   "start": 31.32,
    "end": 31.56
   },
   {
@@ -610,11 +610,11 @@
   {
    "text": "Once",
    "start": 36.04,
-   "end": 36.18
+   "end": 36.2
   },
   {
    "text": "water",
-   "start": 36.18,
+   "start": 36.2,
    "end": 36.48
   },
   {
@@ -645,7 +645,7 @@
   {
    "text": "door,",
    "start": 37.68,
-   "end": 37.94
+   "end": 37.96
   },
   {
    "text": "it",
@@ -714,7 +714,7 @@
   },
   {
    "text": "Usually",
-   "start": 41.88,
+   "start": 41.86,
    "end": 42.2
   },
   {
@@ -740,11 +740,11 @@
   {
    "text": "away.",
    "start": 43.12,
-   "end": 43.44
+   "end": 43.46
   },
   {
    "text": "That's",
-   "start": 43.8,
+   "start": 43.78,
    "end": 43.98
   },
   {
@@ -765,11 +765,11 @@
   {
    "text": "teach",
    "start": 44.88,
-   "end": 45.2
+   "end": 45.26
   },
   {
    "text": "one",
-   "start": 45.2,
+   "start": 45.26,
    "end": 45.5
   },
   {
@@ -779,208 +779,208 @@
   },
   {
    "text": "Seatbelt",
-   "start": 46.1,
-   "end": 46.42
+   "start": 45.78,
+   "end": 46.5
   },
   {
    "text": "off.",
-   "start": 46.42,
-   "end": 46.72
+   "start": 46.5,
+   "end": 46.84
   },
   {
    "text": "Window",
-   "start": 47.08,
-   "end": 47.28
+   "start": 47.24,
+   "end": 47.42
   },
   {
    "text": "open.",
-   "start": 47.28,
-   "end": 47.68
+   "start": 47.42,
+   "end": 47.84
   },
   {
    "text": "Kids",
-   "start": 48.08,
-   "end": 48.22
+   "start": 48.28,
+   "end": 48.38
   },
   {
    "text": "out",
-   "start": 48.22,
-   "end": 48.46
+   "start": 48.38,
+   "end": 48.62
   },
   {
    "text": "first.",
-   "start": 48.46,
-   "end": 48.78
+   "start": 48.62,
+   "end": 48.94
   },
   {
    "text": "Then",
-   "start": 49.22,
-   "end": 49.4
+   "start": 49.34,
+   "end": 49.56
   },
   {
    "text": "you.",
-   "start": 49.4,
-   "end": 49.66
+   "start": 49.56,
+   "end": 49.82
   },
   {
    "text": "And",
-   "start": 49.98,
-   "end": 50.08
-  },
-  {
-   "text": "if",
-   "start": 50.08,
-   "end": 50.16
-  },
-  {
-   "text": "the",
    "start": 50.16,
    "end": 50.24
   },
   {
-   "text": "window",
+   "text": "if",
    "start": 50.24,
-   "end": 50.46
+   "end": 50.32
+  },
+  {
+   "text": "the",
+   "start": 50.32,
+   "end": 50.4
+  },
+  {
+   "text": "window",
+   "start": 50.4,
+   "end": 50.6
   },
   {
    "text": "is",
-   "start": 50.46,
-   "end": 50.62
+   "start": 50.6,
+   "end": 50.78
   },
   {
    "text": "stuck,",
-   "start": 50.62,
-   "end": 50.88
+   "start": 50.78,
+   "end": 51.0
   },
   {
    "text": "smash",
-   "start": 51.18,
-   "end": 51.38
+   "start": 51.36,
+   "end": 51.54
   },
   {
    "text": "the",
-   "start": 51.38,
-   "end": 51.64
+   "start": 51.54,
+   "end": 51.8
   },
   {
    "text": "side",
-   "start": 51.64,
-   "end": 51.88
+   "start": 51.8,
+   "end": 52.04
   },
   {
    "text": "glass.",
-   "start": 51.88,
-   "end": 52.18
+   "start": 52.04,
+   "end": 52.34
   },
   {
    "text": "Never",
-   "start": 52.64,
-   "end": 52.84
+   "start": 52.78,
+   "end": 53.0
   },
   {
    "text": "the",
-   "start": 52.84,
-   "end": 53.04
+   "start": 53.0,
+   "end": 53.2
   },
   {
    "text": "windshield.",
-   "start": 53.04,
-   "end": 53.28
+   "start": 53.2,
+   "end": 53.42
   },
   {
    "text": "It's",
-   "start": 53.82,
-   "end": 54.0
+   "start": 53.98,
+   "end": 54.16
   },
   {
    "text": "built",
-   "start": 54.0,
-   "end": 54.18
+   "start": 54.16,
+   "end": 54.34
   },
   {
    "text": "not",
-   "start": 54.18,
-   "end": 54.4
+   "start": 54.34,
+   "end": 54.56
   },
   {
    "text": "to",
-   "start": 54.4,
-   "end": 54.58
+   "start": 54.56,
+   "end": 54.74
   },
   {
    "text": "break.",
-   "start": 54.58,
-   "end": 54.82
+   "start": 54.74,
+   "end": 54.98
   },
   {
    "text": "Because",
-   "start": 55.14,
-   "end": 55.38
+   "start": 55.32,
+   "end": 55.54
   },
   {
    "text": "911",
-   "start": 55.38,
-   "end": 55.86
+   "start": 55.54,
+   "end": 56.04
   },
   {
    "text": "can't",
-   "start": 55.86,
-   "end": 56.48
+   "start": 56.04,
+   "end": 56.64
   },
   {
    "text": "reach",
-   "start": 56.48,
-   "end": 56.58
+   "start": 56.64,
+   "end": 56.72
   },
   {
    "text": "you",
-   "start": 56.58,
-   "end": 56.8
+   "start": 56.72,
+   "end": 56.96
   },
   {
    "text": "in",
-   "start": 56.8,
-   "end": 56.88
+   "start": 56.96,
+   "end": 57.04
   },
   {
    "text": "one",
-   "start": 56.88,
-   "end": 57.06
+   "start": 57.04,
+   "end": 57.22
   },
   {
    "text": "minute.",
-   "start": 57.06,
-   "end": 57.34
+   "start": 57.22,
+   "end": 57.5
   },
   {
    "text": "But",
-   "start": 57.52,
-   "end": 57.66
+   "start": 57.68,
+   "end": 57.82
   },
   {
    "text": "you",
-   "start": 57.66,
-   "end": 57.8
+   "start": 57.82,
+   "end": 57.94
   },
   {
    "text": "can",
-   "start": 57.8,
-   "end": 57.96
+   "start": 57.94,
+   "end": 58.12
   },
   {
    "text": "reach",
-   "start": 57.96,
-   "end": 58.16
+   "start": 58.12,
+   "end": 58.32
   },
   {
    "text": "the",
-   "start": 58.16,
-   "end": 58.36
+   "start": 58.32,
+   "end": 58.52
   },
   {
    "text": "window.",
-   "start": 58.36,
-   "end": 58.6
+   "start": 58.52,
+   "end": 58.78
   }
  ]
 }
