@@ -1,986 +1,986 @@
 {
- "audio": null,
- "duration": 58.31,
+ "audio": "voiceover.wav",
+ "duration": 59.912,
  "words": [
   {
    "text": "If",
-   "start": 0.15,
-   "end": 0.302
+   "start": 0.0,
+   "end": 0.2
   },
   {
    "text": "your",
-   "start": 0.322,
-   "end": 0.546
+   "start": 0.2,
+   "end": 0.28
   },
   {
    "text": "car",
-   "start": 0.566,
-   "end": 0.754
+   "start": 0.28,
+   "end": 0.52
   },
   {
    "text": "goes",
-   "start": 0.774,
-   "end": 0.998
+   "start": 0.52,
+   "end": 0.76
   },
   {
    "text": "off",
-   "start": 1.018,
-   "end": 1.206
+   "start": 0.76,
+   "end": 1.0
   },
   {
    "text": "a",
-   "start": 1.226,
-   "end": 1.342
+   "start": 1.0,
+   "end": 1.12
   },
   {
    "text": "bridge",
-   "start": 1.362,
-   "end": 1.658
+   "start": 1.12,
+   "end": 1.36
   },
   {
    "text": "into",
-   "start": 1.678,
-   "end": 1.902
+   "start": 1.36,
+   "end": 1.58
   },
   {
    "text": "a",
-   "start": 1.922,
-   "end": 2.038
+   "start": 1.58,
+   "end": 1.76
   },
   {
    "text": "river,",
-   "start": 2.058,
-   "end": 2.318
+   "start": 1.76,
+   "end": 1.98
   },
   {
    "text": "do",
-   "start": 2.418,
-   "end": 2.57
+   "start": 2.3,
+   "end": 2.44
   },
   {
    "text": "not",
-   "start": 2.59,
-   "end": 2.778
+   "start": 2.44,
+   "end": 2.6
   },
   {
    "text": "call",
-   "start": 2.798,
-   "end": 3.022
+   "start": 2.6,
+   "end": 2.86
   },
   {
    "text": "911.",
-   "start": 3.042,
-   "end": 3.23
+   "start": 2.86,
+   "end": 3.44
   },
   {
    "text": "Picture",
-   "start": 3.49,
-   "end": 3.822
+   "start": 3.84,
+   "end": 4.08
   },
   {
    "text": "this.",
-   "start": 3.842,
-   "end": 4.066
+   "start": 4.08,
+   "end": 4.44
   },
   {
    "text": "You're",
-   "start": 4.326,
-   "end": 4.586
+   "start": 4.84,
+   "end": 4.9
   },
   {
    "text": "driving",
-   "start": 4.606,
-   "end": 4.938
+   "start": 4.9,
+   "end": 5.16
   },
   {
    "text": "home",
-   "start": 4.958,
-   "end": 5.182
+   "start": 5.16,
+   "end": 5.5
   },
   {
    "text": "over",
-   "start": 5.202,
-   "end": 5.426
+   "start": 5.5,
+   "end": 5.7
   },
   {
    "text": "the",
-   "start": 5.446,
-   "end": 5.634
+   "start": 5.7,
+   "end": 5.82
   },
   {
    "text": "river,",
-   "start": 5.654,
-   "end": 5.914
+   "start": 5.82,
+   "end": 6.02
   },
   {
    "text": "rain",
-   "start": 6.014,
-   "end": 6.238
+   "start": 6.38,
+   "end": 6.66
   },
   {
    "text": "on",
-   "start": 6.258,
-   "end": 6.41
+   "start": 6.66,
+   "end": 6.84
   },
   {
    "text": "the",
-   "start": 6.43,
-   "end": 6.618
+   "start": 6.84,
+   "end": 6.96
   },
   {
    "text": "windshield,",
-   "start": 6.638,
-   "end": 7.078
+   "start": 6.96,
+   "end": 7.24
   },
   {
    "text": "coffee",
-   "start": 7.178,
-   "end": 7.474
+   "start": 7.6,
+   "end": 7.84
   },
   {
    "text": "in",
-   "start": 7.494,
-   "end": 7.646
+   "start": 7.84,
+   "end": 8.0
   },
   {
    "text": "the",
-   "start": 7.666,
-   "end": 7.854
+   "start": 8.0,
+   "end": 8.12
   },
   {
    "text": "cup",
-   "start": 7.874,
-   "end": 8.062
+   "start": 8.12,
+   "end": 8.24
   },
   {
    "text": "holder.",
-   "start": 8.082,
-   "end": 8.378
+   "start": 8.24,
+   "end": 8.6
   },
   {
    "text": "Then",
-   "start": 8.638,
-   "end": 8.862
+   "start": 8.9,
+   "end": 9.0
   },
   {
    "text": "a",
-   "start": 8.882,
-   "end": 8.998
+   "start": 9.0,
+   "end": 9.1
   },
   {
    "text": "truck",
-   "start": 9.018,
-   "end": 9.278
+   "start": 9.1,
+   "end": 9.28
   },
   {
    "text": "clips",
-   "start": 9.298,
-   "end": 9.558
+   "start": 9.28,
+   "end": 9.5
   },
   {
    "text": "your",
-   "start": 9.578,
-   "end": 9.802
+   "start": 9.5,
+   "end": 9.68
   },
   {
    "text": "back",
-   "start": 9.822,
-   "end": 10.046
+   "start": 9.68,
+   "end": 9.84
   },
   {
    "text": "bumper,",
-   "start": 10.066,
-   "end": 10.362
+   "start": 9.84,
+   "end": 10.16
   },
   {
    "text": "and",
-   "start": 10.462,
-   "end": 10.65
+   "start": 10.42,
+   "end": 10.62
   },
   {
    "text": "suddenly,",
-   "start": 10.67,
-   "end": 11.038
+   "start": 10.62,
+   "end": 10.96
   },
   {
    "text": "you're",
-   "start": 11.138,
-   "end": 11.398
+   "start": 10.96,
+   "end": 11.2
   },
   {
    "text": "flying.",
-   "start": 11.418,
-   "end": 11.714
+   "start": 11.2,
+   "end": 11.54
   },
   {
    "text": "The",
-   "start": 11.974,
-   "end": 12.162
+   "start": 11.92,
+   "end": 12.02
   },
   {
    "text": "car",
-   "start": 12.182,
-   "end": 12.37
+   "start": 12.02,
+   "end": 12.22
   },
   {
    "text": "slams",
-   "start": 12.39,
-   "end": 12.65
+   "start": 12.22,
+   "end": 12.68
   },
   {
    "text": "into",
-   "start": 12.67,
-   "end": 12.894
+   "start": 12.68,
+   "end": 12.88
   },
   {
    "text": "the",
-   "start": 12.914,
-   "end": 13.102
+   "start": 12.88,
+   "end": 13.0
   },
   {
    "text": "water...",
-   "start": 13.122,
-   "end": 13.382
+   "start": 13.0,
+   "end": 13.26
   },
   {
    "text": "and",
-   "start": 13.642,
-   "end": 13.83
+   "start": 13.62,
+   "end": 13.76
   },
   {
    "text": "floats.",
-   "start": 13.85,
-   "end": 14.146
+   "start": 13.76,
+   "end": 14.0
   },
   {
    "text": "You're",
-   "start": 14.406,
-   "end": 14.666
+   "start": 14.5,
+   "end": 14.66
   },
   {
    "text": "fine.",
-   "start": 14.686,
-   "end": 14.91
+   "start": 14.66,
+   "end": 14.92
   },
   {
    "text": "You're",
-   "start": 15.17,
-   "end": 15.43
+   "start": 15.46,
+   "end": 15.6
   },
   {
    "text": "actually",
-   "start": 15.45,
-   "end": 15.818
+   "start": 15.6,
+   "end": 15.96
   },
   {
    "text": "fine.",
-   "start": 15.838,
-   "end": 16.062
+   "start": 15.96,
+   "end": 16.36
   },
   {
    "text": "So",
-   "start": 16.322,
-   "end": 16.474
+   "start": 16.74,
+   "end": 16.9
   },
   {
    "text": "you",
-   "start": 16.494,
-   "end": 16.682
+   "start": 16.9,
+   "end": 17.02
   },
   {
    "text": "do",
-   "start": 16.702,
-   "end": 16.854
+   "start": 17.02,
+   "end": 17.22
   },
   {
    "text": "what",
-   "start": 16.874,
-   "end": 17.098
+   "start": 17.22,
+   "end": 17.48
   },
   {
    "text": "any",
-   "start": 17.118,
-   "end": 17.306
+   "start": 17.48,
+   "end": 17.66
   },
   {
    "text": "responsible",
-   "start": 17.326,
-   "end": 17.802
+   "start": 17.66,
+   "end": 18.14
   },
   {
    "text": "person",
-   "start": 17.822,
-   "end": 18.118
+   "start": 18.14,
+   "end": 18.62
   },
   {
    "text": "would",
-   "start": 18.138,
-   "end": 18.398
+   "start": 18.62,
+   "end": 18.86
   },
   {
    "text": "do.",
-   "start": 18.418,
-   "end": 18.57
+   "start": 18.86,
+   "end": 19.1
   },
   {
    "text": "You",
-   "start": 18.83,
-   "end": 19.018
+   "start": 19.34,
+   "end": 19.44
   },
   {
    "text": "grab",
-   "start": 19.038,
-   "end": 19.262
+   "start": 19.44,
+   "end": 19.64
   },
   {
    "text": "your",
-   "start": 19.282,
-   "end": 19.506
+   "start": 19.64,
+   "end": 19.82
   },
   {
    "text": "phone,",
-   "start": 19.526,
-   "end": 19.786
+   "start": 19.82,
+   "end": 20.14
   },
   {
    "text": "and",
-   "start": 19.886,
-   "end": 20.074
+   "start": 20.38,
+   "end": 20.52
   },
   {
    "text": "dial",
-   "start": 20.094,
-   "end": 20.318
+   "start": 20.52,
+   "end": 20.76
   },
   {
    "text": "911.",
-   "start": 20.338,
-   "end": 20.526
+   "start": 20.76,
+   "end": 21.34
   },
   {
    "text": "The",
-   "start": 20.786,
-   "end": 20.974
+   "start": 21.82,
+   "end": 21.9
   },
   {
    "text": "dispatcher",
-   "start": 20.994,
-   "end": 21.434
+   "start": 21.9,
+   "end": 22.36
   },
   {
    "text": "asks",
-   "start": 21.454,
-   "end": 21.678
+   "start": 22.36,
+   "end": 22.64
   },
   {
    "text": "where",
-   "start": 21.698,
-   "end": 21.958
+   "start": 22.64,
+   "end": 22.88
   },
   {
    "text": "you",
-   "start": 21.978,
-   "end": 22.166
+   "start": 22.88,
+   "end": 23.06
   },
   {
    "text": "are.",
-   "start": 22.186,
-   "end": 22.374
+   "start": 23.06,
+   "end": 23.24
   },
   {
    "text": "And",
-   "start": 22.634,
-   "end": 22.822
+   "start": 23.56,
+   "end": 23.6
   },
   {
    "text": "while",
-   "start": 22.842,
-   "end": 23.102
+   "start": 23.6,
+   "end": 23.7
   },
   {
    "text": "you're",
-   "start": 23.122,
-   "end": 23.382
+   "start": 23.7,
+   "end": 23.88
   },
   {
    "text": "trying",
-   "start": 23.402,
-   "end": 23.698
+   "start": 23.88,
+   "end": 24.1
   },
   {
    "text": "to",
-   "start": 23.718,
-   "end": 23.87
+   "start": 24.1,
+   "end": 24.26
   },
   {
    "text": "remember",
-   "start": 23.89,
-   "end": 24.258
+   "start": 24.26,
+   "end": 24.46
   },
   {
    "text": "the",
-   "start": 24.278,
-   "end": 24.466
+   "start": 24.46,
+   "end": 24.7
   },
   {
    "text": "name",
-   "start": 24.486,
-   "end": 24.71
+   "start": 24.7,
+   "end": 24.9
   },
   {
    "text": "of",
-   "start": 24.73,
-   "end": 24.882
+   "start": 24.9,
+   "end": 25.02
   },
   {
    "text": "the",
-   "start": 24.902,
-   "end": 25.09
+   "start": 25.02,
+   "end": 25.12
   },
   {
    "text": "bridge,",
-   "start": 25.11,
-   "end": 25.406
+   "start": 25.12,
+   "end": 25.36
   },
   {
    "text": "the",
-   "start": 25.506,
-   "end": 25.694
+   "start": 25.88,
+   "end": 26.0
   },
   {
    "text": "water",
-   "start": 25.714,
-   "end": 25.974
+   "start": 26.0,
+   "end": 26.2
   },
   {
    "text": "quietly",
-   "start": 25.994,
-   "end": 26.326
+   "start": 26.2,
+   "end": 26.6
   },
   {
    "text": "climbs",
-   "start": 26.346,
-   "end": 26.642
+   "start": 26.6,
+   "end": 27.02
   },
   {
    "text": "past",
-   "start": 26.662,
-   "end": 26.886
+   "start": 27.02,
+   "end": 27.44
   },
   {
    "text": "your",
-   "start": 26.906,
-   "end": 27.13
+   "start": 27.44,
+   "end": 27.66
   },
   {
    "text": "door",
-   "start": 27.15,
-   "end": 27.374
+   "start": 27.66,
+   "end": 27.82
   },
   {
    "text": "handle.",
-   "start": 27.394,
-   "end": 27.69
+   "start": 27.82,
+   "end": 28.2
   },
   {
    "text": "Now",
-   "start": 27.95,
-   "end": 28.138
+   "start": 28.46,
+   "end": 28.66
   },
   {
    "text": "you",
-   "start": 28.158,
-   "end": 28.346
+   "start": 28.66,
+   "end": 28.86
   },
   {
    "text": "push",
-   "start": 28.366,
-   "end": 28.59
+   "start": 28.86,
+   "end": 29.06
   },
   {
    "text": "the",
-   "start": 28.61,
-   "end": 28.798
+   "start": 29.06,
+   "end": 29.22
   },
   {
    "text": "door.",
-   "start": 28.818,
-   "end": 29.042
+   "start": 29.22,
+   "end": 29.44
   },
   {
    "text": "It",
-   "start": 29.302,
-   "end": 29.454
+   "start": 29.44,
+   "end": 29.86
   },
   {
    "text": "won't",
-   "start": 29.474,
-   "end": 29.698
+   "start": 29.86,
+   "end": 30.1
   },
   {
    "text": "move.",
-   "start": 29.718,
-   "end": 29.942
+   "start": 30.1,
+   "end": 30.46
   },
   {
    "text": "Not",
-   "start": 30.202,
-   "end": 30.39
+   "start": 30.82,
+   "end": 30.98
   },
   {
    "text": "even",
-   "start": 30.41,
-   "end": 30.634
+   "start": 30.98,
+   "end": 31.14
   },
   {
    "text": "an",
-   "start": 30.654,
-   "end": 30.806
+   "start": 31.14,
+   "end": 31.3
   },
   {
    "text": "inch.",
-   "start": 30.826,
-   "end": 31.05
+   "start": 31.3,
+   "end": 31.56
   },
   {
    "text": "Wait,",
-   "start": 31.31,
-   "end": 31.534
+   "start": 32.0,
+   "end": 32.22
   },
   {
    "text": "what?",
-   "start": 31.634,
-   "end": 31.858
+   "start": 32.22,
+   "end": 32.48
   },
   {
    "text": "You",
-   "start": 32.118,
-   "end": 32.306
+   "start": 32.98,
+   "end": 33.1
   },
   {
    "text": "see,",
-   "start": 32.326,
-   "end": 32.514
+   "start": 33.1,
+   "end": 33.3
   },
   {
    "text": "a",
-   "start": 32.614,
-   "end": 32.73
+   "start": 33.52,
+   "end": 33.58
   },
   {
    "text": "sinking",
-   "start": 32.75,
-   "end": 33.082
+   "start": 33.58,
+   "end": 33.82
   },
   {
    "text": "car",
-   "start": 33.102,
-   "end": 33.29
+   "start": 33.82,
+   "end": 34.18
   },
   {
    "text": "only",
-   "start": 33.31,
-   "end": 33.534
+   "start": 34.18,
+   "end": 34.54
   },
   {
    "text": "floats",
-   "start": 33.554,
-   "end": 33.85
+   "start": 34.54,
+   "end": 34.82
   },
   {
    "text": "for",
-   "start": 33.87,
-   "end": 34.058
+   "start": 34.82,
+   "end": 35.12
   },
   {
    "text": "about",
-   "start": 34.078,
-   "end": 34.338
+   "start": 35.12,
+   "end": 35.34
   },
   {
    "text": "one",
-   "start": 34.358,
-   "end": 34.546
+   "start": 35.34,
+   "end": 35.54
   },
   {
    "text": "minute.",
-   "start": 34.566,
-   "end": 34.862
+   "start": 35.54,
+   "end": 35.8
   },
   {
    "text": "Once",
-   "start": 35.122,
-   "end": 35.346
+   "start": 36.04,
+   "end": 36.18
   },
   {
    "text": "water",
-   "start": 35.366,
-   "end": 35.626
+   "start": 36.18,
+   "end": 36.48
   },
   {
    "text": "climbs",
-   "start": 35.646,
-   "end": 35.942
+   "start": 36.48,
+   "end": 36.86
   },
   {
    "text": "the",
-   "start": 35.962,
-   "end": 36.15
+   "start": 36.86,
+   "end": 37.04
   },
   {
    "text": "outside",
-   "start": 36.17,
-   "end": 36.502
+   "start": 37.04,
+   "end": 37.3
   },
   {
    "text": "of",
-   "start": 36.522,
-   "end": 36.674
+   "start": 37.3,
+   "end": 37.6
   },
   {
    "text": "the",
-   "start": 36.694,
-   "end": 36.882
+   "start": 37.6,
+   "end": 37.68
   },
   {
    "text": "door,",
-   "start": 36.902,
-   "end": 37.126
+   "start": 37.68,
+   "end": 37.94
   },
   {
    "text": "it",
-   "start": 37.226,
-   "end": 37.378
+   "start": 38.32,
+   "end": 38.42
   },
   {
    "text": "pushes",
-   "start": 37.398,
-   "end": 37.694
+   "start": 38.42,
+   "end": 38.64
   },
   {
    "text": "harder",
-   "start": 37.714,
-   "end": 38.01
+   "start": 38.64,
+   "end": 38.98
   },
   {
    "text": "than",
-   "start": 38.03,
-   "end": 38.254
+   "start": 38.98,
+   "end": 39.16
   },
   {
    "text": "you",
-   "start": 38.274,
-   "end": 38.462
+   "start": 39.16,
+   "end": 39.28
   },
   {
    "text": "could",
-   "start": 38.482,
-   "end": 38.742
+   "start": 39.28,
+   "end": 39.42
   },
   {
    "text": "ever",
-   "start": 38.762,
-   "end": 38.986
+   "start": 39.42,
+   "end": 39.62
   },
   {
    "text": "push",
-   "start": 39.006,
-   "end": 39.23
+   "start": 39.62,
+   "end": 39.9
   },
   {
    "text": "back.",
-   "start": 39.25,
-   "end": 39.474
+   "start": 39.9,
+   "end": 40.14
   },
   {
    "text": "And",
-   "start": 39.734,
-   "end": 39.922
+   "start": 40.38,
+   "end": 40.48
   },
   {
    "text": "the",
-   "start": 39.942,
-   "end": 40.13
+   "start": 40.48,
+   "end": 40.56
   },
   {
    "text": "nearest",
-   "start": 40.15,
-   "end": 40.482
+   "start": 40.56,
+   "end": 40.76
   },
   {
    "text": "ambulance?",
-   "start": 40.502,
-   "end": 40.906
+   "start": 40.76,
+   "end": 41.32
   },
   {
    "text": "Usually",
-   "start": 41.166,
-   "end": 41.498
+   "start": 41.88,
+   "end": 42.2
   },
   {
    "text": "more",
-   "start": 41.518,
-   "end": 41.742
+   "start": 42.2,
+   "end": 42.5
   },
   {
    "text": "than",
-   "start": 41.762,
-   "end": 41.986
+   "start": 42.5,
+   "end": 42.66
   },
   {
    "text": "eight",
-   "start": 42.006,
-   "end": 42.266
+   "start": 42.66,
+   "end": 42.9
   },
   {
    "text": "minutes",
-   "start": 42.286,
-   "end": 42.618
+   "start": 42.9,
+   "end": 43.12
   },
   {
    "text": "away.",
-   "start": 42.638,
-   "end": 42.862
+   "start": 43.12,
+   "end": 43.44
   },
   {
    "text": "That's",
-   "start": 43.122,
-   "end": 43.382
+   "start": 43.8,
+   "end": 43.98
   },
   {
    "text": "why",
-   "start": 43.402,
-   "end": 43.59
+   "start": 43.98,
+   "end": 44.14
   },
   {
    "text": "rescue",
-   "start": 43.61,
-   "end": 43.906
+   "start": 44.14,
+   "end": 44.5
   },
   {
    "text": "experts",
-   "start": 43.926,
-   "end": 44.258
+   "start": 44.5,
+   "end": 44.88
   },
   {
    "text": "teach",
-   "start": 44.278,
-   "end": 44.538
+   "start": 44.88,
+   "end": 45.2
   },
   {
    "text": "one",
-   "start": 44.558,
-   "end": 44.746
+   "start": 45.2,
+   "end": 45.5
   },
   {
    "text": "rule.",
-   "start": 44.766,
-   "end": 44.99
+   "start": 45.5,
+   "end": 45.78
   },
   {
    "text": "Seatbelt",
-   "start": 45.25,
-   "end": 45.618
+   "start": 46.1,
+   "end": 46.42
   },
   {
    "text": "off.",
-   "start": 45.638,
-   "end": 45.826
+   "start": 46.42,
+   "end": 46.72
   },
   {
    "text": "Window",
-   "start": 46.086,
-   "end": 46.382
+   "start": 47.08,
+   "end": 47.28
   },
   {
    "text": "open.",
-   "start": 46.402,
-   "end": 46.626
+   "start": 47.28,
+   "end": 47.68
   },
   {
    "text": "Kids",
-   "start": 46.886,
-   "end": 47.11
+   "start": 48.08,
+   "end": 48.22
   },
   {
    "text": "out",
-   "start": 47.13,
-   "end": 47.318
+   "start": 48.22,
+   "end": 48.46
   },
   {
    "text": "first.",
-   "start": 47.338,
-   "end": 47.598
+   "start": 48.46,
+   "end": 48.78
   },
   {
    "text": "Then",
-   "start": 47.858,
-   "end": 48.082
+   "start": 49.22,
+   "end": 49.4
   },
   {
    "text": "you.",
-   "start": 48.102,
-   "end": 48.29
+   "start": 49.4,
+   "end": 49.66
   },
   {
    "text": "And",
-   "start": 48.55,
-   "end": 48.738
+   "start": 49.98,
+   "end": 50.08
   },
   {
    "text": "if",
-   "start": 48.758,
-   "end": 48.91
+   "start": 50.08,
+   "end": 50.16
   },
   {
    "text": "the",
-   "start": 48.93,
-   "end": 49.118
+   "start": 50.16,
+   "end": 50.24
   },
   {
    "text": "window",
-   "start": 49.138,
-   "end": 49.434
+   "start": 50.24,
+   "end": 50.46
   },
   {
    "text": "is",
-   "start": 49.454,
-   "end": 49.606
+   "start": 50.46,
+   "end": 50.62
   },
   {
    "text": "stuck,",
-   "start": 49.626,
-   "end": 49.886
+   "start": 50.62,
+   "end": 50.88
   },
   {
    "text": "smash",
-   "start": 49.986,
-   "end": 50.246
+   "start": 51.18,
+   "end": 51.38
   },
   {
    "text": "the",
-   "start": 50.266,
-   "end": 50.454
+   "start": 51.38,
+   "end": 51.64
   },
   {
    "text": "side",
-   "start": 50.474,
-   "end": 50.698
+   "start": 51.64,
+   "end": 51.88
   },
   {
    "text": "glass.",
-   "start": 50.718,
-   "end": 50.978
+   "start": 51.88,
+   "end": 52.18
   },
   {
    "text": "Never",
-   "start": 51.238,
-   "end": 51.498
+   "start": 52.64,
+   "end": 52.84
   },
   {
    "text": "the",
-   "start": 51.518,
-   "end": 51.706
+   "start": 52.84,
+   "end": 53.04
   },
   {
    "text": "windshield.",
-   "start": 51.726,
-   "end": 52.166
+   "start": 53.04,
+   "end": 53.28
   },
   {
    "text": "It's",
-   "start": 52.426,
-   "end": 52.614
+   "start": 53.82,
+   "end": 54.0
   },
   {
    "text": "built",
-   "start": 52.634,
-   "end": 52.894
+   "start": 54.0,
+   "end": 54.18
   },
   {
    "text": "not",
-   "start": 52.914,
-   "end": 53.102
+   "start": 54.18,
+   "end": 54.4
   },
   {
    "text": "to",
-   "start": 53.122,
-   "end": 53.274
+   "start": 54.4,
+   "end": 54.58
   },
   {
    "text": "break.",
-   "start": 53.294,
-   "end": 53.554
+   "start": 54.58,
+   "end": 54.82
   },
   {
    "text": "Because",
-   "start": 53.814,
-   "end": 54.146
+   "start": 55.14,
+   "end": 55.38
   },
   {
    "text": "911",
-   "start": 54.166,
-   "end": 54.354
+   "start": 55.38,
+   "end": 55.86
   },
   {
    "text": "can't",
-   "start": 54.374,
-   "end": 54.598
+   "start": 55.86,
+   "end": 56.48
   },
   {
    "text": "reach",
-   "start": 54.618,
-   "end": 54.878
+   "start": 56.48,
+   "end": 56.58
   },
   {
    "text": "you",
-   "start": 54.898,
-   "end": 55.086
+   "start": 56.58,
+   "end": 56.8
   },
   {
    "text": "in",
-   "start": 55.106,
-   "end": 55.258
+   "start": 56.8,
+   "end": 56.88
   },
   {
    "text": "one",
-   "start": 55.278,
-   "end": 55.466
+   "start": 56.88,
+   "end": 57.06
   },
   {
    "text": "minute.",
-   "start": 55.486,
-   "end": 55.782
+   "start": 57.06,
+   "end": 57.34
   },
   {
    "text": "But",
-   "start": 56.042,
-   "end": 56.23
+   "start": 57.52,
+   "end": 57.66
   },
   {
    "text": "you",
-   "start": 56.25,
-   "end": 56.438
+   "start": 57.66,
+   "end": 57.8
   },
   {
    "text": "can",
-   "start": 56.458,
-   "end": 56.646
+   "start": 57.8,
+   "end": 57.96
   },
   {
    "text": "reach",
-   "start": 56.666,
-   "end": 56.926
+   "start": 57.96,
+   "end": 58.16
   },
   {
    "text": "the",
-   "start": 56.946,
-   "end": 57.134
+   "start": 58.16,
+   "end": 58.36
   },
   {
    "text": "window.",
-   "start": 57.154,
-   "end": 57.45
+   "start": 58.36,
+   "end": 58.6
   }
  ]
 }

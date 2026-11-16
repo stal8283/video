@@ -164,7 +164,7 @@ export const RisingExterior: React.FC<{ f: number; dur: number }> = ({ f, dur })
       <Skyline />
       <River t={t} amp={0.1} color="#0c3f45" />
       <Car position={[0, mix(-0.72, -1.05, k) + Math.sin(t * 2) * 0.04, 0]} rotation={[0, 0, -0.12]} />
-      <Label text="911, where are you?" bubble position={[1.6, 2.6, 0.8]} scale={2.6 * pop} />
+      <Label text="911, where are you?" bubble position={[0.5, 2.0, 0.8]} scale={1.3 * pop} />
       <Rain t={t} center={[1, 5, 3]} area={[14, 12, 12]} count={600} />
     </Stage>
   );
@@ -213,7 +213,7 @@ export const AmbulanceScene: React.FC<SceneProps> = ({ dur }) => {
       <FaceCam position={[amb[0], 18, amb[2]]}>
         <Label text="8+ MIN" sub="AWAY" position={[0, 0, 0]} scale={34 * easeOut(clamp((k - 0.45) * 3))} bg="#ff3b3b" color="#fff" />
       </FaceCam>
-      <FaceCam position={[0, 16, 3]}>
+      <FaceCam position={[0, 24, 3]}>
         <Label text="YOU" position={[0, 0, 0]} scale={16 * easeOut(clamp((k - 0.55) * 3))} bg="#ffd23f" />
       </FaceCam>
     </Stage>
@@ -245,8 +245,8 @@ export const Escape: React.FC<SceneProps> = ({ dur, at }) => {
   const above = camY > 0.02;
   const carY = -7.4 - t * 0.5;
   const arms = above
-    ? { armL: [2.6, 0.4] as [number, number], armR: [-2.6, -0.4] as [number, number] }
-    : { armL: [2.4 + stroke * 0.6, 0.3] as [number, number], armR: [-2.4 - stroke * 0.6, -0.3] as [number, number] };
+    ? { armL: [-2.3, 0.35] as [number, number], armR: [2.3, -0.35] as [number, number] }
+    : { armL: [-2.1 - stroke * 0.6, 0.4] as [number, number], armR: [2.1 + stroke * 0.6, -0.4] as [number, number] };
   return (
     <Stage exposure={above ? 1.1 : 1.0}>
       <Cam pos={[mix(2.8, 0.6, ease(s)), camY, mix(6.5, 3.6, ease(s))]} look={[fx, fy + (above ? 0.3 : 0.6), 0]} fov={44} roll={above ? 0 : Math.sin(t) * 0.02} />

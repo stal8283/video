@@ -34,6 +34,7 @@ export const Video: React.FC = () => (
     {/* vignette */}
     <AbsoluteFill style={{ background: "radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%)", pointerEvents: "none" }} />
     <Captions />
-    {VO.audio ? <Audio src={staticFile(VO.audio)} /> : null}
+    {VO.audio ? <Audio src={staticFile(VO.audio)} volume={1} /> : null}
+    <Audio src={staticFile("sfx.wav")} volume={0.9} />
   </AbsoluteFill>
 );

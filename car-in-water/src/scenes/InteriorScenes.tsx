@@ -288,7 +288,7 @@ export const Rule: React.FC<SceneProps> = ({ dur, at }) => {
         insideLevel={inside}
         windowDown={win}
         seatbelt={belt}
-        kid={kid < 0.98 ? { expr: "determined", position: kidPos, armL: [2.2, 0.3], armR: [-2.2, -0.3] } : null}
+        kid={kid < 0.98 ? { expr: "determined", position: kidPos, armL: [-2.2, 0.3], armR: [2.2, -0.3] } : null}
         driver={{
           expr: "determined",
           look: [-1, 0.2],
@@ -328,23 +328,23 @@ const GlassInside: React.FC<{ f: number; dur: number; fSm: number }> = ({ f, dur
   const broken = f > fSm + 3;
   return (
     <Stage>
-      <Cam pos={mix3([0.3, 1.22, 0.45], [0.05, 1.15, 0.3], kk).map((v, i) => v + (f > fSm && f < fSm + 6 ? Math.sin(f * 3) * 0.01 : 0) * (i === 1 ? 1 : 0))} look={[-0.92, 1.15, 0.12]} fov={46} />
+      <Cam pos={mix3([0.3, 1.3, 1.45], [0.1, 1.22, 1.15], kk).map((v, i) => v + (f > fSm && f < fSm + 6 ? Math.sin(f * 3) * 0.012 : 0) * (i === 1 ? 1 : 0))} look={[-0.5, 1.08, 0.0]} fov={52} />
       <Interior
         t={t}
         outside="water"
         outsideLevel={1.62}
         insideLevel={0.35}
         windowDown={broken ? 1 : 0}
-        driver={{ expr: "determined", look: [-1, 0], armR: ik(SHOULDER_R, toLocal(hp[0] + 0.3, hp[1]), 1) }}
+        driver={{ expr: "determined", look: [-1, 0.3], armL: ik(SHOULDER_L, toLocal(hp[0] + 0.25, hp[1] - 0.02), 1), armR: ik(SHOULDER_R, toLocal(-0.3, 0.75), 1) }}
         ambient="#215a58"
         ambientI={1}
         dash="#ff9a3c"
         dashI={1}
         windowColor="#03080c"
       >
-        <Hammer position={hp} rotation={[0, 0.2, mix(0.3, -0.2, hit)]} scale={0.9} />
+        <Hammer position={hp} rotation={[0, 0.2, mix(0.3, -0.2, hit)]} scale={0.38} />
         {!broken && f > fSm - 1 && <Cracks amount={1} w={1.22} h={0.56} position={[-0.905, 1.24, 0]} rotation={[0, Math.PI / 2, 0]} center={[0.13, 0.16]} />}
-        <Burst age={(f - fSm - 3) / FPS} origin={[-0.88, 1.24, 0.1]} dir={[2.2, 0.8, 0]} spread={0.7} count={90} size={0.045} color="#e9fbff" shape="tri" life={1.2} gravity={4} emissive />
+        <Burst age={(f - fSm - 3) / FPS} origin={[-0.88, 1.24, 0.1]} dir={[2.2, 0.8, 0]} spread={0.7} count={90} size={0.022} color="#e9fbff" shape="tri" life={1.2} gravity={4} emissive />
         {broken && [0, 6, 12, 18, 24, 30, 36].map((d) => <Burst key={d} age={((f - fSm - 3 - d) / FPS) % 1.4} origin={[-0.9, 1.25, 0]} dir={[2.5, 0.2, 0]} spread={0.35} count={40} size={0.025} color="#9ff5ee" seed={d} life={0.6} gravity={3} emissive />)}
       </Interior>
     </Stage>
