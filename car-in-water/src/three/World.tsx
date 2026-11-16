@@ -205,7 +205,6 @@ export const Bridge: React.FC<{ y?: number; length?: number; gapX?: number | nul
           <boxGeometry args={[0.5, 0.12, 0.25]} />
           <meshBasicMaterial color="#ffd38a" toneMapped={false} />
         </mesh>
-        <pointLight position={[0, 4.7, 1.2]} intensity={14} distance={16} decay={1.5} color="#ffbe6b" />
       </group>,
     );
   }

@@ -141,22 +141,23 @@ export const Stopwatch: React.FC<{ progress: number; position?: [number, number,
 };
 
 /** Arrow pointing along +X from origin, length l. */
-export const Arrow: React.FC<{ l?: number; color?: string; position?: [number, number, number]; rotation?: [number, number, number]; scale?: number; opacity?: number }> = ({
+export const Arrow: React.FC<{ l?: number; color?: string; position?: [number, number, number]; rotation?: [number, number, number]; scale?: number; opacity?: number; onTop?: boolean }> = ({
   l = 1,
   color = "#ff4040",
   position = [0, 0, 0],
   rotation = [0, 0, 0],
   scale = 1,
   opacity = 1,
+  onTop = false,
 }) => (
   <group position={position} rotation={rotation} scale={scale}>
-    <mesh position={[l * 0.35, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
+    <mesh position={[l * 0.35, 0, 0]} rotation={[0, 0, -Math.PI / 2]} renderOrder={onTop ? 999 : 0}>
       <cylinderGeometry args={[0.07, 0.07, l * 0.7, 12]} />
-      <meshBasicMaterial color={color} transparent={opacity < 1} opacity={opacity} toneMapped={false} />
+      <meshBasicMaterial color={color} transparent={opacity < 1 || onTop} opacity={opacity} toneMapped={false} depthTest={!onTop} />
     </mesh>
-    <mesh position={[l * 0.82, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
+    <mesh position={[l * 0.82, 0, 0]} rotation={[0, 0, -Math.PI / 2]} renderOrder={onTop ? 999 : 0}>
       <coneGeometry args={[0.18, l * 0.36, 16]} />
-      <meshBasicMaterial color={color} transparent={opacity < 1} opacity={opacity} toneMapped={false} />
+      <meshBasicMaterial color={color} transparent={opacity < 1 || onTop} opacity={opacity} toneMapped={false} depthTest={!onTop} />
     </mesh>
   </group>
 );

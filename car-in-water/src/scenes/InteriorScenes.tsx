@@ -203,7 +203,7 @@ export const Door: React.FC<SceneProps> = ({ dur, at }) => {
   const lean = 0.12 + shove * 0.08;
   return (
     <Stage>
-      <Cam pos={mix3([0.35, 1.22, 1.3], [0.1, 1.12, 0.85], k).map((v, i) => v + (i === 0 ? Math.sin(f * 2.1) * shove * 0.01 : 0))} look={[-0.6, 1.02, 0.05]} fov={48} />
+      <Cam pos={mix3([0.3, 1.28, 1.55], [0.1, 1.18, 1.15], k).map((v, i) => v + (i === 0 ? Math.sin(f * 2.1) * shove * 0.01 : 0))} look={[-0.55, 0.98, -0.1]} fov={54} />
       <Interior
         t={t}
         outside="water"
@@ -226,7 +226,7 @@ export const Door: React.FC<SceneProps> = ({ dur, at }) => {
       >
         {[0.75, 1.05, 1.35].map((y, i) =>
           [-0.3, 0.3].map((z) => (
-            <Arrow key={`${y}${z}`} position={[-1.75 + Math.sin(t * 6 + i) * 0.04, y, z]} l={0.7} color="#ff4b4b" scale={0.7 + i * 0.1} />
+            <Arrow key={`${y}${z}`} position={[-1.75 + Math.sin(t * 6 + i) * 0.05, y, z]} l={0.75} color="#ff3030" scale={0.75 + i * 0.1} onTop />
           )),
         )}
       </Interior>

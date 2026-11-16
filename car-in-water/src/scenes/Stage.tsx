@@ -1,6 +1,9 @@
 import { ThreeCanvas } from "@remotion/three";
-import { AbsoluteFill, useVideoConfig } from "remotion";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
+import { useThree } from "@react-three/fiber";
+import { useLayoutEffect } from "react";
 import * as THREE from "three";
+import { LiteMaterials } from "../three/Lite";
 
 export const Stage: React.FC<{ children: React.ReactNode; exposure?: number; style?: React.CSSProperties }> = ({ children, exposure = 1.45, style }) => {
   const { width, height } = useVideoConfig();
@@ -10,10 +13,13 @@ export const Stage: React.FC<{ children: React.ReactNode; exposure?: number; sty
         width={width}
         height={height}
         dpr={1}
+        frameloop="demand"
         camera={{ fov: 40, near: 0.03, far: 1200, position: [0, 2, 10] }}
-        gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: exposure, preserveDrawingBuffer: true }}
+        gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: exposure, preserveDrawingBuffer: true }}
       >
         {children}
+        <LiteMaterials />
+        <Invalidate />
       </ThreeCanvas>
     </AbsoluteFill>
   );
@@ -28,4 +34,14 @@ export const XFade: React.FC<{ f: number; at: number; len?: number; a: React.Rea
       {o > 0 && <AbsoluteFill style={{ opacity: o }}>{b}</AbsoluteFill>}
     </AbsoluteFill>
   );
+};
+
+/** Render exactly once per Remotion frame (instead of R3F's continuous loop). */
+const Invalidate: React.FC = () => {
+  const f = useCurrentFrame();
+  const { invalidate } = useThree();
+  useLayoutEffect(() => {
+    invalidate();
+  }, [f, invalidate]);
+  return null;
 };

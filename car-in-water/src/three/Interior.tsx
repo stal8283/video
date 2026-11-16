@@ -141,7 +141,7 @@ export const Interior: React.FC<InteriorProps> = ({
           <group key={i}>
             <mesh position={[x, (outsideLevel - 6) / 2, z]}>
               <boxGeometry args={[sx, outsideLevel + 6, sz]} />
-              <meshStandardMaterial color="#0d5a5a" transparent opacity={0.92} roughness={0.2} emissive="#06302f" />
+              <meshStandardMaterial color="#0d5a5a" transparent opacity={0.82} roughness={0.2} emissive="#06302f" depthWrite={false} />
             </mesh>
             <mesh position={[x, outsideLevel + 0.005 + Math.sin(t * 3 + i) * 0.015, z]} rotation={[-Math.PI / 2, 0, 0]}>
               <planeGeometry args={[sx, sz]} />
@@ -154,7 +154,7 @@ export const Interior: React.FC<InteriorProps> = ({
 
   return (
     <group>
-      <ambientLight color={ambient} intensity={ambientI * 1.8} />
+      <ambientLight color={ambient} intensity={ambientI * 2.6} />
       <hemisphereLight args={["#9fb8d8", "#1a1410", 0.6]} />
       <pointLight position={[0, 0.95, 0.75]} color={dash} intensity={dashI * 1.6} distance={4} decay={1.2} />
       <pointLight position={[0.2, 1.5, 1.4]} color="#dfe8ff" intensity={1.4} distance={4} decay={1.2} />

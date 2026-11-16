@@ -1,0 +1,11 @@
+import { bundle } from "@remotion/bundler";
+import { renderFrames, selectComposition } from "@remotion/renderer";
+import path from "node:path";
+const browserExecutable = "/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell";
+const serveUrl = await bundle({ entryPoint: path.resolve("src/index.ts") });
+const chromiumOptions = { gl: "swangle" };
+const comp = await selectComposition({ serveUrl, id: "CarInWater", browserExecutable, chromiumOptions });
+const [a, n, scale] = [Number(process.argv[2]), Number(process.argv[3] || 6), Number(process.argv[4] || 0.5)];
+const t0 = Date.now();
+await renderFrames({ composition: comp, serveUrl, frameRange: [a, a + n - 1], outputDir: "out/bench", imageFormat: "jpeg", browserExecutable, chromiumOptions, concurrency: 1, scale, onStart: () => {}, onFrameUpdate: () => {} });
+console.log(`frames ${a}-${a + n - 1}: ${((Date.now() - t0) / n / 1000).toFixed(2)} s/frame`);
