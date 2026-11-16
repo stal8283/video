@@ -1,0 +1,986 @@
+{
+ "audio": null,
+ "duration": 58.31,
+ "words": [
+  {
+   "text": "If",
+   "start": 0.15,
+   "end": 0.302
+  },
+  {
+   "text": "your",
+   "start": 0.322,
+   "end": 0.546
+  },
+  {
+   "text": "car",
+   "start": 0.566,
+   "end": 0.754
+  },
+  {
+   "text": "goes",
+   "start": 0.774,
+   "end": 0.998
+  },
+  {
+   "text": "off",
+   "start": 1.018,
+   "end": 1.206
+  },
+  {
+   "text": "a",
+   "start": 1.226,
+   "end": 1.342
+  },
+  {
+   "text": "bridge",
+   "start": 1.362,
+   "end": 1.658
+  },
+  {
+   "text": "into",
+   "start": 1.678,
+   "end": 1.902
+  },
+  {
+   "text": "a",
+   "start": 1.922,
+   "end": 2.038
+  },
+  {
+   "text": "river,",
+   "start": 2.058,
+   "end": 2.318
+  },
+  {
+   "text": "do",
+   "start": 2.418,
+   "end": 2.57
+  },
+  {
+   "text": "not",
+   "start": 2.59,
+   "end": 2.778
+  },
+  {
+   "text": "call",
+   "start": 2.798,
+   "end": 3.022
+  },
+  {
+   "text": "911.",
+   "start": 3.042,
+   "end": 3.23
+  },
+  {
+   "text": "Picture",
+   "start": 3.49,
+   "end": 3.822
+  },
+  {
+   "text": "this.",
+   "start": 3.842,
+   "end": 4.066
+  },
+  {
+   "text": "You're",
+   "start": 4.326,
+   "end": 4.586
+  },
+  {
+   "text": "driving",
+   "start": 4.606,
+   "end": 4.938
+  },
+  {
+   "text": "home",
+   "start": 4.958,
+   "end": 5.182
+  },
+  {
+   "text": "over",
+   "start": 5.202,
+   "end": 5.426
+  },
+  {
+   "text": "the",
+   "start": 5.446,
+   "end": 5.634
+  },
+  {
+   "text": "river,",
+   "start": 5.654,
+   "end": 5.914
+  },
+  {
+   "text": "rain",
+   "start": 6.014,
+   "end": 6.238
+  },
+  {
+   "text": "on",
+   "start": 6.258,
+   "end": 6.41
+  },
+  {
+   "text": "the",
+   "start": 6.43,
+   "end": 6.618
+  },
+  {
+   "text": "windshield,",
+   "start": 6.638,
+   "end": 7.078
+  },
+  {
+   "text": "coffee",
+   "start": 7.178,
+   "end": 7.474
+  },
+  {
+   "text": "in",
+   "start": 7.494,
+   "end": 7.646
+  },
+  {
+   "text": "the",
+   "start": 7.666,
+   "end": 7.854
+  },
+  {
+   "text": "cup",
+   "start": 7.874,
+   "end": 8.062
+  },
+  {
+   "text": "holder.",
+   "start": 8.082,
+   "end": 8.378
+  },
+  {
+   "text": "Then",
+   "start": 8.638,
+   "end": 8.862
+  },
+  {
+   "text": "a",
+   "start": 8.882,
+   "end": 8.998
+  },
+  {
+   "text": "truck",
+   "start": 9.018,
+   "end": 9.278
+  },
+  {
+   "text": "clips",
+   "start": 9.298,
+   "end": 9.558
+  },
+  {
+   "text": "your",
+   "start": 9.578,
+   "end": 9.802
+  },
+  {
+   "text": "back",
+   "start": 9.822,
+   "end": 10.046
+  },
+  {
+   "text": "bumper,",
+   "start": 10.066,
+   "end": 10.362
+  },
+  {
+   "text": "and",
+   "start": 10.462,
+   "end": 10.65
+  },
+  {
+   "text": "suddenly,",
+   "start": 10.67,
+   "end": 11.038
+  },
+  {
+   "text": "you're",
+   "start": 11.138,
+   "end": 11.398
+  },
+  {
+   "text": "flying.",
+   "start": 11.418,
+   "end": 11.714
+  },
+  {
+   "text": "The",
+   "start": 11.974,
+   "end": 12.162
+  },
+  {
+   "text": "car",
+   "start": 12.182,
+   "end": 12.37
+  },
+  {
+   "text": "slams",
+   "start": 12.39,
+   "end": 12.65
+  },
+  {
+   "text": "into",
+   "start": 12.67,
+   "end": 12.894
+  },
+  {
+   "text": "the",
+   "start": 12.914,
+   "end": 13.102
+  },
+  {
+   "text": "water...",
+   "start": 13.122,
+   "end": 13.382
+  },
+  {
+   "text": "and",
+   "start": 13.642,
+   "end": 13.83
+  },
+  {
+   "text": "floats.",
+   "start": 13.85,
+   "end": 14.146
+  },
+  {
+   "text": "You're",
+   "start": 14.406,
+   "end": 14.666
+  },
+  {
+   "text": "fine.",
+   "start": 14.686,
+   "end": 14.91
+  },
+  {
+   "text": "You're",
+   "start": 15.17,
+   "end": 15.43
+  },
+  {
+   "text": "actually",
+   "start": 15.45,
+   "end": 15.818
+  },
+  {
+   "text": "fine.",
+   "start": 15.838,
+   "end": 16.062
+  },
+  {
+   "text": "So",
+   "start": 16.322,
+   "end": 16.474
+  },
+  {
+   "text": "you",
+   "start": 16.494,
+   "end": 16.682
+  },
+  {
+   "text": "do",
+   "start": 16.702,
+   "end": 16.854
+  },
+  {
+   "text": "what",
+   "start": 16.874,
+   "end": 17.098
+  },
+  {
+   "text": "any",
+   "start": 17.118,
+   "end": 17.306
+  },
+  {
+   "text": "responsible",
+   "start": 17.326,
+   "end": 17.802
+  },
+  {
+   "text": "person",
+   "start": 17.822,
+   "end": 18.118
+  },
+  {
+   "text": "would",
+   "start": 18.138,
+   "end": 18.398
+  },
+  {
+   "text": "do.",
+   "start": 18.418,
+   "end": 18.57
+  },
+  {
+   "text": "You",
+   "start": 18.83,
+   "end": 19.018
+  },
+  {
+   "text": "grab",
+   "start": 19.038,
+   "end": 19.262
+  },
+  {
+   "text": "your",
+   "start": 19.282,
+   "end": 19.506
+  },
+  {
+   "text": "phone,",
+   "start": 19.526,
+   "end": 19.786
+  },
+  {
+   "text": "and",
+   "start": 19.886,
+   "end": 20.074
+  },
+  {
+   "text": "dial",
+   "start": 20.094,
+   "end": 20.318
+  },
+  {
+   "text": "911.",
+   "start": 20.338,
+   "end": 20.526
+  },
+  {
+   "text": "The",
+   "start": 20.786,
+   "end": 20.974
+  },
+  {
+   "text": "dispatcher",
+   "start": 20.994,
+   "end": 21.434
+  },
+  {
+   "text": "asks",
+   "start": 21.454,
+   "end": 21.678
+  },
+  {
+   "text": "where",
+   "start": 21.698,
+   "end": 21.958
+  },
+  {
+   "text": "you",
+   "start": 21.978,
+   "end": 22.166
+  },
+  {
+   "text": "are.",
+   "start": 22.186,
+   "end": 22.374
+  },
+  {
+   "text": "And",
+   "start": 22.634,
+   "end": 22.822
+  },
+  {
+   "text": "while",
+   "start": 22.842,
+   "end": 23.102
+  },
+  {
+   "text": "you're",
+   "start": 23.122,
+   "end": 23.382
+  },
+  {
+   "text": "trying",
+   "start": 23.402,
+   "end": 23.698
+  },
+  {
+   "text": "to",
+   "start": 23.718,
+   "end": 23.87
+  },
+  {
+   "text": "remember",
+   "start": 23.89,
+   "end": 24.258
+  },
+  {
+   "text": "the",
+   "start": 24.278,
+   "end": 24.466
+  },
+  {
+   "text": "name",
+   "start": 24.486,
+   "end": 24.71
+  },
+  {
+   "text": "of",
+   "start": 24.73,
+   "end": 24.882
+  },
+  {
+   "text": "the",
+   "start": 24.902,
+   "end": 25.09
+  },
+  {
+   "text": "bridge,",
+   "start": 25.11,
+   "end": 25.406
+  },
+  {
+   "text": "the",
+   "start": 25.506,
+   "end": 25.694
+  },
+  {
+   "text": "water",
+   "start": 25.714,
+   "end": 25.974
+  },
+  {
+   "text": "quietly",
+   "start": 25.994,
+   "end": 26.326
+  },
+  {
+   "text": "climbs",
+   "start": 26.346,
+   "end": 26.642
+  },
+  {
+   "text": "past",
+   "start": 26.662,
+   "end": 26.886
+  },
+  {
+   "text": "your",
+   "start": 26.906,
+   "end": 27.13
+  },
+  {
+   "text": "door",
+   "start": 27.15,
+   "end": 27.374
+  },
+  {
+   "text": "handle.",
+   "start": 27.394,
+   "end": 27.69
+  },
+  {
+   "text": "Now",
+   "start": 27.95,
+   "end": 28.138
+  },
+  {
+   "text": "you",
+   "start": 28.158,
+   "end": 28.346
+  },
+  {
+   "text": "push",
+   "start": 28.366,
+   "end": 28.59
+  },
+  {
+   "text": "the",
+   "start": 28.61,
+   "end": 28.798
+  },
+  {
+   "text": "door.",
+   "start": 28.818,
+   "end": 29.042
+  },
+  {
+   "text": "It",
+   "start": 29.302,
+   "end": 29.454
+  },
+  {
+   "text": "won't",
+   "start": 29.474,
+   "end": 29.698
+  },
+  {
+   "text": "move.",
+   "start": 29.718,
+   "end": 29.942
+  },
+  {
+   "text": "Not",
+   "start": 30.202,
+   "end": 30.39
+  },
+  {
+   "text": "even",
+   "start": 30.41,
+   "end": 30.634
+  },
+  {
+   "text": "an",
+   "start": 30.654,
+   "end": 30.806
+  },
+  {
+   "text": "inch.",
+   "start": 30.826,
+   "end": 31.05
+  },
+  {
+   "text": "Wait,",
+   "start": 31.31,
+   "end": 31.534
+  },
+  {
+   "text": "what?",
+   "start": 31.634,
+   "end": 31.858
+  },
+  {
+   "text": "You",
+   "start": 32.118,
+   "end": 32.306
+  },
+  {
+   "text": "see,",
+   "start": 32.326,
+   "end": 32.514
+  },
+  {
+   "text": "a",
+   "start": 32.614,
+   "end": 32.73
+  },
+  {
+   "text": "sinking",
+   "start": 32.75,
+   "end": 33.082
+  },
+  {
+   "text": "car",
+   "start": 33.102,
+   "end": 33.29
+  },
+  {
+   "text": "only",
+   "start": 33.31,
+   "end": 33.534
+  },
+  {
+   "text": "floats",
+   "start": 33.554,
+   "end": 33.85
+  },
+  {
+   "text": "for",
+   "start": 33.87,
+   "end": 34.058
+  },
+  {
+   "text": "about",
+   "start": 34.078,
+   "end": 34.338
+  },
+  {
+   "text": "one",
+   "start": 34.358,
+   "end": 34.546
+  },
+  {
+   "text": "minute.",
+   "start": 34.566,
+   "end": 34.862
+  },
+  {
+   "text": "Once",
+   "start": 35.122,
+   "end": 35.346
+  },
+  {
+   "text": "water",
+   "start": 35.366,
+   "end": 35.626
+  },
+  {
+   "text": "climbs",
+   "start": 35.646,
+   "end": 35.942
+  },
+  {
+   "text": "the",
+   "start": 35.962,
+   "end": 36.15
+  },
+  {
+   "text": "outside",
+   "start": 36.17,
+   "end": 36.502
+  },
+  {
+   "text": "of",
+   "start": 36.522,
+   "end": 36.674
+  },
+  {
+   "text": "the",
+   "start": 36.694,
+   "end": 36.882
+  },
+  {
+   "text": "door,",
+   "start": 36.902,
+   "end": 37.126
+  },
+  {
+   "text": "it",
+   "start": 37.226,
+   "end": 37.378
+  },
+  {
+   "text": "pushes",
+   "start": 37.398,
+   "end": 37.694
+  },
+  {
+   "text": "harder",
+   "start": 37.714,
+   "end": 38.01
+  },
+  {
+   "text": "than",
+   "start": 38.03,
+   "end": 38.254
+  },
+  {
+   "text": "you",
+   "start": 38.274,
+   "end": 38.462
+  },
+  {
+   "text": "could",
+   "start": 38.482,
+   "end": 38.742
+  },
+  {
+   "text": "ever",
+   "start": 38.762,
+   "end": 38.986
+  },
+  {
+   "text": "push",
+   "start": 39.006,
+   "end": 39.23
+  },
+  {
+   "text": "back.",
+   "start": 39.25,
+   "end": 39.474
+  },
+  {
+   "text": "And",
+   "start": 39.734,
+   "end": 39.922
+  },
+  {
+   "text": "the",
+   "start": 39.942,
+   "end": 40.13
+  },
+  {
+   "text": "nearest",
+   "start": 40.15,
+   "end": 40.482
+  },
+  {
+   "text": "ambulance?",
+   "start": 40.502,
+   "end": 40.906
+  },
+  {
+   "text": "Usually",
+   "start": 41.166,
+   "end": 41.498
+  },
+  {
+   "text": "more",
+   "start": 41.518,
+   "end": 41.742
+  },
+  {
+   "text": "than",
+   "start": 41.762,
+   "end": 41.986
+  },
+  {
+   "text": "eight",
+   "start": 42.006,
+   "end": 42.266
+  },
+  {
+   "text": "minutes",
+   "start": 42.286,
+   "end": 42.618
+  },
+  {
+   "text": "away.",
+   "start": 42.638,
+   "end": 42.862
+  },
+  {
+   "text": "That's",
+   "start": 43.122,
+   "end": 43.382
+  },
+  {
+   "text": "why",
+   "start": 43.402,
+   "end": 43.59
+  },
+  {
+   "text": "rescue",
+   "start": 43.61,
+   "end": 43.906
+  },
+  {
+   "text": "experts",
+   "start": 43.926,
+   "end": 44.258
+  },
+  {
+   "text": "teach",
+   "start": 44.278,
+   "end": 44.538
+  },
+  {
+   "text": "one",
+   "start": 44.558,
+   "end": 44.746
+  },
+  {
+   "text": "rule.",
+   "start": 44.766,
+   "end": 44.99
+  },
+  {
+   "text": "Seatbelt",
+   "start": 45.25,
+   "end": 45.618
+  },
+  {
+   "text": "off.",
+   "start": 45.638,
+   "end": 45.826
+  },
+  {
+   "text": "Window",
+   "start": 46.086,
+   "end": 46.382
+  },
+  {
+   "text": "open.",
+   "start": 46.402,
+   "end": 46.626
+  },
+  {
+   "text": "Kids",
+   "start": 46.886,
+   "end": 47.11
+  },
+  {
+   "text": "out",
+   "start": 47.13,
+   "end": 47.318
+  },
+  {
+   "text": "first.",
+   "start": 47.338,
+   "end": 47.598
+  },
+  {
+   "text": "Then",
+   "start": 47.858,
+   "end": 48.082
+  },
+  {
+   "text": "you.",
+   "start": 48.102,
+   "end": 48.29
+  },
+  {
+   "text": "And",
+   "start": 48.55,
+   "end": 48.738
+  },
+  {
+   "text": "if",
+   "start": 48.758,
+   "end": 48.91
+  },
+  {
+   "text": "the",
+   "start": 48.93,
+   "end": 49.118
+  },
+  {
+   "text": "window",
+   "start": 49.138,
+   "end": 49.434
+  },
+  {
+   "text": "is",
+   "start": 49.454,
+   "end": 49.606
+  },
+  {
+   "text": "stuck,",
+   "start": 49.626,
+   "end": 49.886
+  },
+  {
+   "text": "smash",
+   "start": 49.986,
+   "end": 50.246
+  },
+  {
+   "text": "the",
+   "start": 50.266,
+   "end": 50.454
+  },
+  {
+   "text": "side",
+   "start": 50.474,
+   "end": 50.698
+  },
+  {
+   "text": "glass.",
+   "start": 50.718,
+   "end": 50.978
+  },
+  {
+   "text": "Never",
+   "start": 51.238,
+   "end": 51.498
+  },
+  {
+   "text": "the",
+   "start": 51.518,
+   "end": 51.706
+  },
+  {
+   "text": "windshield.",
+   "start": 51.726,
+   "end": 52.166
+  },
+  {
+   "text": "It's",
+   "start": 52.426,
+   "end": 52.614
+  },
+  {
+   "text": "built",
+   "start": 52.634,
+   "end": 52.894
+  },
+  {
+   "text": "not",
+   "start": 52.914,
+   "end": 53.102
+  },
+  {
+   "text": "to",
+   "start": 53.122,
+   "end": 53.274
+  },
+  {
+   "text": "break.",
+   "start": 53.294,
+   "end": 53.554
+  },
+  {
+   "text": "Because",
+   "start": 53.814,
+   "end": 54.146
+  },
+  {
+   "text": "911",
+   "start": 54.166,
+   "end": 54.354
+  },
+  {
+   "text": "can't",
+   "start": 54.374,
+   "end": 54.598
+  },
+  {
+   "text": "reach",
+   "start": 54.618,
+   "end": 54.878
+  },
+  {
+   "text": "you",
+   "start": 54.898,
+   "end": 55.086
+  },
+  {
+   "text": "in",
+   "start": 55.106,
+   "end": 55.258
+  },
+  {
+   "text": "one",
+   "start": 55.278,
+   "end": 55.466
+  },
+  {
+   "text": "minute.",
+   "start": 55.486,
+   "end": 55.782
+  },
+  {
+   "text": "But",
+   "start": 56.042,
+   "end": 56.23
+  },
+  {
+   "text": "you",
+   "start": 56.25,
+   "end": 56.438
+  },
+  {
+   "text": "can",
+   "start": 56.458,
+   "end": 56.646
+  },
+  {
+   "text": "reach",
+   "start": 56.666,
+   "end": 56.926
+  },
+  {
+   "text": "the",
+   "start": 56.946,
+   "end": 57.134
+  },
+  {
+   "text": "window.",
+   "start": 57.154,
+   "end": 57.45
+  }
+ ]
+}
