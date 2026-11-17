@@ -63,7 +63,7 @@ export const Driving: React.FC<SceneProps> = ({ dur, at }) => {
           })}
         </group>
         {/* passing street-light sweep */}
-        <pointLight position={[-1.4, 1.9, sweepZ]} intensity={5} distance={3.5} color="#ffbf70" />
+        <pointLight position={[-1.4, 1.9, sweepZ]} intensity={1.4} distance={3.5} color="#ffbf70" />
       </Interior>
     </Stage>
   );

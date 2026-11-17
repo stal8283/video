@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { InkEffect } from "./Ink";
 
 /** Reference look: ink outlines, bloom on lights, SMAA edges, punchy saturated grade + vignette. */
-export const Post: React.FC<{ bloom?: number; threshold?: number; ink?: number }> = ({ bloom = 0.8, threshold = 0.85, ink = 1.0 }) => {
+export const Post: React.FC<{ bloom?: number; threshold?: number; ink?: number }> = ({ bloom = 0.8, threshold = 0.93, ink = 1.0 }) => {
   const inkFx = useMemo(() => new InkEffect({ strength: ink }), [ink]);
   return (
     <EffectComposer multisampling={0}>
