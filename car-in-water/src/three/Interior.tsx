@@ -1,9 +1,10 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 import { Figure, FigureProps } from "./Figure";
+import { KeyLight } from "../scenes/Stage";
 import { rand } from "./util";
 import { fabricTex, gaugeTex, plasticTex } from "./Textures";
-import { Glow } from "./World";
+import { Glow, Sky, rbox } from "./World";
 
 /**
  * Car cabin seen from the dashboard looking back at the driver (forward = +Z, toward camera).
@@ -28,13 +29,14 @@ export type InteriorProps = {
   children?: React.ReactNode;
 };
 
-let _mats: { fabric: THREE.Material; plastic: THREE.Material; trim: THREE.Material; headliner: THREE.Material } | null = null;
+let _mats: { fabric: THREE.Material; plastic: THREE.Material; trim: THREE.Material; headliner: THREE.Material; body: THREE.Material } | null = null;
 const mats = () =>
   (_mats ??= {
-    fabric: new THREE.MeshStandardMaterial({ map: fabricTex("#3a4458", [3, 3]), roughness: 0.95 }),
+    fabric: new THREE.MeshStandardMaterial({ map: fabricTex("#b8743f", [2, 2]), roughness: 0.75 }),
     plastic: new THREE.MeshStandardMaterial({ map: plasticTex("#23292f"), roughness: 0.6, envMapIntensity: 0.4 }),
-    trim: new THREE.MeshStandardMaterial({ map: plasticTex("#47505c"), roughness: 0.55, envMapIntensity: 0.4 }),
-    headliner: new THREE.MeshStandardMaterial({ map: fabricTex("#8b8578", [4, 4]), roughness: 1 }),
+    trim: new THREE.MeshStandardMaterial({ map: plasticTex("#7a3430"), roughness: 0.6, envMapIntensity: 0.4 }),
+    headliner: new THREE.MeshStandardMaterial({ map: fabricTex("#efe2c6", [4, 4]), roughness: 1 }),
+    body: new THREE.MeshStandardMaterial({ color: "#ffb703", roughness: 0.4 }),
   });
 
 const Win: React.FC<{ w: number; h: number; position: [number, number, number]; rotation?: [number, number, number]; drops?: boolean; t: number; lowered?: number }> = ({
@@ -88,7 +90,7 @@ export const Interior: React.FC<InteriorProps> = ({
   rainOnGlass = true,
   children,
 }) => {
-  const { fabric, plastic, trim, headliner } = mats();
+  const { fabric, plastic, trim, headliner, body } = mats();
   const W = 0.92;
   const roof = 1.68;
   const winY = 1.24;
@@ -113,28 +115,12 @@ export const Interior: React.FC<InteriorProps> = ({
           <planeGeometry args={[30, 80]} />
           <meshStandardMaterial color="#1b2027" roughness={0.3} />
         </mesh>
-        {/* headlights of the truck behind, growing */}
-        <mesh position={[0, 0.9, -12]}>
-          <planeGeometry args={[60, 30]} />
-          <meshBasicMaterial color={windowColor} />
-        </mesh>
+        <Sky top="#28357e" mid="#f39a6e" bottom="#2a2f5c" radius={40} moon={false} clouds={false} />
       </group>
     ) : (
       <group>
-        {/* night rain sky above the waterline */}
-        <mesh position={[0, 3, -6]}>
-          <planeGeometry args={[30, 20]} />
-          <meshBasicMaterial color={windowColor} />
-        </mesh>
-        {[
-          [-3.2, -1],
-          [3.2, 1],
-        ].map(([x, s]) => (
-          <mesh key={x} position={[x, 3, 0]} rotation={[0, (s * Math.PI) / 2, 0]}>
-            <planeGeometry args={[30, 20]} />
-            <meshBasicMaterial color={windowColor} />
-          </mesh>
-        ))}
+        {/* stormy sunset sky above the waterline */}
+        <Sky top="#28357e" mid="#d98a6e" bottom="#1d4f5c" radius={40} moon={false} clouds={false} stars={false} />
         {/* water slabs outside left / right / rear windows */}
         {[
           [-2.2, 0, 2.4, 6],
@@ -144,7 +130,7 @@ export const Interior: React.FC<InteriorProps> = ({
           <group key={i}>
             <mesh position={[x, (outsideLevel - 6) / 2, z]}>
               <boxGeometry args={[sx, outsideLevel + 6, sz]} />
-              <meshStandardMaterial color="#0d5a5a" transparent opacity={0.82} roughness={0.2} emissive="#06302f" depthWrite={false} />
+              <meshStandardMaterial color="#1a8f95" transparent opacity={0.8} roughness={0.2} emissive="#0d4a4c" depthWrite={false} />
             </mesh>
             <mesh position={[x, outsideLevel + 0.005 + Math.sin(t * 3 + i) * 0.015, z]} rotation={[-Math.PI / 2, 0, 0]}>
               <planeGeometry args={[sx, sz]} />
@@ -157,8 +143,9 @@ export const Interior: React.FC<InteriorProps> = ({
 
   return (
     <group>
-      <ambientLight color={ambient} intensity={ambientI * 2.6} />
-      <hemisphereLight args={["#9fb8d8", "#1a1410", 0.6]} />
+      <ambientLight color={ambient} intensity={ambientI * 2.2} />
+      <hemisphereLight args={["#ffd9b8", "#3a2a40", 1.1]} />
+      <KeyLight position={outside === "road" ? [-3, 2.6, 1.5] : [-3, 3.2, 0.5]} target={[-0.2, 0.9, -0.3]} intensity={outside === "road" ? 2.4 : 1.3} color={outside === "road" ? "#ffb877" : "#9ff0e0"} size={2.5} />
       <pointLight position={[0, 0.95, 0.75]} color={dash} intensity={dashI * 1.6} distance={4} decay={1.2} />
       <pointLight position={[0.2, 1.5, 1.4]} color="#dfe8ff" intensity={1.4} distance={4} decay={1.2} />
       <pointLight position={[0, roof - 0.1, -0.4]} color="#9ab8ff" intensity={0.6} distance={3} />
@@ -175,6 +162,9 @@ export const Interior: React.FC<InteriorProps> = ({
         <group key={s}>
           <mesh position={[s * W, 0.48, -0.35]} material={trim}>
             <boxGeometry args={[0.06, 0.96, 2.5]} />
+          </mesh>
+          <mesh position={[s * (W - 0.01), 0.92, -0.35]} material={body}>
+            <boxGeometry args={[0.04, 0.08, 2.5]} />
           </mesh>
           {/* door armrest + handle */}
           <mesh position={[s * (W - 0.06), 0.86, 0.05]} material={plastic}>
@@ -206,23 +196,20 @@ export const Interior: React.FC<InteriorProps> = ({
         <boxGeometry args={[W * 2, 0.96, 0.06]} />
       </mesh>
       <Win w={W * 2 - 0.2} h={winH} position={[0, winY, -1.65]} t={t + 7} drops={rainOnGlass} />
-      {/* seats */}
+      {/* seats: rounded caramel leather with piping */}
       {[-0.42, 0.42].map((x) => (
         <group key={x}>
-          <mesh position={[x, 0.32, -0.15]} material={fabric}>
-            <boxGeometry args={[0.6, 0.18, 0.55]} />
-          </mesh>
-          <mesh position={[x, 0.85, -0.45]} rotation={[-0.12, 0, 0]} material={fabric}>
-            <boxGeometry args={[0.6, 0.95, 0.15]} />
-          </mesh>
-          <mesh position={[x, 1.45, -0.52]} material={fabric}>
-            <boxGeometry args={[0.32, 0.22, 0.12]} />
-          </mesh>
+          <mesh position={[x, 0.32, -0.15]} material={fabric} geometry={rbox(0.62, 0.2, 0.58, 0.08)} />
+          <mesh position={[x, 0.85, -0.45]} rotation={[-0.12, 0, 0]} material={fabric} geometry={rbox(0.62, 0.95, 0.18, 0.08)} />
+          {[-0.15, 0, 0.15].map((dx) => (
+            <mesh key={dx} position={[x + dx, 0.85, -0.355]} rotation={[-0.12, 0, 0]} material={trim}>
+              <boxGeometry args={[0.012, 0.8, 0.01]} />
+            </mesh>
+          ))}
+          <mesh position={[x, 1.45, -0.52]} material={fabric} geometry={rbox(0.34, 0.24, 0.14, 0.07)} />
         </group>
       ))}
-      <mesh position={[0, 0.85, -1.3]} material={fabric}>
-        <boxGeometry args={[W * 2 - 0.1, 0.8, 0.2]} />
-      </mesh>
+      <mesh position={[0, 0.85, -1.3]} material={fabric} geometry={rbox(W * 2 - 0.1, 0.8, 0.22, 0.1)} />
       {/* center console + coffee */}
       <mesh position={[0, 0.42, 0.25]} material={plastic}>
         <boxGeometry args={[0.24, 0.3, 0.8]} />
@@ -311,6 +298,6 @@ export const Phone: React.FC<{ tex: THREE.Texture; position?: [number, number, n
       <planeGeometry args={[0.33, 0.68]} />
       <meshBasicMaterial map={tex} toneMapped={false} />
     </mesh>
-    <pointLight position={[0, 0, 0.3]} color="#7fb6ff" intensity={1.6} distance={1.6} />
+    <pointLight position={[0, 0, 0.3]} color="#7fb6ff" intensity={0.5} distance={1.2} />
   </group>
 );

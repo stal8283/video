@@ -1,7 +1,7 @@
 import { ThreeCanvas } from "@remotion/three";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { useThree } from "@react-three/fiber";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useMemo } from "react";
 import * as THREE from "three";
 import { Env } from "../three/World";
 import { Post } from "../three/Post";
@@ -14,12 +14,14 @@ export const Stage: React.FC<{ children: React.ReactNode; exposure?: number; sty
         width={width}
         height={height}
         dpr={1}
+        shadows="soft"
         frameloop="demand"
         camera={{ fov: 40, near: 0.03, far: 1200, position: [0, 2, 10] }}
         gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: exposure, preserveDrawingBuffer: true }}
       >
         {children}
         <Env intensity={envIntensity} />
+        <ShadowSetup />
         <Post bloom={bloom} />
         <Invalidate />
       </ThreeCanvas>
@@ -46,4 +48,54 @@ const Invalidate: React.FC = () => {
     invalidate();
   }, [f, invalidate]);
   return null;
+};
+
+/** Every opaque mesh casts and receives shadows (the reference's crisp key-light shadows). */
+const ShadowSetup: React.FC = () => {
+  const { scene } = useThree();
+  useLayoutEffect(() => {
+    scene.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (!m.isMesh) return;
+      const mat = m.material as THREE.Material;
+      const opaque = mat && !(mat as THREE.Material).transparent;
+      m.castShadow = !!opaque;
+      m.receiveShadow = true;
+    });
+  });
+  return null;
+};
+
+/** Key light with shadows. */
+export const KeyLight: React.FC<{ position: [number, number, number]; target?: [number, number, number]; intensity?: number; color?: string; size?: number }> = ({
+  position,
+  target = [0, 0, 0],
+  intensity = 2,
+  color = "#ffffff",
+  size = 20,
+}) => {
+  const tgt = useMemo(() => new THREE.Object3D(), []);
+  tgt.position.set(...target);
+  return (
+    <>
+      <primitive object={tgt} />
+      <directionalLight
+        position={position}
+        target={tgt}
+        intensity={intensity}
+        color={color}
+        castShadow
+        shadow-mapSize-width={2048}
+        shadow-mapSize-height={2048}
+        shadow-bias={-0.0004}
+        shadow-normalBias={0.02}
+        shadow-camera-left={-size}
+        shadow-camera-right={size}
+        shadow-camera-top={size}
+        shadow-camera-bottom={-size}
+        shadow-camera-near={0.5}
+        shadow-camera-far={size * 8}
+      />
+    </>
+  );
 };

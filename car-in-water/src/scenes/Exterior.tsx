@@ -1,6 +1,6 @@
 import { useCurrentFrame } from "remotion";
 import { useThree } from "@react-three/fiber";
-import { Stage } from "./Stage";
+import { KeyLight, Stage } from "./Stage";
 import { Cam } from "../three/Camera";
 import { Bridge, Rain, River, Sky, Skyline, Splash } from "../three/World";
 import { Car, Truck } from "../three/Car";
@@ -12,13 +12,14 @@ import type { SceneProps } from "../Video";
 const FPS = 30;
 
 /** Rainy blue-hour night: the "normal world" before things go wrong. */
-const Dusk: React.FC<{ bright?: number; t?: number }> = ({ bright = 1, t = 0 }) => (
+/** Stormy golden-hour sunset: vivid warm key (with shadows) + cool fill, like the reference's colour contrast. */
+const Dusk: React.FC<{ bright?: number; t?: number; focus?: [number, number, number] }> = ({ bright = 1, t = 0, focus = [0, 0, 0] }) => (
   <>
-    <Sky top="#060b1c" mid="#2c4766" bottom="#05101a" />
-    <fog attach="fog" args={["#1d3349", 28, 190]} />
-    <hemisphereLight args={["#6f8fba", "#0a1820", 0.85 * bright]} />
-    <directionalLight position={[-30, 40, -40]} intensity={0.9 * bright} color="#a9bfff" />
-    <directionalLight position={[40, 10, 30]} intensity={0.35 * bright} color="#ffb47a" />
+    <Sky top="#28357e" mid="#f39a6e" bottom="#2a2f5c" moon={false} />
+    <fog attach="fog" args={["#7d76a6", 45, 260]} />
+    <hemisphereLight args={["#b3c6ff", "#4b3350", 1.35 * bright]} />
+    <KeyLight position={[focus[0] + 40, focus[1] + 30, focus[2] - 25]} target={focus} intensity={2.6 * bright} color="#ffc28a" size={22} />
+    <directionalLight position={[-30, 20, 40]} intensity={0.8 * bright} color="#8fb0ff" />
     <Skyline t={t} />
   </>
 );
@@ -58,7 +59,7 @@ export const Hook: React.FC<SceneProps> = ({ dur }) => {
   return (
     <Stage>
       <Cam pos={camPos} look={[2, mix(4.2, 1.6, k), 7]} fov={46} />
-      <Dusk t={t} />
+      <Dusk t={t} focus={[2, 3, 6]} />
       <Bridge y={6} gapX={2} t={t} lampLights={[-4, 10]} />
       <River t={t} ripples={[{ x: 2, z: zi, t0: ti }]} />
       <Car position={pos} rotation={[0, -Math.PI / 2, -pitch]} />
@@ -112,7 +113,7 @@ export const TruckScene: React.FC<SceneProps> = ({ dur, at }) => {
   return (
     <Stage>
       <Cam pos={camPos} look={[mix(x, 11, air * 0.5), mix(6.8, 5.5, air), mix(z, 6, air)]} fov={42} />
-      <Dusk t={t} />
+      <Dusk t={t} focus={[x, 5, 4]} />
       <Bridge y={6} gapX={t > tf - 0.05 ? 11.5 : null} t={t} lampLights={[-4, 10]} />
       <River t={t} />
       <group rotation={[roll, 0, 0]} position={[0, 0, 0]}>
@@ -138,7 +139,7 @@ export const Float: React.FC<SceneProps> = ({ dur, at }) => {
   return (
     <Stage>
       <Cam pos={mix3([6.2, 0.75, 7.6], [4.3, 0.95, 5.4], k)} look={[0, mix(0.55, 0.75, k), 0]} fov={42} />
-      <Dusk bright={0.9} t={t} />
+      <Dusk bright={0.95} t={t} focus={[0, 0, 0]} />
       <River t={t} amp={0.12} ripples={[{ x: 0, z: 0, t0: ts }, { x: 0.5, z: 0.5, t0: ts + 1.6 }, { x: -1, z: 0.3, t0: ts + 3.2 }]} />
       <Car position={[0, -0.62 + bob - settle * 0.4, 0]} rotation={[0.04 * Math.sin(t * 1.5), -0.65, -0.17 - settle * 0.3]} lights={false} />
       <Splash age={a} position={[0.8, 0, 0.6]} size={0.9} />
@@ -156,13 +157,13 @@ export const RisingExterior: React.FC<{ f: number; dur: number }> = ({ f, dur })
   return (
     <Stage>
       <Cam pos={mix3([2.2, 2.0, 8.4], [1.2, 1.5, 6.4], k)} look={[0.2, 0.4, 0]} fov={40} />
-      <Sky top="#04070f" mid="#1b3046" bottom="#03090d" />
-      <fog attach="fog" args={["#132636", 14, 120]} />
-      <hemisphereLight args={["#5f7fa8", "#06141a", 0.7]} />
-      <directionalLight position={[-20, 30, 20]} intensity={0.7} color="#9fb8ff" />
-      <pointLight position={[2, 3, 4]} intensity={5} distance={12} color="#8fc3ff" />
+      <Sky top="#202a66" mid="#c9786a" bottom="#1d2448" moon={false} />
+      <fog attach="fog" args={["#5f5c8a", 25, 180]} />
+      <hemisphereLight args={["#a5b8f0", "#3a2a45", 1.15]} />
+      <KeyLight position={[30, 22, -20]} target={[0, 0, 0]} intensity={2.0} color="#ffb37a" size={10} />
+      <directionalLight position={[-20, 15, 25]} intensity={0.6} color="#8fb0ff" />
       <Skyline t={t} />
-      <River t={t} amp={0.1} color="#0c3f45" />
+      <River t={t} amp={0.1} />
       <Car position={[0, mix(-0.72, -1.05, k) + Math.sin(t * 2) * 0.04, 0]} rotation={[0, 0, -0.12]} lights={false} />
       <Label text="911, where are you?" bubble position={[0.5, 2.0, 0.8]} scale={1.3 * pop} />
       <Rain t={t} center={[1, 5, 3]} area={[14, 12, 12]} count={600} />
@@ -186,9 +187,10 @@ export const AmbulanceScene: React.FC<SceneProps> = ({ dur }) => {
   return (
     <Stage exposure={1.7}>
       <Cam pos={camPos} look={look} fov={mix(42, 36, k2)} />
-      <Sky top="#0d1f3f" mid="#4a6d9c" bottom="#0b1522" />
-      <fog attach="fog" args={["#2a4466", 60, 380]} />
-      <hemisphereLight args={["#9cb6e0", "#141c28", 1.6]} />
+      <Sky top="#28357e" mid="#f39a6e" bottom="#2a2f5c" moon={false} />
+      <fog attach="fog" args={["#8a7aa6", 80, 420]} />
+      <hemisphereLight args={["#b3c6ff", "#4b3350", 1.5]} />
+      <KeyLight position={[60, 50, -40]} target={[-20, 0, -20]} intensity={2.2} color="#ffc28a" size={120} />
       <directionalLight position={[-60, 80, 40]} intensity={1.0} color="#c5d4ff" />
       <City size={230} rz={[-12, 12]} t={t} />
       <group position={[0, 0, 0]}>

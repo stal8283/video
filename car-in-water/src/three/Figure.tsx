@@ -440,7 +440,7 @@ const drawBody = (c: CanvasRenderingContext2D, shirt: string, kind: "driver" | "
 
 /* ------------------------------------------------------------------ materials */
 const cardMat = (tex: THREE.Texture) => {
-  const m = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.4, emissive: new THREE.Color("#ffffff"), emissiveMap: tex, emissiveIntensity: 0.3, side: THREE.DoubleSide });
+  const m = new THREE.MeshLambertMaterial({ map: tex, transparent: true, alphaTest: 0.4, emissive: new THREE.Color("#ffffff"), emissiveMap: tex, emissiveIntensity: 0.12, side: THREE.DoubleSide });
   return m;
 };
 const matCache = new Map<string, THREE.Material>();
@@ -551,3 +551,22 @@ export const ik = (shoulder: [number, number], target: [number, number], bend = 
 };
 export const SHOULDER_L: [number, number] = [-0.33, 0.25];
 export const SHOULDER_R: [number, number] = [0.33, 0.25];
+
+/** Camera-facing head (for characters seen through car windows from any angle). */
+export const HeadSprite: React.FC<{ expr?: Expr; position?: [number, number, number]; size?: number; hair?: "none" | "kid" | "tuft"; skin?: string; look?: [number, number] }> = ({
+  expr = "neutral",
+  position = [0, 0, 0],
+  size = 0.4,
+  hair = "none",
+  skin = "#f6f0e6",
+  look = [0, 0],
+}) => {
+  const fk: FaceKey = { expr, mouth: 0, look, blink: false, sweat: false, hair, skin };
+  const key = `head|${JSON.stringify(fk)}`;
+  const tex = makeTex(key, HW, HH, (c) => drawHead(c, fk));
+  return (
+    <sprite position={position} scale={[size, size * (HH / HW), 1]}>
+      <spriteMaterial map={tex} alphaTest={0.4} />
+    </sprite>
+  );
+};

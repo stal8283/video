@@ -122,7 +122,7 @@ export const River: React.FC<{
   ripples?: { x: number; z: number; t0: number }[];
   opacity?: number;
   doubleSide?: boolean;
-}> = ({ t, size = [160, 160], seg = 90, y = 0, color = "#06303b", amp = 0.14, ripples = [], opacity = 1, doubleSide = false }) => {
+}> = ({ t, size = [160, 160], seg = 90, y = 0, color = "#1b6f82", amp = 0.14, ripples = [], opacity = 1, doubleSide = false }) => {
   const geo = useMemo(() => {
     const g = new THREE.PlaneGeometry(size[0], size[1], seg, seg);
     g.rotateX(-Math.PI / 2);
