@@ -4,14 +4,14 @@
 import fs from "node:fs";
 const src = fs.readFileSync(new URL("../src/script.ts", import.meta.url), "utf8");
 const text = src.match(/SCRIPT = `([\s\S]*?)`;/)[1].replace(/\n/g, " ");
-const voiceId = process.argv[2] || process.env.ELEVENLABS_VOICE_ID || "nPczCjzI2devNBz1zQrb"; // "Brian": warm, deep narrator
-const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/with-timestamps?output_format=mp3_44100_192`, {
+const voiceId = process.argv[2] || process.env.ELEVENLABS_VOICE_ID || "TX3LPaxmHKxFdv7VOQHJ"; // "Liam": energetic, conversational
+const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/with-timestamps?output_format=mp3_44100_128`, {
   method: "POST",
   headers: { "content-type": "application/json", "xi-api-key": process.env.ELEVENLABS_API_KEY || "proxy-injected" },
   body: JSON.stringify({
     text,
     model_id: process.env.ELEVENLABS_MODEL || "eleven_multilingual_v2",
-    voice_settings: { stability: 0.42, similarity_boost: 0.8, style: 0.35, use_speaker_boost: true, speed: 1.08 },
+    voice_settings: { stability: 0.38, similarity_boost: 0.8, style: 0.45, use_speaker_boost: true, speed: 1.2 },
   }),
 });
 if (!res.ok) { console.error(res.status, await res.text()); process.exit(1); }

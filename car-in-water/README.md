@@ -8,13 +8,16 @@ A 1080×1920, 30 fps vertical short built in the style analysed in `../analysis/
 
 ## Pipeline
 1. **Script**: `src/script.ts`. Each scene is anchored to a phrase in the script, so the visuals re-sync automatically whenever the voiceover changes.
-2. **Voiceover (local, no API key)**: `python3 scripts/voice.py <kokoro_model_dir> [voice=am_michael] [speed=1.28]`
-   Narration comes from the open-source Kokoro TTS model (kokoro-onnx), generated sentence by sentence with reference-style pauses.
-   Word timings come from faster-whisper, aligned back to the script. The script writes `public/voiceover.wav` and `public/voiceover.json`.
-   (Optional alternative: `scripts/voiceover.mjs` uses ElevenLabs if you have a key.)
-3. **Sound design + music**: `python3 scripts/sfx.py` synthesizes every effect from scratch (rain, engine, horn, crash, tyre screech, splashes,
-   9-1-1 DTMF + ringback, thuds, stopwatch ticks, siren, seatbelt click, window motor, glass shatter, underwater, bubbles, whooshes) plus
-   a tension music bed that ducks under the voice. Each cue is placed on the spoken words, and the mix is written to `public/sfx.wav`.
+2. **Voiceover (ElevenLabs)**: `NODE_USE_ENV_PROXY=1 ELEVENLABS_API_KEY=... node scripts/voiceover.mjs [voiceId]`
+   Uses the voice "Liam" with `eleven_multilingual_v2` at speed 1.2, and word timings from `/with-timestamps`.
+   Then `python3 scripts/tighten.py` trims pauses longer than about 0.4 s (keeping the punchline beats) and writes `public/voiceover.wav` + `voiceover.json`.
+   (Offline fallback: `scripts/voice.py` uses the local Kokoro TTS.)
+3. **Sound effects + music (ElevenLabs)**: `python3 scripts/sfx_gen.py` generates 30 cues with the sound-effects API, cached in `public/sfx11/`:
+   rain, car interior, tyre screech, truck horn, crash, guardrail, splashes, phone dial/ring, water filling, door thuds,
+   metal groans, stinger, stopwatch, pressure rumble, siren, seatbelt, window motor, water gush, glass smash, underwater, surface gasp, whooshes,
+   plus two music beds. The dispatcher line is ElevenLabs TTS ("Sarah"), filtered to sound like a phone.
+   `python3 scripts/mix11.py` places every cue on its spoken word, loops the ambiences, crossfades the music
+   (calm, then tense, then cut for "Wait, what?"), ducks everything under the narration, and writes `public/sfx.wav`.
 4. **Preview stills**: `node scripts/stills.mjs [frame ...]`
 5. **Render**: `npx remotion render src/index.ts CarInWater out/car-in-water.mp4`
    (uses software WebGL, "swangle", so it renders on machines without a GPU)
