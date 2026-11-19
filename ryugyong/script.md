@@ -1,0 +1,44 @@
+# The Hotel That Has Never Had a Single Guest
+1-minute script, Fast pace
+
+[STAMP: PYONGYANG]
+This is the tallest hotel in North Korea. [CARD] It has never had a single guest.
+
+One hundred and five floors. Zero check-ins.
+
+- Do you have a room?
+- We have a hundred and five floors.
+- So, yes?
+- No.
+
+But here's the strange part. Every night, it lights up.
+
+[CARD] A light show. Zero guests.
+
+So why build it? And why can't they finish it?
+
+[TITLE]
+
+[CHAPTER: The Race to the Sky]
+
+[STAMP: SINGAPORE, 1986]
+Singapore opens the world's tallest hotel. A South Korean company built it.
+
+North Korea reportedly wants a taller one. Work starts in nineteen eighty-seven.
+
+[CARD] Then, in nineteen ninety-two, the money runs out.
+
+Its Soviet ally has collapsed. For sixteen years, it's a bare concrete pyramid.
+
+By twenty eleven, an Egyptian firm wraps it in glass. It's a wrapped present. Shiny paper. Empty box.
+
+In twenty twelve, a hotel chain signs on. Months later, it pulls out.
+
+- Opening date?
+- Soon.
+- Which year?
+- ...Soon.
+
+Tonight, over a hundred thousand lights switch on. A giant flag glows at the top.
+
+[CARD] And every room is still empty.
