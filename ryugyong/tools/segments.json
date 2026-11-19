@@ -1,0 +1,134 @@
+[
+ {
+  "id": "n01",
+  "spk": "narr",
+  "text": "This is the tallest hotel in North Korea.",
+  "gap": 0.25
+ },
+ {
+  "id": "n02",
+  "spk": "narr",
+  "text": "It has never had a single guest.",
+  "gap": 0.35
+ },
+ {
+  "id": "n03",
+  "spk": "narr",
+  "text": "One hundred and five floors. Zero check-ins.",
+  "gap": 0.35
+ },
+ {
+  "id": "s01",
+  "spk": "guest",
+  "text": "Do you have a room?",
+  "gap": 0.3
+ },
+ {
+  "id": "s02",
+  "spk": "clerk",
+  "text": "We have a hundred and five floors.",
+  "gap": 0.35
+ },
+ {
+  "id": "s03",
+  "spk": "guest",
+  "text": "So... yes?",
+  "gap": 0.45
+ },
+ {
+  "id": "s04",
+  "spk": "clerk",
+  "text": "No.",
+  "gap": 0.6
+ },
+ {
+  "id": "n04",
+  "spk": "narr",
+  "text": "But here's the strange part. Every night, it lights up.",
+  "gap": 0.3
+ },
+ {
+  "id": "n05",
+  "spk": "narr",
+  "text": "A light show. Zero guests.",
+  "gap": 0.3
+ },
+ {
+  "id": "n06",
+  "spk": "narr",
+  "text": "So why build it? And why can't they finish it?",
+  "gap": 3.7
+ },
+ {
+  "id": "n07",
+  "spk": "narr",
+  "text": "Singapore opens the world's tallest hotel. A South Korean company built it.",
+  "gap": 0.3
+ },
+ {
+  "id": "n08",
+  "spk": "narr",
+  "text": "North Korea reportedly wants a taller one. Work starts in nineteen eighty-seven.",
+  "gap": 0.3
+ },
+ {
+  "id": "n09",
+  "spk": "narr",
+  "text": "Then, in nineteen ninety-two, the money runs out.",
+  "gap": 0.3
+ },
+ {
+  "id": "n10",
+  "spk": "narr",
+  "text": "Its Soviet ally has collapsed. For sixteen years, it's a bare concrete pyramid.",
+  "gap": 0.25
+ },
+ {
+  "id": "n11",
+  "spk": "narr",
+  "text": "By twenty eleven, an Egyptian firm wraps it in glass. It's a wrapped present. Shiny paper. Empty box.",
+  "gap": 0.25
+ },
+ {
+  "id": "n12",
+  "spk": "narr",
+  "text": "In twenty twelve, a hotel chain signs on. Months later, it pulls out.",
+  "gap": 0.3
+ },
+ {
+  "id": "s05",
+  "spk": "guest",
+  "text": "Opening date?",
+  "gap": 0.3
+ },
+ {
+  "id": "s06",
+  "spk": "clerk",
+  "text": "Soon.",
+  "gap": 0.35
+ },
+ {
+  "id": "s07",
+  "spk": "guest",
+  "text": "Which year?",
+  "gap": 0.55
+ },
+ {
+  "id": "s08",
+  "spk": "clerk",
+  "text": "...Soon.",
+  "gap": 0.6
+ },
+ {
+  "id": "n13",
+  "spk": "narr",
+  "text": "Tonight, over a hundred thousand lights switch on. A giant flag glows at the top.",
+  "gap": 0.35
+ },
+ {
+  "id": "n14",
+  "spk": "narr",
+  "text": "And every room is still empty.",
+  "gap": 0.6
+ }
+]
