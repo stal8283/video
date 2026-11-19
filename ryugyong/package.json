@@ -1,0 +1,16 @@
+{
+  "name": "ryugyong-doc",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+    "@fontsource/caveat": "^5.1.0",
+    "@fontsource/permanent-marker": "^5.1.0",
+    "@remotion/cli": "^4.0.380",
+    "@remotion/renderer": "^4.0.380",
+    "@types/react": "^18.3.12",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.380",
+    "typescript": "^5.6.3"
+  }
+}
