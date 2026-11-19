@@ -90,4 +90,45 @@ c(wordAt('n13', 'switch') + fr(6), 'pan_whoosh', 0.08, 'tilt up to the crown');
 c(wordAt('n13', 'flag'), 'glint_chime', 0.09, 'flag glows');
 card('n14', 'final card writes on');
 
+// ---- extra movement cues (round 2)
+// every skit gesture: Guest gestures once per line; Clerk turns his head
+(['s01', 's03', 's05', 's07'] as const).forEach((id) => c(segOf(id).start, 'arm_swish', 0.08, `Guest gesture (${id})`));
+c(segOf('s02').start, 'head_turn', 0.08, 'Clerk turns to the keys');
+(['s04', 's06', 's08'] as const).forEach((id) => c(segOf(id).start - 0.05, 'head_turn', 0.07, `Clerk head tilt (${id})`));
+c(segOf('s04').end + 0.05, 'crickets', 0.07, 'awkward silence after "No."', 0.9);
+c(segOf('s08').end + 0.02, 'crickets', 0.07, 'awkward silence after "...Soon."', 0.55);
+c(wordAt('n04', 'lights') + fr(4), 'surprise_boing', 0.08, 'passer-by startled');
+c(20.55, 'suitcase_set', 0.09, 'suitcase set down');
+c(23.62, 'card_swell', 0.07, 'chapter card');
+c(32.9, 'crane_hum', 0.08, 'crane winches the floors');
+c(40.7, 'paper_rustle', 0.08, 'debris blows across');
+{ const g0 = wordAt('n11', 'egyptian'), g1 = wordAt('n11', 'glass'); c(g1 + 0.05, 'ring_ping', 0.08, 'glass complete, crane gone'); void g0; }
+c(wordAt('n11', 'empty'), 'punch_whoosh', 0.07, 'camera punch on "Empty"');
+c(wordAt('n12', 'signs') + 0.1, 'clipboard_flip', 0.09, 'contract flips to SIGNED');
+c(wordAt('n13', 'switch') + 0.3, 'twinkle_rise', 0.08, 'green particles rise');
+c(wordAt('n03', 'zero'), 'ring_ping', 0.06, 'camera lands on the key rack');
+
 export const CUES = cues.sort((a, b) => a.at - b.at);
+
+/* Ambience beds: one per location, cut hard with the picture (cards stay silent apart from the music). */
+export type Bed = { from: number; to: number; file: string; vol: number };
+export const BEDS: Bed[] = [
+  { from: 0.00, to: 2.45, file: 'amb_night_street', vol: 0.15 },
+  { from: 0.00, to: 2.45, file: 'led_buzz', vol: 0.075 },
+  { from: 4.60, to: 14.80, file: 'amb_lobby', vol: 0.165 },
+  { from: 14.80, to: 17.20, file: 'amb_night_street', vol: 0.15 },
+  { from: wordAt('n04', 'lights'), to: 17.20, file: 'led_buzz', vol: 0.09 },
+  { from: 19.25, to: 20.45, file: 'amb_room', vol: 0.135 },
+  { from: 20.45, to: 22.10, file: 'amb_lobby', vol: 0.165 },
+  { from: 22.10, to: 23.62, file: 'amb_night_street', vol: 0.12 },
+  { from: 25.70, to: 28.15, file: 'amb_singapore', vol: 0.15 },
+  { from: 28.15, to: 32.75, file: 'amb_room', vol: 0.12 },
+  { from: 32.75, to: 35.20, file: 'amb_construction', vol: 0.15 },
+  { from: 38.70, to: 43.65, file: 'amb_wind_city', vol: 0.15 },
+  { from: 43.65, to: 47.50, file: 'amb_day_city', vol: 0.15 },
+  { from: 47.50, to: 51.85, file: 'amb_room', vol: 0.135 },
+  { from: 51.85, to: 56.10, file: 'amb_lobby_day', vol: 0.15 },
+  { from: 56.10, to: 61.40, file: 'amb_lobby', vol: 0.165 },
+  { from: 61.40, to: 66.44, file: 'amb_night_street', vol: 0.15 },
+  { from: wordAt('n13', 'switch'), to: 66.44, file: 'led_buzz', vol: 0.09 },
+];
