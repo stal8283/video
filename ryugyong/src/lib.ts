@@ -24,20 +24,27 @@ export const wordAt = (seg: string, w: string, nth = 0) => {
 export const segOf = (id: string) => T.segments.find((s) => s.id === id)!;
 export const f = (sec: number) => Math.round(sec * FPS);
 
-/** Mouth for `spk` at absolute frame: loudness band, held 2-4 frames, never same shape twice running */
+/** Mouth for `spk` at absolute frame.
+ *  Leads the audio by LEAD frames (animation convention: mouth shapes land on or just before the sound),
+ *  uses the peak loudness of a short look-ahead window, holds each shape 2 frames, never the same shape twice running. */
 const MOUTHS: Mouth[] = ['closed', 'smallO', 'tallO', 'wide', 'smile'];
+const LEAD = 2;
+const loudPeak = (fr: number) => {
+  let m = 0;
+  for (let i = fr + LEAD - 1; i <= fr + LEAD + 1; i++) m = Math.max(m, T.loudness[Math.min(T.loudness.length - 1, Math.max(0, i))] ?? 0);
+  return m;
+};
+const shapeOf = (loud: number, block: number): Mouth =>
+  loud < 0.08 ? 'closed' : loud < 0.3 ? 'smallO' : loud < 0.55 ? (rand(block) > 0.5 ? 'smile' : 'smallO') : loud < 0.8 ? 'tallO' : 'wide';
 export const mouthFor = (spk: string, absFrame: number): Mouth | null => {
-  const t = absFrame / FPS;
-  const seg = T.segments.find((s) => s.spk === spk && t >= s.start && t <= s.end);
+  const t = (absFrame + LEAD) / FPS;
+  const seg = T.segments.find((s) => s.spk === spk && t >= s.start && t <= s.end + 0.05);
   if (!seg) return null;
-  // hold blocks of 3 frames (alternating 2/4 by seed)
-  const block = Math.floor(absFrame / 3);
-  const fr = block * 3;
-  const loud = T.loudness[Math.min(T.loudness.length - 1, fr)] ?? 0;
-  let m: Mouth = loud < 0.08 ? 'closed' : loud < 0.3 ? 'smallO' : loud < 0.55 ? (rand(block) > 0.5 ? 'smile' : 'smallO') : loud < 0.8 ? 'tallO' : 'wide';
-  const prevLoud = T.loudness[Math.max(0, fr - 3)] ?? 0;
-  const prev: Mouth = prevLoud < 0.08 ? 'closed' : prevLoud < 0.3 ? 'smallO' : prevLoud < 0.55 ? (rand(block - 1) > 0.5 ? 'smile' : 'smallO') : prevLoud < 0.8 ? 'tallO' : 'wide';
-  if (m === prev) m = MOUTHS[(MOUTHS.indexOf(m) + 1 + Math.floor(rand(block * 7) * 3)) % MOUTHS.length];
+  const block = Math.floor(absFrame / 2);
+  const fr = block * 2;
+  let m = shapeOf(loudPeak(fr), block);
+  const prev = shapeOf(loudPeak(fr - 2), block - 1);
+  if (m === prev && m !== 'closed') m = MOUTHS[(MOUTHS.indexOf(m) + 1 + Math.floor(rand(block * 7) * 3)) % MOUTHS.length];
   return m;
 };
 /** blink ~every 3.2 s, 4 frames, never on frame 0 of the beat */
