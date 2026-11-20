@@ -121,11 +121,11 @@ const baseCam = (id: string, t: number): Cam => {
     case "S05": return lens([1.1, 0.55, 3.0], -4, 20, 75);
     case "S06": return { pos: [0.0, 1.12, 1.95], look: [0.0, 1.02, 0], fov: 62, roll: 0 };
     case "S07": return lens([0.5, 0.5, 3.8], -6, 19, 75);
-    case "S08": return lens([0.3, 0.6, 3.9], 0, 19, 75);
+    case "S08": return lens([0.4, 0.6, 3.9], -3, 19, 75);
     case "S09": return lens([0.2, 0.5, 3.8], 4, 19, 75);
-    case "S10": return { pos: [0.25, 1.38, 1.4], look: [0.0, 1.0, 0], fov: 55, roll: 0 };
+    case "S10": return { pos: [0.35, 1.5, 2.0], look: [0.0, 1.08, 0], fov: 58, roll: 0 };
     case "S11": return { pos: [0.75, 1.45, 2.3], look: [0.68, 1.3, -1.6], fov: 58, roll: 0 };
-    case "S12": return { pos: [0.55, 1.5, 2.0], look: [0.68, 1.3, -1.6], fov: 56, roll: 0 };
+    case "S12": return { pos: [0.4, 1.5, 2.1], look: [0.6, 1.3, -1.6], fov: 60, roll: 0 };
     default: return lens([0.6, 0.5, 3.8], -3, 19, 75); // S13 = the opening lens
   }
 };
@@ -208,7 +208,7 @@ const BoulevardScene: React.FC<SceneProps> = ({ t, id, cam }) => {
       {id === "S08" ? (
         <>
           <SovietBanner fall={collapsed} />
-          <Character3D {...BUILDER} position={[-0.55, Y, 0.6]} yaw={0.5} t={t}
+          <Character3D {...BUILDER} position={[0.0, Y, 0.6]} yaw={0.5} t={t}
             face={t > at("then") + 0.3 ? EXPRESSIONS.sad : EXPRESSIONS.surprised} pose={{ headNod: t > at("sixteen") ? 12 : 0, armL: [8, 10], armR: [8, 10] }}
             faceCamera={cam.pos} faceCameraAmount={0.35} />
           <Leaves center={[0, 2, 0]} size={[12, 5, 8]} t={t} count={50} colors={["#8a7a6a", "#a89a80", "#6e665c", "#c8bca4"]} wind={1.4} />
@@ -263,8 +263,8 @@ const LobbyScene: React.FC<SceneProps> = ({ t, id, cam }) => {
           pose={{ ...(ex.moving ? {} : hold.pose), walk: ex.moving ? ex.phase : undefined }} hold={signed && !ex.moving ? "letter" : ex.moving ? "letter" : "scroll"} holdSide="R"
           faceCamera={ex.moving ? undefined : cam.pos} faceCameraAmount={0.3} />
       ) : null}
-      <CastLight at={id === "S11" ? headOf(EXEC_L, EXEC.height, EXEC.build) : gHead} cam={cam.pos} mood={moodOf(day ? "day" : "lamp")} k={0.6} />
-      <CastLight at={cHead} cam={cam.pos} mood={moodOf(day ? "day" : "lamp")} k={0.35} />
+      <CastLight at={id === "S11" ? headOf(EXEC_L, EXEC.height, EXEC.build) : gHead} cam={cam.pos} mood={moodOf(day ? "day" : "lamp")} k={0.7} rimBack={0.3} />
+      <CastLight at={cHead} cam={cam.pos} mood={moodOf(day ? "day" : "lamp")} k={0.5} rimBack={0.3} />
     </Lobby>
   );
 };
