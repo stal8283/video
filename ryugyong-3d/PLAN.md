@@ -23,7 +23,7 @@
 | 2.60 s | PUSH | never |
 | 3.40 s | PUNCH | guest. |
 | 5.29 s | PUSH | floors. |
-| 5.88 s | DOLLY_R | Zero |
+| 5.88 s | DOLLY_L | Zero |
 | 7.36 s | PULL | Do |
 | 8.86 s | ORBIT_L | We |
 | 10.24 s | PUSH | floors. |

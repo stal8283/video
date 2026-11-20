@@ -1,5 +1,6 @@
 import React from "react";
 import { Composition } from "remotion";
+import { Lab } from "./short/Lab";
 import { Demo, DEMO_MOODS } from "./demo/Demo";
 import { DemoCast } from "./demo/DemoCast";
 import { DemoMove, MOVE_FRAMES } from "./demo/DemoMove";
@@ -16,6 +17,7 @@ export const Root: React.FC = () => (
   <>
     <Composition id="Short" component={Short} durationInFrames={DURATION} fps={30} width={1080} height={1920} defaultProps={{ sub: false }} />
     <Composition id="ShortSub" component={Short} durationInFrames={DURATION * SUB} fps={30 * SUB} width={1080} height={1920} defaultProps={{ sub: true }} />
+    <Composition id="Lab" component={Lab} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{ mood: "night", state: "lit" as const, ledOn: 1, from: [1.5, 1.0, 9] as [number, number, number], at: [0, 40, -170] as [number, number, number], fov: 70, face: 0.35, t: 1 }} />
     <Composition id="Demo" component={Demo} durationInFrames={30} fps={30} width={1080} height={1920} defaultProps={{ mood: "day", wide: false }} />
     <Composition id="DemoHero" component={Demo} durationInFrames={30} fps={30} width={1080} height={1920} defaultProps={{ mood: "dusk", wide: false, hero: true }} />
     <Composition id="DemoWide" component={Demo} durationInFrames={30} fps={30} width={1080} height={1920} defaultProps={{ mood: "day", wide: true }} />

@@ -46,8 +46,8 @@ BEATS = [
     (("guest", 1), "PUNCH", {"frac": 0.1}),
     # S02 lobby + skit 1
     (("floors", 1), "PUSH", {"frac": 0.14}),
-    (("zero", 1), "DOLLY_R", {}),
-    (("do", 1), "PULL", {"frac": -0.18}),
+    (("zero", 1), "DOLLY_L", {"dur": 0.85, "to": {"pos": [0.95, 1.95, -0.2], "look": [0.95, 2.0, -3.45], "fov": 46}}),
+    (("do", 1), "PULL", {"dur": 0.9, "to": {"pos": [0.3, 1.5, 2.9], "look": [0.45, 1.22, -1.6], "fov": 58}}),
     (("we", 1), "ORBIT_L", {"deg": 16}),
     (("floors", 2), "PUSH", {"frac": 0.12}),
     (("so", 1), "ORBIT_R", {"deg": 14}),

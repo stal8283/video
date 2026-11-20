@@ -1,0 +1,4 @@
+All sound effects in this folder were generated for this project with the ElevenLabs sound-effects API
+(the account holder's ElevenLabs plan terms apply). No third-party samples.
+public/music/bed.wav: "Sneaky Snitch" by Kevin MacLeod (incompetech.com), licensed under CC BY 4.0
+(http://creativecommons.org/licenses/by/4.0/). Credit it in the video description.

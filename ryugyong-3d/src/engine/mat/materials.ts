@@ -310,3 +310,24 @@ export function toonMaterial(o: ToonOpts): THREE.Material {
   matCache.set(key, mat);
   return mat;
 }
+
+/** (project addition) a toon material with a custom painted map (canvas texture): same ramp, tint and rim as
+ *  toonMaterial, so painted facades sit in the set's light. Cached by `key` (content), bounded. */
+const mapCache = new Map<string, THREE.Material>();
+export function mapToon(key: string, map: THREE.Texture, o: { emissiveMap?: THREE.Texture; emissive?: string; emissiveIntensity?: number } = {}): THREE.Material {
+  const hit = mapCache.get(key);
+  if (hit) return hit;
+  if (mapCache.size > 60) mapCache.clear();
+  map.wrapS = map.wrapT = THREE.RepeatWrapping;
+  const mat = new THREE.MeshToonMaterial({ color: "#ffffff", map, gradientMap: toonRamp() });
+  if (o.emissiveMap) {
+    o.emissiveMap.wrapS = o.emissiveMap.wrapT = THREE.RepeatWrapping;
+    mat.emissiveMap = o.emissiveMap;
+    mat.emissive = new THREE.Color(o.emissive ?? "#ffffff");
+    mat.emissiveIntensity = o.emissiveIntensity ?? 1;
+  }
+  mat.userData.triScale = { value: 1 };
+  patch(mat);
+  mapCache.set(key, mat);
+  return mat;
+}
