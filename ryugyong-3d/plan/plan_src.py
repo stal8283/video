@@ -41,13 +41,13 @@ SHOTS = [
 BEATS = [
     # S01 hook
     (("tallest", 1), "PUSH", {"frac": 0.12}),
-    (("korea", 1), "CRANE_UP", {}),
+    (("korea", 1), "CRANE_UP", {"up": 0.7, "tilt": 0.5}),
     (("never", 1), "PUSH", {"frac": 0.12}),
     (("guest", 1), "PUNCH", {"frac": 0.1}),
     # S02 lobby + skit 1
     (("floors", 1), "PUSH", {"frac": 0.14}),
     (("zero", 1), "DOLLY_L", {"dur": 0.85, "to": {"pos": [0.95, 1.95, -0.2], "look": [0.95, 2.0, -3.45], "fov": 46}}),
-    (("do", 1), "PULL", {"dur": 0.9, "to": {"pos": [0.3, 1.5, 2.9], "look": [0.45, 1.22, -1.6], "fov": 58}}),
+    (("do", 1), "PULL", {"dur": 0.9, "to": {"pos": [0.75, 1.45, 2.3], "look": [0.68, 1.3, -1.6], "fov": 58}}),
     (("we", 1), "ORBIT_L", {"deg": 16}),
     (("floors", 2), "PUSH", {"frac": 0.12}),
     (("so", 1), "ORBIT_R", {"deg": 14}),
@@ -55,7 +55,7 @@ BEATS = [
     (("no", 1), "PUNCH", {"frac": 0.12}),
     # S03 the twist
     (("strange", 1), "PUSH", {"frac": 0.12}),
-    (("lights", 1), "CRANE_UP", {}),
+    (("lights", 1), "CRANE_UP", {"up": 0.8, "tilt": 0.6}),
     (("show", 1), "ORBIT_L", {"deg": 14}),
     (("guests", 1), "PUSH", {"frac": 0.14}),
     # S04 table: why?
@@ -63,15 +63,15 @@ BEATS = [
     (("why", 2), "ORBIT_R", {"deg": 16}),
     (("finish", 1), "PUSH", {"frac": 0.12}),
     # S05 Singapore 1986
-    (("tallest", 2), "CRANE_UP", {}),
+    (("tallest", 2), "CRANE_UP", {"up": 1.0, "tilt": 2.2, "dur": 0.9}),
     (("south", 1), "PULL", {"frac": -0.18}),
     (("built", 1), "ORBIT_L", {"deg": 14}),
     # S06 the models
     (("reportedly", 1), "PUSH", {"frac": 0.12}),
-    (("taller", 1), "CRANE_UP", {}),
+    (("taller", 1), "CRANE_UP", {"up": 0.12, "tilt": 0.6}),
     (("one", 2), "PUNCH", {"frac": 0.1}),
     # S07 1987
-    (("starts", 1), "CRANE_UP", {}),
+    (("starts", 1), "CRANE_UP", {"up": 0.7, "tilt": 0.5}),
     (("eighty-seven", 1), "PUSH", {"frac": 0.12}),
     # S08 1992-2008
     (("ninety-two", 1), "PUSH", {"frac": 0.14}),
@@ -82,7 +82,7 @@ BEATS = [
     (("bare", 1), "ORBIT_R", {"deg": 14}),
     (("pyramid", 1), "PUSH", {"frac": 0.12}),
     # S09 2011
-    (("egyptian", 1), "CRANE_UP", {}),
+    (("egyptian", 1), "CRANE_UP", {"up": 0.8, "tilt": 0.6, "dur": 1.0}),
     (("glass", 1), "PUSH", {"frac": 0.12}),
     # S10 the present
     (("present", 1), "PUSH", {"frac": 0.12}),
@@ -101,7 +101,7 @@ BEATS = [
     (("soon", 2), "PUNCH", {"frac": 0.12}),
     # S13 payoff (calmer)
     (("hundred", 3), "PUSH", {"frac": 0.12}),
-    (("switch", 1), "CRANE_UP", {}),
+    (("switch", 1), "CRANE_UP", {"up": 1.4, "tilt": 1.6, "dur": 1.1}),
     (("flag", 1), "PUSH", {"frac": 0.14}),
     (("every", 2), "ORBIT_R", {"deg": 12}),
     (("empty", 2), "PULL", {"frac": -0.18}),

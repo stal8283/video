@@ -93,32 +93,40 @@ const camAt = (t: number) => {
 
 // ---------------------------------------------------------------- blocking
 const Y = WALK_Y;
-const GUEST_PATH: V3[] = [[-2.6, Y, 0.6], [0.2, Y, 0.6]];
-const guestWalk = (t: number) => walkAlong(t, GUEST_PATH, { speed: 1.05, height: GUEST.height });
+const GUEST_PATH: V3[] = [[-0.95, Y, 0.6], [0.25, Y, 0.6]];
+const guestWalk = (t: number) => walkAlong(t, GUEST_PATH, { speed: 0.9, height: GUEST.height });
 // lobby
-const CLERK_P: V3 = [1.55, 0, DESK_Z - 0.6];
-const GUEST_L: V3 = [-0.55, 0, -0.95];
-const EXEC_L: V3 = [-0.45, 0, -0.95];
-const EXEC_OUT: V3[] = [EXEC_L, [-2.2, 0, -0.2], [-4.6, 0, 1.6]];
+const CLERK_P: V3 = [1.35, 0, DESK_Z - 0.6];
+const GUEST_L: V3 = [0.0, 0, -0.95];
+const EXEC_L: V3 = [0.05, 0, -0.95];
+const EXEC_OUT: V3[] = [EXEC_L, [-2.0, 0, -0.2], [-4.4, 0, 1.6]];
 // table / singapore
-const DOOR_P: V3 = [1.1, 0.12, -2.4];
+const DOOR_P: V3 = [0.6, 0.12, -0.6];
 
 // ---------------------------------------------------------------- the resting lens of each shot
+const D2R = Math.PI / 180;
+/** a lens at `pos` looking along azimuth `az` (deg, + = toward +x) and elevation `el` (deg, + = up) */
+const lens = (pos: V3, az: number, el: number, fov: number, d = 10): Cam => ({
+  pos, fov, roll: 0,
+  look: [pos[0] + Math.sin(az * D2R) * Math.cos(el * D2R) * d, pos[1] + Math.sin(el * D2R) * d, pos[2] - Math.cos(az * D2R) * Math.cos(el * D2R) * d],
+});
+// Boulevard lenses: low (0.5 m), ~3.2 m from the cast, tilted up ~19 deg: the face sits mid-frame, the pyramid above it.
 const baseCam = (id: string, t: number): Cam => {
+  void t;
   switch (id) {
-    case "S01": { const h = headOf(guestWalk(t).pos, GUEST.height, GUEST.build); return { pos: [1.7, 0.75, 4.6], look: [h[0] * 0.3 - 0.2, 3.4, -6], fov: 72, roll: 0 }; }
+    case "S01": return lens([0.6, 0.5, 3.8], -3, 19, 75);
     case "S02": return { pos: [2.6, 2.3, -1.25], look: [3.4, 2.92, -3.45], fov: 48, roll: 0 };
-    case "S03": return { pos: [3.0, 1.1, 4.4], look: [0.4, 4.2, -8], fov: 72, roll: 0 };
+    case "S03": return lens([1.7, 0.5, 3.8], -6, 19, 75);
     case "S04": return { pos: [0.05, 1.62, 1.15], look: [0.0, TOP, -0.05], fov: 58, roll: 0 };
-    case "S05": return { pos: [0.3, 0.9, 4.2], look: [0.2, 5.2, -10], fov: 74, roll: 0 };
-    case "S06": return { pos: [0.15, 1.12, 1.05], look: [0.05, TOP + 0.3, 0], fov: 52, roll: 0 };
-    case "S07": return { pos: [1.6, 0.95, 4.6], look: [-0.3, 4.0, -8], fov: 70, roll: 0 };
-    case "S08": return { pos: [-1.8, 1.25, 4.8], look: [0.6, 3.8, -8], fov: 70, roll: 0 };
-    case "S09": return { pos: [2.2, 0.9, 4.7], look: [-0.2, 4.4, -8], fov: 70, roll: 0 };
-    case "S10": return { pos: [0.2, 1.3, 1.0], look: [0.0, TOP + 0.24, 0], fov: 50, roll: 0 };
-    case "S11": return { pos: [0.3, 1.5, 2.9], look: [0.45, 1.22, -1.6], fov: 58, roll: 0 };
-    case "S12": return { pos: [-0.2, 1.55, 2.6], look: [0.55, 1.25, -1.6], fov: 56, roll: 0 };
-    default: return { pos: [1.7, 0.75, 4.6], look: [0.0, 3.6, -6], fov: 72, roll: 0 }; // S13 = the opening lens
+    case "S05": return lens([1.1, 0.55, 3.0], -4, 20, 75);
+    case "S06": return { pos: [0.0, 1.08, 1.55], look: [0.0, 1.0, 0], fov: 55, roll: 0 };
+    case "S07": return lens([0.5, 0.5, 3.8], -6, 19, 75);
+    case "S08": return lens([0.3, 0.6, 3.9], 0, 19, 75);
+    case "S09": return lens([0.2, 0.5, 3.8], 4, 19, 75);
+    case "S10": return { pos: [0.25, 1.38, 1.4], look: [0.0, 1.0, 0], fov: 55, roll: 0 };
+    case "S11": return { pos: [0.75, 1.45, 2.3], look: [0.68, 1.3, -1.6], fov: 58, roll: 0 };
+    case "S12": return { pos: [0.55, 1.5, 2.0], look: [0.68, 1.3, -1.6], fov: 56, roll: 0 };
+    default: return lens([0.6, 0.5, 3.8], -3, 19, 75); // S13 = the opening lens
   }
 };
 
@@ -135,7 +143,7 @@ const Suitcase: React.FC<{ p: V3; yaw: number; handle?: boolean }> = ({ p, yaw, 
 const SovietBanner: React.FC<{ fall: number }> = ({ fall }) => {
   const k = clamp(fall);
   return (
-    <group position={[2.9, Y, -1.4]}>
+    <group position={[1.5, Y, -0.6]}>
       <M g={cylG(0.06, 0.07, 4.6, 10)} c="#3a3a3a" tex="metal" p={[0, 2.3, 0]} />
       <group position={[0.85, 3.9 - k * k * 3.1, 0]} rotation={[0, 0, k * 1.2]}>
         <M g={boxG(1.6, 1.0, 0.03)} c="#a8322e" tex="fabric" />
@@ -172,43 +180,43 @@ const BoulevardScene: React.FC<SceneProps> = ({ t, id, cam }) => {
       </Boulevard>
       {id === "S01" || id === "S13" ? (
         <>
-          {id === "S01" ? <Suitcase p={[gw.pos[0] - 0.55, Y, gw.pos[2] + 0.05]} yaw={0.1} /> : <Suitcase p={[-0.45, Y, 0.75]} yaw={0.35} />}
-          <Character3D {...GUEST} position={id === "S01" ? gw.pos : [0.2, Y, 0.6]} yaw={id === "S01" ? (gw.moving ? gw.yaw : Math.PI * 0.85) : Math.PI * 0.95} t={t}
+          {id === "S01" ? <Suitcase p={[gw.pos[0] - 0.55, Y, gw.pos[2] + 0.05]} yaw={0.1} /> : <Suitcase p={[-0.3, Y, 0.75]} yaw={0.35} />}
+          <Character3D {...GUEST} position={id === "S01" ? gw.pos : [0.25, Y, 0.6]} yaw={id === "S01" ? (gw.moving ? gw.yaw : Math.PI * 0.85) : Math.PI * 0.95} t={t}
             face={id === "S13" ? (t > at("switch") ? { ...EXPRESSIONS.surprised, look: 0.2 } : EXPRESSIONS.thinking) : { ...EXPRESSIONS.happy, look: 0.3 }}
             pose={{ walk: id === "S01" && gw.moving ? gw.phase : undefined, armL: id === "S01" && gw.moving ? [24, 12] : [12, 14], armLFwd: -10, headNod: id === "S13" ? -14 : -6 }}
             hands={{ L: "grip" }} faceCamera={cam.pos} faceCameraAmount={id === "S13" ? 0.2 : 0.35} />
-          <CastLight at={id === "S01" ? gHead : headOf([0.2, Y, 0.6], GUEST.height, GUEST.build)} cam={cam.pos} mood={moodOf("night")} />
+          <CastLight at={id === "S01" ? gHead : headOf([0.25, Y, 0.6], GUEST.height, GUEST.build)} cam={cam.pos} mood={moodOf("night")} />
         </>
       ) : null}
       {id === "S03" ? (
         <>
-          <Character3D {...PASSER} position={[1.1, Y, -0.6]} yaw={Math.PI * 0.82} t={t}
+          <Character3D {...PASSER} position={[1.0, Y, 0.5]} yaw={Math.PI * 0.82} t={t}
             face={shocked ? EXPRESSIONS.surprised : { ...EXPRESSIONS.neutral, look: -0.2 }}
             pose={{ headNod: shocked ? -18 : -4, armR: shocked ? [40, 70] : [10, 12], armL: [10, 12] }} hands={shocked ? { R: "open" } : undefined}
             faceCamera={cam.pos} faceCameraAmount={0.3} />
-          <CastLight at={headOf([1.1, Y, -0.6], PASSER.height, PASSER.build)} cam={cam.pos} mood={moodOf("night")} />
+          <CastLight at={headOf([1.0, Y, 0.5], PASSER.height, PASSER.build)} cam={cam.pos} mood={moodOf("night")} />
         </>
       ) : null}
       {id === "S07" ? (
         <>
-          <Character3D {...BUILDER} position={[-1.1, Y, 0.3]} yaw={0.4} t={t} face={{ ...EXPRESSIONS.happy, look: 0.3 }}
+          <Character3D {...BUILDER} position={[-0.35, Y, 0.6]} yaw={0.4} t={t} face={{ ...EXPRESSIONS.happy, look: 0.3 }}
             pose={{ armR: t > at("starts") ? [150, 10] : [30, 40], headNod: -10 }} hands={{ R: t > at("starts") ? "point" : "relaxed" }} hold="scroll" holdSide="L"
             faceCamera={cam.pos} faceCameraAmount={0.3} />
-          {gaps.map((g, i) => (t >= g && t < g + 0.8 ? <Smoke key={i} p={[0, (0.2 + 0.08 * (i + 1)) * 0.82 * 135, PYR_Z + 6]} s={8} t={t - g} seed={i} n={4} color="#c8b898" /> : null))}
+          {gaps.map((g, i) => (t >= g && t < g + 0.6 ? <Smoke key={i} p={[0, (0.2 + 0.08 * (i + 1)) * 0.82 * 135, PYR_Z + 6]} s={3} t={t - g} seed={i} n={3} color="#c8b898" /> : null))}
         </>
       ) : null}
       {id === "S08" ? (
         <>
           <SovietBanner fall={collapsed} />
-          <Character3D {...BUILDER} position={[-1.0, Y, 0.4]} yaw={0.5} t={t}
+          <Character3D {...BUILDER} position={[-0.55, Y, 0.6]} yaw={0.5} t={t}
             face={t > at("then") + 0.3 ? EXPRESSIONS.sad : EXPRESSIONS.surprised} pose={{ headNod: t > at("sixteen") ? 12 : 0, armL: [8, 10], armR: [8, 10] }}
             faceCamera={cam.pos} faceCameraAmount={0.35} />
           <Leaves center={[0, 2, 0]} size={[12, 5, 8]} t={t} count={50} colors={["#8a7a6a", "#a89a80", "#6e665c", "#c8bca4"]} wind={1.4} />
-          {collapsed >= 1 && t < at("collapsed") + 1.0 ? <Smoke p={[3.75, Y + 0.3, -1.4]} s={1.2} t={t - at("collapsed")} n={5} color="#b8aa98" /> : null}
+          {collapsed >= 1 && t < at("collapsed") + 1.0 ? <Smoke p={[2.35, Y + 0.3, -0.6]} s={1.2} t={t - at("collapsed")} n={5} color="#b8aa98" /> : null}
         </>
       ) : null}
       {id === "S09" ? (
-        <Character3D {...FITTER} position={[1.2, Y, 0.2]} yaw={-0.5} t={t} face={{ ...EXPRESSIONS.proud, look: -0.3 }}
+        <Character3D {...FITTER} position={[0.8, Y, 0.6]} yaw={-0.5} t={t} face={{ ...EXPRESSIONS.proud, look: -0.3 }}
           pose={{ armL: [150, 10], headNod: -12 }} hands={{ L: "point" }} faceCamera={cam.pos} faceCameraAmount={0.3} />
       ) : null}
       {id === "S13" && ledOn > 0 ? <Dust center={[0, 40, PYR_Z + 20]} size={[70, 80, 20]} t={t} count={60} color="#8fd23f" glow={1.2} /> : null}
@@ -242,7 +250,7 @@ const LobbyScene: React.FC<SceneProps> = ({ t, id, cam }) => {
         faceCamera={cam.pos} faceCameraAmount={0.25} />
       {id !== "S11" ? (
         <>
-          <Suitcase p={[-1.15, 0, -0.7]} yaw={0.5} />
+          <Suitcase p={[-0.5, 0, -0.75]} yaw={0.5} />
           <Character3D {...GUEST} position={GUEST_L} yaw={1.05} t={t}
             face={{ ...guestFace, mouth: guestSpeaks ?? guestFace.mouth }}
             pose={{ armR: guestSpeaks !== guestFace.mouth || (t > at("so", 1) && t < at("no")) ? [60, 50] : [10, 14], armRFwd: 25, headTilt: id === "S12" && t > at("which") ? -6 : 0 }}

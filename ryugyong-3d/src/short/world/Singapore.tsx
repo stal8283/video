@@ -72,8 +72,8 @@ export const Singapore: React.FC<{ t: number; bannerIn: number; children?: React
       </group>
     ))}
     {/* the banner on two poles (the tag) */}
-    {[-2.6, 2.6].map((x) => <M key={x} g={cylG(0.06, 0.07, 3.6, 10)} c="#2a3238" tex="metal" p={[x, 1.8 + 0.12, -4]} />)}
-    <group position={[0, 3.0 + (1 - bannerIn) * 1.4, -4]} visible={bannerIn > 0}>
+    {[-2.6, 2.6].map((x) => <M key={x} g={cylG(0.06, 0.07, 4.8, 10)} c="#2a3238" tex="metal" p={[x, 2.4 + 0.12, -4]} />)}
+    <group position={[0, 4.3 + (1 - bannerIn) * 1.4, -4]} visible={bannerIn > 0}>
       <M g={boxG(5.0, 0.8, 0.03)} c="#c33631" tex="fabric" />
       <Label text="TALLEST HOTEL 1986" p={[0, 0, 0.02]} w={4.7} h={0.62} fg="#f4f1ea" bg="none" font={0.62} />
     </group>

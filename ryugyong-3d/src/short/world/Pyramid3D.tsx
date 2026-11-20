@@ -59,12 +59,12 @@ const tierGeo = (k: number, H: number) => {
 /** painted facade tiles: one tile = 10 floors high, a few bays wide */
 const facade = (state: PyrState) => {
   const tex = canvasTex(`pyr-${state}`, 256, 256, (g, w, h) => {
-    const base = state === "concrete" ? "#8e8a82" : state === "glass" ? "#6d8c9b" : "#1b2536";
+    const base = state === "concrete" ? "#6e6a64" : state === "glass" ? "#4f6e7e" : "#1b2536";
     g.fillStyle = base; g.fillRect(0, 0, w, h);
     for (let r = 0; r < 10; r++) {
       const y = r * (h / 10);
       // slab line
-      g.fillStyle = state === "concrete" ? "#77736b" : state === "glass" ? "#56717f" : "#141c2a";
+      g.fillStyle = state === "concrete" ? "#5a5650" : state === "glass" ? "#3e5866" : "#141c2a";
       g.fillRect(0, y, w, 5);
       for (let c = 0; c < 4; c++) {
         const s = r * 7 + c * 13;
@@ -72,7 +72,7 @@ const facade = (state: PyrState) => {
           if (hash(s) < 0.22) continue; // missing / boarded windows
           g.fillStyle = hash(s + 3) < 0.15 ? "#5a4a3a" : "#34322e";
         } else if (state === "glass") {
-          g.fillStyle = hash(s) < 0.5 ? "#7f9fae" : "#88a8b6";
+          g.fillStyle = hash(s) < 0.5 ? "#5f7f8e" : "#6a8a9a";
         } else {
           g.fillStyle = "#222d42";
         }
@@ -179,9 +179,9 @@ export const Pyramid3D: React.FC<{
       })}
       {crownOn ? (
         <group position={[0, BODY * H, 0]}>
-          <M g={cylG(0.05 * H, 0.075 * H, 0.15 * H, 8)} c={state === "lit" ? "#1b2536" : state === "glass" || glassTiers >= TIERS ? "#6d8c9b" : "#8e8a82"} tex="metal" p={[0, 0.075 * H, 0]} />
+          <M g={cylG(0.05 * H, 0.075 * H, 0.15 * H, 8)} c={state === "lit" ? "#1b2536" : state === "glass" || glassTiers >= TIERS ? "#4f6e7e" : "#6e6a64"} tex="metal" p={[0, 0.075 * H, 0]} />
           {[0, 1, 2, 3, 4].map((r) => (
-            <M key={r} g={cylG((0.085 - r * 0.007) * H, (0.085 - r * 0.007) * H, 0.008 * H, 8)} c={state === "lit" ? "#26324a" : "#9a968e"} tex="metal" p={[0, (0.02 + r * 0.03) * H, 0]} />
+            <M key={r} g={cylG((0.085 - r * 0.007) * H, (0.085 - r * 0.007) * H, 0.008 * H, 8)} c={state === "lit" ? "#26324a" : "#7a766e"} tex="metal" p={[0, (0.02 + r * 0.03) * H, 0]} />
           ))}
           <M g={cylG(0.004 * H, 0.006 * H, 0.06 * H, 8)} c="#3a3a3a" p={[0, 0.18 * H, 0]} />
           {state === "lit" && ledOn > 0.6 ? (

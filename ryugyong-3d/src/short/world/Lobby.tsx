@@ -105,11 +105,11 @@ export const Lobby: React.FC<{
       {/* grandeur: columns, chandelier, rug, the covered sofa, chairs, plants, a lamp, a luggage trolley */}
       <Column p={[-3.9, 0, -0.6]} hgt={3.6} />
       <Column p={[3.9, 0, -0.6]} hgt={3.6} />
-      <group position={[0.4, 3.25, -0.6]}>
+      <group position={[0.4, 3.25, 0.4]}>
         <M g={cylG(0.01, 0.01, 0.35, 6)} c="#2a2a2a" p={[0, 0.17, 0]} />
         <M g={cylG(0.42, 0.26, 0.16, 16)} c="#c99f4b" tex="metal" />
         {[0, 1, 2, 3, 4, 5].map((i) => <mesh key={i} geometry={sphG(0.05, 10)} material={coreMat("#ffe0a0", day ? 0.6 : 1.25)} position={[Math.cos(i) * 0.38, -0.1, Math.sin(i) * 0.38]} userData={{ outline: false }} />)}
-        <pointLight position={[0, -0.3, 0]} color="#ffc070" intensity={day ? 2 : 7} distance={8} decay={2} />
+        <pointLight position={[0, -0.3, 0]} color="#ffc070" intensity={day ? 1.5 : 3.5} distance={7} decay={2} />
       </group>
       <Rug p={[0.2, 0, 0.6]} w={1.6} d={4.2} color="#8e2b28" border="#c99f4b" />
       <Sofa p={[-2.7, 0, -2.5]} color={sheets ? "#d8d2c4" : "#7a2e3a"} />
