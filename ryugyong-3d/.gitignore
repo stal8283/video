@@ -1,0 +1,5 @@
+node_modules/
+build/
+out/
+.machine.json
+.render_log.json

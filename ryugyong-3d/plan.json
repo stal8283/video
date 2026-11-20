@@ -1,0 +1,546 @@
+{
+ "fps": 30,
+ "duration_s": 65.472,
+ "shots": [
+  {
+   "id": "S01",
+   "t": 0.0,
+   "set": "boulevard",
+   "mood": "night",
+   "note": "HOOK: the Guest pulls a suitcase toward the glowing 105-floor pyramid; key object in frame from frame 0",
+   "end": 4.697
+  },
+  {
+   "id": "S02",
+   "t": 4.697,
+   "set": "lobby",
+   "mood": "lamp",
+   "note": "elevator dial counts to 105 [tag], key rack with every key on its hook; skit 1: Guest vs deadpan Clerk",
+   "end": 14.271
+  },
+  {
+   "id": "S03",
+   "t": 14.271,
+   "set": "boulevard",
+   "mood": "night",
+   "note": "the dark pyramid switches on row by row; a passer-by looks up",
+   "end": 19.375
+  },
+  {
+   "id": "S04",
+   "t": 19.375,
+   "set": "table",
+   "mood": "golden",
+   "note": "the architect's table: the blueprint unrolls, a red pencil circles the empty inside",
+   "end": 22.523
+  },
+  {
+   "id": "S05",
+   "t": 22.523,
+   "set": "singapore",
+   "mood": "golden",
+   "note": "Singapore 1986: the round tower, a doorman cheers, banner TALLEST HOTEL 1986 [tag]",
+   "end": 27.234
+  },
+  {
+   "id": "S06",
+   "t": 27.234,
+   "set": "table",
+   "mood": "golden",
+   "note": "golden close-up: the pyramid model grows taller than the Singapore model",
+   "end": 29.742
+  },
+  {
+   "id": "S07",
+   "t": 29.742,
+   "set": "boulevard",
+   "mood": "day",
+   "note": "1987: floors stack up, a crane, the builder with a blueprint",
+   "end": 32.085
+  },
+  {
+   "id": "S08",
+   "t": 32.085,
+   "set": "boulevard",
+   "mood": "cold",
+   "note": "1992 [tag]: work stops, the USSR banner falls, the bare concrete shell in the wind for 16 years",
+   "end": 40.53
+  },
+  {
+   "id": "S09",
+   "t": 40.53,
+   "set": "boulevard",
+   "mood": "day",
+   "note": "2011: the glass skin climbs the pyramid, the glass fitter holds a panel",
+   "end": 44.489
+  },
+  {
+   "id": "S10",
+   "t": 44.489,
+   "set": "table",
+   "mood": "golden",
+   "note": "the wrapped present: glint, the lid lifts, the box is empty, one moth flies out",
+   "end": 48.721
+  },
+  {
+   "id": "S11",
+   "t": 48.721,
+   "set": "lobby",
+   "mood": "day",
+   "note": "2012: the Exec signs, banner OPENING 2013 [tag]; months later she walks out, the banner falls",
+   "end": 53.062
+  },
+  {
+   "id": "S12",
+   "t": 53.062,
+   "set": "lobby",
+   "mood": "lamp",
+   "note": "skit 2: Opening date? / Soon. / Which year? / ...Soon.",
+   "end": 58.245
+  },
+  {
+   "id": "S13",
+   "t": 58.245,
+   "set": "boulevard",
+   "mood": "night",
+   "note": "PAYOFF: back to the opening image, 100,000 lights switch on, the flag glows at the top",
+   "end": 65.472
+  }
+ ],
+ "beats": [
+  {
+   "t": 0.426,
+   "move": "PUSH",
+   "word": "tallest",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 1.459,
+   "move": "CRANE_UP",
+   "word": "Korea.",
+   "prm": {}
+  },
+  {
+   "t": 2.603,
+   "move": "PUSH",
+   "word": "never",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 3.405,
+   "move": "PUNCH",
+   "word": "guest.",
+   "prm": {
+    "frac": 0.1
+   }
+  },
+  {
+   "t": 5.286,
+   "move": "PUSH",
+   "word": "floors.",
+   "prm": {
+    "frac": 0.14
+   }
+  },
+  {
+   "t": 5.879,
+   "move": "DOLLY_R",
+   "word": "Zero",
+   "prm": {}
+  },
+  {
+   "t": 7.355,
+   "move": "PULL",
+   "word": "Do",
+   "prm": {
+    "frac": -0.18
+   }
+  },
+  {
+   "t": 8.863,
+   "move": "ORBIT_L",
+   "word": "We",
+   "prm": {
+    "deg": 16
+   }
+  },
+  {
+   "t": 10.245,
+   "move": "PUSH",
+   "word": "floors.",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 11.442,
+   "move": "ORBIT_R",
+   "word": "So...",
+   "prm": {
+    "deg": 14
+   }
+  },
+  {
+   "t": 11.906,
+   "move": "PUSH",
+   "word": "yes?",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 12.774,
+   "move": "PUNCH",
+   "word": "No.",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 14.64,
+   "move": "PUSH",
+   "word": "strange",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 15.871,
+   "move": "CRANE_UP",
+   "word": "lights",
+   "prm": {}
+  },
+  {
+   "t": 17.459,
+   "move": "ORBIT_L",
+   "word": "show.",
+   "prm": {
+    "deg": 14
+   }
+  },
+  {
+   "t": 18.155,
+   "move": "PUSH",
+   "word": "guests.",
+   "prm": {
+    "frac": 0.14
+   }
+  },
+  {
+   "t": 19.697,
+   "move": "PUSH",
+   "word": "build",
+   "prm": {
+    "frac": 0.14
+   }
+  },
+  {
+   "t": 20.533,
+   "move": "ORBIT_R",
+   "word": "why",
+   "prm": {
+    "deg": 16
+   }
+  },
+  {
+   "t": 21.067,
+   "move": "PUSH",
+   "word": "finish",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 23.588,
+   "move": "CRANE_UP",
+   "word": "tallest",
+   "prm": {}
+  },
+  {
+   "t": 24.993,
+   "move": "PULL",
+   "word": "South",
+   "prm": {
+    "frac": -0.18
+   }
+  },
+  {
+   "t": 26.015,
+   "move": "ORBIT_L",
+   "word": "built",
+   "prm": {
+    "deg": 14
+   }
+  },
+  {
+   "t": 27.673,
+   "move": "PUSH",
+   "word": "reportedly",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 28.474,
+   "move": "CRANE_UP",
+   "word": "taller",
+   "prm": {}
+  },
+  {
+   "t": 28.915,
+   "move": "PUNCH",
+   "word": "one.",
+   "prm": {
+    "frac": 0.1
+   }
+  },
+  {
+   "t": 29.809,
+   "move": "CRANE_UP",
+   "word": "starts",
+   "prm": {}
+  },
+  {
+   "t": 30.61,
+   "move": "PUSH",
+   "word": "eighty-seven.",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 32.918,
+   "move": "PUSH",
+   "word": "ninety-two,",
+   "prm": {
+    "frac": 0.14
+   }
+  },
+  {
+   "t": 34.021,
+   "move": "ORBIT_R",
+   "word": "money",
+   "prm": {
+    "deg": 12
+   }
+  },
+  {
+   "t": 35.611,
+   "move": "ORBIT_L",
+   "word": "Soviet",
+   "prm": {
+    "deg": 16
+   }
+  },
+  {
+   "t": 36.621,
+   "move": "PUNCH",
+   "word": "collapsed.",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 37.48,
+   "move": "PULL",
+   "word": "sixteen",
+   "prm": {
+    "frac": -0.2
+   }
+  },
+  {
+   "t": 38.513,
+   "move": "ORBIT_R",
+   "word": "bare",
+   "prm": {
+    "deg": 14
+   }
+  },
+  {
+   "t": 39.303,
+   "move": "PUSH",
+   "word": "pyramid.",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 41.77,
+   "move": "CRANE_UP",
+   "word": "Egyptian",
+   "prm": {}
+  },
+  {
+   "t": 43.198,
+   "move": "PUSH",
+   "word": "glass.",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 44.951,
+   "move": "PUSH",
+   "word": "present.",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 45.914,
+   "move": "ORBIT_L",
+   "word": "Shiny",
+   "prm": {
+    "deg": 14
+   }
+  },
+  {
+   "t": 47.18,
+   "move": "PUNCH",
+   "word": "Empty",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 47.54,
+   "move": "PULL",
+   "word": "box.",
+   "prm": {
+    "frac": -0.16
+   }
+  },
+  {
+   "t": 48.974,
+   "move": "PUSH",
+   "word": "twelve,",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 50.297,
+   "move": "ORBIT_R",
+   "word": "signs",
+   "prm": {
+    "deg": 14
+   }
+  },
+  {
+   "t": 51.319,
+   "move": "DOLLY_L",
+   "word": "later,",
+   "prm": {}
+  },
+  {
+   "t": 52.027,
+   "move": "PULL",
+   "word": "out.",
+   "prm": {
+    "frac": -0.18
+   }
+  },
+  {
+   "t": 53.268,
+   "move": "PUSH",
+   "word": "date?",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 54.183,
+   "move": "ORBIT_L",
+   "word": "Soon.",
+   "prm": {
+    "deg": 12
+   }
+  },
+  {
+   "t": 55.369,
+   "move": "PUSH",
+   "word": "Which",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 56.563,
+   "move": "PUNCH",
+   "word": "...Soon.",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 58.834,
+   "move": "PUSH",
+   "word": "hundred",
+   "prm": {
+    "frac": 0.12
+   }
+  },
+  {
+   "t": 59.752,
+   "move": "CRANE_UP",
+   "word": "switch",
+   "prm": {}
+  },
+  {
+   "t": 61.168,
+   "move": "PUSH",
+   "word": "flag",
+   "prm": {
+    "frac": 0.14
+   }
+  },
+  {
+   "t": 63.329,
+   "move": "ORBIT_R",
+   "word": "every",
+   "prm": {
+    "deg": 12
+   }
+  },
+  {
+   "t": 64.096,
+   "move": "PULL",
+   "word": "empty.",
+   "prm": {
+    "frac": -0.18
+   }
+  }
+ ],
+ "sfx": [],
+ "accent_words": [
+  "empty",
+  "guest",
+  "lights"
+ ],
+ "tags": [
+  {
+   "text": "105",
+   "t": 5.486,
+   "note": "the elevator floor dial in the lobby"
+  },
+  {
+   "text": "1986",
+   "t": 22.523,
+   "note": "the TALLEST HOTEL banner in Singapore"
+  },
+  {
+   "text": "1992",
+   "t": 33.118,
+   "note": "a stencil on the halted crane's counterweight"
+  },
+  {
+   "text": "OPENING 2013",
+   "t": 49.174,
+   "note": "the banner over the reception desk"
+  }
+ ]
+}
