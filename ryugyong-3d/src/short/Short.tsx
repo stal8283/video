@@ -106,7 +106,7 @@ const DOOR_P: V3 = [0.6, 0.12, -0.6];
 // ---------------------------------------------------------------- the resting lens of each shot
 const D2R = Math.PI / 180;
 /** a lens at `pos` looking along azimuth `az` (deg, + = toward +x) and elevation `el` (deg, + = up) */
-const lens = (pos: V3, az: number, el: number, fov: number, d = 10): Cam => ({
+const lens = (pos: V3, az: number, el: number, fov: number, d = 3.4): Cam => ({
   pos, fov, roll: 0,
   look: [pos[0] + Math.sin(az * D2R) * Math.cos(el * D2R) * d, pos[1] + Math.sin(el * D2R) * d, pos[2] - Math.cos(az * D2R) * Math.cos(el * D2R) * d],
 });
@@ -119,7 +119,7 @@ const baseCam = (id: string, t: number): Cam => {
     case "S03": return lens([1.7, 0.5, 3.8], -6, 19, 75);
     case "S04": return { pos: [0.05, 1.62, 1.15], look: [0.0, TOP, -0.05], fov: 58, roll: 0 };
     case "S05": return lens([1.1, 0.55, 3.0], -4, 20, 75);
-    case "S06": return { pos: [0.0, 1.08, 1.55], look: [0.0, 1.0, 0], fov: 55, roll: 0 };
+    case "S06": return { pos: [0.0, 1.12, 1.95], look: [0.0, 1.02, 0], fov: 62, roll: 0 };
     case "S07": return lens([0.5, 0.5, 3.8], -6, 19, 75);
     case "S08": return lens([0.3, 0.6, 3.9], 0, 19, 75);
     case "S09": return lens([0.2, 0.5, 3.8], 4, 19, 75);
@@ -143,7 +143,7 @@ const Suitcase: React.FC<{ p: V3; yaw: number; handle?: boolean }> = ({ p, yaw, 
 const SovietBanner: React.FC<{ fall: number }> = ({ fall }) => {
   const k = clamp(fall);
   return (
-    <group position={[1.5, Y, -0.6]}>
+    <group position={[2.3, Y, -1.6]}>
       <M g={cylG(0.06, 0.07, 4.6, 10)} c="#3a3a3a" tex="metal" p={[0, 2.3, 0]} />
       <group position={[0.85, 3.9 - k * k * 3.1, 0]} rotation={[0, 0, k * 1.2]}>
         <M g={boxG(1.6, 1.0, 0.03)} c="#a8322e" tex="fabric" />
@@ -212,7 +212,7 @@ const BoulevardScene: React.FC<SceneProps> = ({ t, id, cam }) => {
             face={t > at("then") + 0.3 ? EXPRESSIONS.sad : EXPRESSIONS.surprised} pose={{ headNod: t > at("sixteen") ? 12 : 0, armL: [8, 10], armR: [8, 10] }}
             faceCamera={cam.pos} faceCameraAmount={0.35} />
           <Leaves center={[0, 2, 0]} size={[12, 5, 8]} t={t} count={50} colors={["#8a7a6a", "#a89a80", "#6e665c", "#c8bca4"]} wind={1.4} />
-          {collapsed >= 1 && t < at("collapsed") + 1.0 ? <Smoke p={[2.35, Y + 0.3, -0.6]} s={1.2} t={t - at("collapsed")} n={5} color="#b8aa98" /> : null}
+          {collapsed >= 1 && t < at("collapsed") + 1.0 ? <Smoke p={[3.15, Y + 0.3, -1.6]} s={1.2} t={t - at("collapsed")} n={5} color="#b8aa98" /> : null}
         </>
       ) : null}
       {id === "S09" ? (
@@ -263,8 +263,8 @@ const LobbyScene: React.FC<SceneProps> = ({ t, id, cam }) => {
           pose={{ ...(ex.moving ? {} : hold.pose), walk: ex.moving ? ex.phase : undefined }} hold={signed && !ex.moving ? "letter" : ex.moving ? "letter" : "scroll"} holdSide="R"
           faceCamera={ex.moving ? undefined : cam.pos} faceCameraAmount={0.3} />
       ) : null}
-      <CastLight at={id === "S11" ? headOf(EXEC_L, EXEC.height, EXEC.build) : gHead} cam={cam.pos} mood={moodOf(day ? "day" : "lamp")} />
-      <CastLight at={cHead} cam={cam.pos} mood={moodOf(day ? "day" : "lamp")} />
+      <CastLight at={id === "S11" ? headOf(EXEC_L, EXEC.height, EXEC.build) : gHead} cam={cam.pos} mood={moodOf(day ? "day" : "lamp")} k={0.6} />
+      <CastLight at={cHead} cam={cam.pos} mood={moodOf(day ? "day" : "lamp")} k={0.35} />
     </Lobby>
   );
 };

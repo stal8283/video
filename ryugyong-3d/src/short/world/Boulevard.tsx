@@ -9,7 +9,7 @@ import type { V3 } from "../../engine/types";
 
 const hash = (n: number) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
 export const WALK_Y = 0.15; // sidewalk top
-export const PYR_Z = -170; // the pyramid stands at the end of the boulevard
+export const PYR_Z = -130; // the pyramid stands at the end of the boulevard
 
 type Era = "night" | "day" | "cold";
 
