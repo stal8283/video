@@ -1,0 +1,44 @@
+{
+  "output": "/tmp/claude-0/-home-user-video/aac03617-f1a9-5387-8280-3792fa5f6a3d/scratchpad/out/demo_pipeline_test.mp4",
+  "voiceover": {
+    "script": "This abandoned house in Vice City is hiding over $30,000 and almost nobody knows about it. Sneak up on the guy at the safe and take him out quietly for a stealth bonus. Then drop down, clear the three guards, and grab the legendary rifle in the back. But the real prize is on the middle table. Two stash bags worth $12,600 each. Follow for more secret GTA 6 money spots.",
+    "voice_id": "TX3LPaxmHKxFdv7VOQHJ",
+    "speed": 1.12
+  },
+  "clips": [
+    {
+      "file": "/tmp/claude-0/-home-user-video/aac03617-f1a9-5387-8280-3792fa5f6a3d/scratchpad/ref/ref.mp4",
+      "start": 38,
+      "end": 50,
+      "crop": "1080:970:0:600"
+    },
+    {
+      "file": "/tmp/claude-0/-home-user-video/aac03617-f1a9-5387-8280-3792fa5f6a3d/scratchpad/ref/ref.mp4",
+      "start": 55,
+      "end": 68,
+      "crop": "1080:970:0:600"
+    },
+    {
+      "file": "/tmp/claude-0/-home-user-video/aac03617-f1a9-5387-8280-3792fa5f6a3d/scratchpad/ref/ref.mp4",
+      "start": 68,
+      "end": 82,
+      "crop": "1080:970:0:600"
+    }
+  ],
+  "band_height": 1220,
+  "game_audio_volume": 0.0,
+  "hype_words": [
+    "stash",
+    "prize"
+  ],
+  "callouts": [
+    {
+      "t": 16.4,
+      "dur": 1.6,
+      "x": 760,
+      "y": 820,
+      "rotate": 200
+    }
+  ],
+  "preset": "veryfast"
+}

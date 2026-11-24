@@ -1,0 +1,24 @@
+{
+  "output": "../renders/loot_house_DISTRICT.mp4",
+  "voiceover": {
+    "script": "Here's how you can get $50,000 AND a legendary rifle in GTA 6 in two minutes. Make your way to this exact spot ... (paste Script A here, filled in)",
+    "voice_id": "TX3LPaxmHKxFdv7VOQHJ",
+    "speed": 1.1
+  },
+  "clips": [
+    {"file": "../footage/intro_walk.mp4", "start": 0, "end": 5},
+    {"file": "../footage/map.mp4", "start": 0, "end": 2.5},
+    {"file": "../footage/route.mp4", "start": 12, "end": 40},
+    {"file": "../footage/route.mp4", "start": 55, "end": 110, "speed": 1.15}
+  ],
+  "band_height": 1220,
+  "zoom": 1.0,
+  "game_audio_volume": 0.18,
+  "hype_words": ["stash"],
+  "captions": {"font": "Anton", "size": 145, "y": 560, "uppercase": false},
+  "callouts": [
+    {"t": 30.5, "dur": 1.6, "x": 900, "y": 980, "rotate": 210}
+  ],
+  "music": null,
+  "preset": "medium"
+}
