@@ -1,0 +1,217 @@
+{
+ "output": "../renders/lab_fees_guide.mp4",
+ "voiceover": {
+  "script": "Here's how to beat Lab Fees in GTA 6 with both door codes, and walk out with a $600 stash bag. Brian sends you to this boutique, so head inside and talk to the dealer behind the counter. He'll tell you the acid is in the back room, and the code is 0420. It even gets saved to your notes app. Punch it in, and the back room opens up. Now, don't just grab one thing and leave. There are four batches of acid in here, and each one is worth $150. Check the lab bench, the desk by the printer, and the shelves in the back. There's even $27 in loose cash. That's $600 in your stash bag. But we're not done yet. Get back in the car and call Brian. He'll send you to his lockup, and this door code is 7700. Drop the bag in Brian's strongbox. That's how stash works in GTA 6. You bring stolen goods to drop-offs like this, and you get paid once they're collected. So that's both codes, and $600 of acid from one back room. Comment which mission you want a guide for next.",
+  "voice_id": "TX3LPaxmHKxFdv7VOQHJ",
+  "speed": 1.12,
+  "spoken_as": {
+   "0420": "zero four two zero",
+   "7700": "seven seven zero zero"
+  }
+ },
+ "clips": [
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 237.0,
+   "end": 240.2,
+   "focus": 1.0,
+   "note": "HOOK: acid lab, stash counter ticking"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 182.0,
+   "end": 185.3,
+   "focus": 0.5,
+   "note": "HOOK: dealer intimidation"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 63.0,
+   "end": 66.0,
+   "focus": 0.5,
+   "note": "arrive at boutique (whale statue)"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 139.0,
+   "end": 141.0,
+   "focus": 0.5,
+   "note": "enter the shop"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 193.5,
+   "end": 198.5,
+   "focus": 0.5,
+   "note": "dealer: acid in back room, code 0420"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 204.0,
+   "end": 206.0,
+   "focus": 1.0,
+   "note": "'Safe code 0420' saved to Notes"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 212.0,
+   "end": 214.7,
+   "focus": 0.5,
+   "note": "punch in keypad"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 219.0,
+   "end": 221.5,
+   "focus": 0.5,
+   "note": "back room opens"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 226.0,
+   "end": 230.2,
+   "focus": 1.0,
+   "note": "acid pickup +$150"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 233.6,
+   "end": 237.3,
+   "focus": 1.0,
+   "note": "desk by printer"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 245.0,
+   "end": 247.8,
+   "focus": 1.0,
+   "note": "+$27 loose cash"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 250.5,
+   "end": 252.9,
+   "focus": 1.0,
+   "note": "stash $600"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 273.0,
+   "end": 276.5,
+   "focus": 0.5,
+   "note": "back to the car"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 320.0,
+   "end": 321.5,
+   "focus": 0.5,
+   "note": "Brian call: lockup code"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 378.6,
+   "end": 381.0,
+   "focus": 0.5,
+   "note": "keypad 7700"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 393.0,
+   "end": 395.0,
+   "focus": 0.5,
+   "note": "bag into strongbox"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 397.8,
+   "end": 400.8,
+   "focus": 1.0,
+   "note": "'Stash bag -> Brian's Lockup'"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 407.8,
+   "end": 411.0,
+   "focus": 0.0,
+   "note": "drop-off tooltip"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 30.0,
+   "end": 33.0,
+   "focus": 0.5,
+   "note": "recap: sunset drive"
+  },
+  {
+   "file": "../footage/lab_fees_gameplay.mp4",
+   "start": 252.9,
+   "end": 256.6,
+   "focus": 1.0,
+   "note": "recap: $600 stash"
+  }
+ ],
+ "fps": 30,
+ "band_height": 1000,
+ "game_audio_volume": 0.12,
+ "hype_words": [
+  "0420",
+  "7700",
+  "stash"
+ ],
+ "captions": {
+  "y": 540
+ },
+ "callouts": [
+  {
+   "t": 0.3,
+   "dur": 1.8,
+   "x": 770,
+   "y": 858,
+   "rotate": 0,
+   "note": "hook +$150 pops"
+  },
+  {
+   "t": 16.6,
+   "dur": 1.7,
+   "x": 760,
+   "y": 858,
+   "rotate": 0,
+   "note": "Safe code 0420"
+  },
+  {
+   "t": 26.95,
+   "dur": 1.4,
+   "x": 760,
+   "y": 858,
+   "rotate": 0,
+   "note": "+$150"
+  },
+  {
+   "t": 31.8,
+   "dur": 2.0,
+   "x": 790,
+   "y": 858,
+   "rotate": 0,
+   "note": "+$27"
+  },
+  {
+   "t": 35.1,
+   "dur": 1.9,
+   "x": 840,
+   "y": 528,
+   "rotate": 0,
+   "note": "$600 total"
+  },
+  {
+   "t": 46.5,
+   "dur": 2.4,
+   "x": 620,
+   "y": 858,
+   "rotate": 0,
+   "note": "stash bag to lockup"
+  }
+ ],
+ "preset": "medium",
+ "fg_eq": "brightness=0.04:contrast=1.08:saturation=1.15:gamma=1.1"
+}

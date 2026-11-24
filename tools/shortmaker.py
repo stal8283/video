@@ -42,8 +42,16 @@ DEFAULT_HYPE = {
 # --------------------------------------------------------------------------- #
 # Voiceover
 # --------------------------------------------------------------------------- #
-def tts_elevenlabs(text, voice_id, out_mp3, speed=1.1, model="eleven_multilingual_v2"):
-    """Generate speech and return word timings [(word, start, end), ...]."""
+def tts_elevenlabs(text, voice_id, out_mp3, speed=1.1, model="eleven_multilingual_v2",
+                   spoken_as=None):
+    """Generate speech and return word timings [(word, start, end), ...].
+
+    spoken_as: {"0420": "zero four two zero"} - the TTS reads the phrase, but the
+    captions show the original token (timed across the whole phrase).
+    """
+    spoken_as = spoken_as or {}
+    for token, phrase in spoken_as.items():
+        text = text.replace(token, phrase)
     url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/with-timestamps"
     body = json.dumps({
         "text": text,
@@ -74,6 +82,16 @@ def tts_elevenlabs(text, voice_id, out_mp3, speed=1.1, model="eleven_multilingua
         end = e
     if cur:
         words.append((cur, start, end))
+    # merge spoken phrases back into the display token
+    for token, phrase in spoken_as.items():
+        n = len(phrase.split())
+        i = 0
+        while i <= len(words) - n:
+            seg = [w for w, _, _ in words[i:i + n]]
+            if [x.strip(".,!?").lower() for x in seg] == [x.lower() for x in phrase.split()]:
+                trail = seg[-1][len(seg[-1].rstrip(".,!?")):]
+                words[i:i + n] = [(token + trail, words[i][1], words[i + n - 1][2])]
+            i += 1
     return words
 
 
@@ -128,7 +146,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             continue
         key = clean.lower().strip("'")
         colour = ""
-        if MONEY_RE.match(clean):
+        if "$" in clean:
             colour = r"\c&H5CFF4A&"          # money green (#4AFF5C, BGR)
         elif key in hype:
             colour = r"\c&H00D7FF&"          # hype yellow (#FFD700, BGR)
@@ -195,7 +213,8 @@ def render(cfg_path):
         if not (words_json.exists() and Path(vo_audio).exists() and
                 json.loads(words_json.read_text()).get("script") == vo["script"]):
             words = tts_elevenlabs(vo["script"], vo.get("voice_id", "TX3LPaxmHKxFdv7VOQHJ"),
-                                   vo_audio, speed=vo.get("speed", 1.1))
+                                   vo_audio, speed=vo.get("speed", 1.1),
+                                   spoken_as=vo.get("spoken_as"))
             words_json.write_text(json.dumps({"script": vo["script"], "words": words}))
         words = json.loads(words_json.read_text())["words"]
     vo_dur = probe_duration(vo_audio) + cfg.get("tail", 0.4)
@@ -213,6 +232,8 @@ def render(cfg_path):
     fg = []
     game_audio = cfg.get("game_audio_volume", 0.18)
     clip_has_audio = []
+    fps = cfg.get("fps", 60)
+    fg_eq = f",eq={cfg['fg_eq']}" if cfg.get("fg_eq") else ""
     for i, c in enumerate(clips):
         f = rel(c["file"])
         if "start" in c:
@@ -223,8 +244,19 @@ def render(cfg_path):
         clip_has_audio.append(has_audio(f))
         pre = f"crop={c['crop']}," if c.get("crop") else ""
         spd = c.get("speed", 1.0)
+        # per-clip vertical composition: blurred fill + 1080xBAND window.
+        # `focus` (0=left, 0.5=centre, 1=right) pans the window, e.g. to keep the
+        # HUD money counter (top-right) in frame; `zoom` punches in.
+        focus = c.get("focus", 0.5)
+        z = c.get("zoom", cfg.get("zoom", 1.0))
+        bh = int(band * z)
         fg.append(f"[{i}:v]{pre}scale=1920:1080:force_original_aspect_ratio=increase,"
-                  f"crop=1920:1080,setsar=1,fps=60,setpts=(PTS-STARTPTS)/{spd}[v{i}]")
+                  f"crop=1920:1080,setsar=1,fps={fps},setpts=(PTS-STARTPTS)/{spd},"
+                  f"split=2[bs{i}][fs{i}]")
+        fg.append(f"[bs{i}]scale={W}:{H}:force_original_aspect_ratio=increase,"
+                  f"crop={W}:{H},gblur=sigma=35,eq=brightness=-0.08:saturation=1.1[bg{i}]")
+        fg.append(f"[fs{i}]scale=-2:{bh},crop={W}:{band}:(iw-{W})*{focus}:(ih-{band})*{c.get('focus_y', 0.5)}{fg_eq}[fv{i}]")
+        fg.append(f"[bg{i}][fv{i}]overlay=0:{(H - band) // 2},setsar=1[v{i}]")
         if clip_has_audio[i]:
             atempo = f",atempo={spd}" if spd != 1.0 else ""
             fg.append(f"[{i}:a]asetpts=PTS-STARTPTS{atempo},aresample=48000,"
@@ -242,13 +274,7 @@ def render(cfg_path):
     if music:
         args += ["-stream_loop", "-1", "-i", rel(music["file"])]
 
-    # vertical composition
-    fg.append("[cv]split=2[bgsrc][fgsrc]")
-    fg.append(f"[bgsrc]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},"
-              f"gblur=sigma=35,eq=brightness=-0.08:saturation=1.1[bg]")
-    zoom = cfg.get("zoom", 1.0)
-    fg.append(f"[fgsrc]scale=-2:{int(band * zoom)},crop={W}:{band}[fgv]")
-    fg.append(f"[bg][fgv]overlay=0:{(H - band) // 2}[comp0]")
+    fg.append("[cv]null[comp0]")
 
     # 4. arrows -------------------------------------------------------------
     last = "comp0"
@@ -297,7 +323,7 @@ def render(cfg_path):
     args += ["-filter_complex_script", str(work / "filtergraph.txt"),
              "-map", "[vout]", "-map", "[aout]",
              "-c:v", "libx264", "-preset", cfg.get("preset", "medium"), "-crf", "19",
-             "-profile:v", "high", "-r", "60", "-c:a", "aac", "-b:a", "192k",
+             "-profile:v", "high", "-r", str(fps), "-c:a", "aac", "-b:a", "192k",
              "-movflags", "+faststart", "-t", f"{vo_dur:.3f}", str(out)]
     subprocess.run(args, check=True)
     print(f"done -> {out}")
