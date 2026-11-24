@@ -151,9 +151,11 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         elif key in hype:
             colour = r"\c&H00D7FF&"          # hype yellow (#FFD700, BGR)
         txt = clean.upper() if upper else clean
+        wy = next((o["y"] for o in cap.get("y_overrides", [])
+                   if o["from"] <= s < o["to"]), y)
         pop = r"\fscx65\fscy65\t(0,70,\fscx110\fscy110)\t(70,130,\fscx100\fscy100)"
         lines.append(f"Dialogue: 0,{ass_time(s)},{ass_time(end)},Word,,0,0,0,,"
-                     f"{{\\an5\\pos({W // 2},{y}){pop}{colour}}}{txt}")
+                     f"{{\\an5\\pos({W // 2},{wy}){pop}{colour}}}{txt}")
     Path(path).write_text(header + "\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -322,7 +324,8 @@ def render(cfg_path):
     (work / "filtergraph.txt").write_text(";\n".join(fg))
     args += ["-filter_complex_script", str(work / "filtergraph.txt"),
              "-map", "[vout]", "-map", "[aout]",
-             "-c:v", "libx264", "-preset", cfg.get("preset", "medium"), "-crf", "19",
+             "-c:v", "libx264", "-preset", cfg.get("preset", "medium"), "-crf", "20",
+             "-maxrate", cfg.get("maxrate", "6M"), "-bufsize", "12M",
              "-profile:v", "high", "-r", str(fps), "-c:a", "aac", "-b:a", "192k",
              "-movflags", "+faststart", "-t", f"{vo_dur:.3f}", str(out)]
     subprocess.run(args, check=True)
