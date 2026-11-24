@@ -12,52 +12,66 @@
  "clips": [
   {
    "file": "../footage/lab_fees_gameplay.mp4",
-   "start": 237.0,
-   "end": 240.2,
-   "focus": 1.0,
-   "note": "HOOK: acid lab, stash counter ticking"
+   "start": 256.6,
+   "end": 259.8,
+   "focus": 0.45,
+   "note": "HOOK: walking out of the lab, $600 stash",
+   "hud": true
   },
   {
    "file": "../footage/lab_fees_gameplay.mp4",
-   "start": 182.0,
-   "end": 185.3,
-   "focus": 0.55,
-   "note": "HOOK: dealer intimidation"
+   "start": 186.0,
+   "end": 189.2,
+   "focus": 0.45,
+   "note": "HOOK: dealer scene action"
   },
   {
    "file": "../footage/lab_fees_gameplay.mp4",
    "start": 63.0,
    "end": 66.0,
-   "focus": 0.5,
-   "note": "arrive at boutique (whale statue)"
+   "focus": 0.35,
+   "note": "arrive at boutique (whale statue)",
+   "pan": [
+    0.25,
+    0.45
+   ]
   },
   {
    "file": "../footage/lab_fees_gameplay.mp4",
    "start": 139.0,
    "end": 141.0,
-   "focus": 0.5,
+   "focus": 0.45,
    "note": "enter the shop"
   },
   {
    "file": "../footage/lab_fees_gameplay.mp4",
-   "start": 193.5,
-   "end": 198.5,
-   "focus": 0.6,
-   "note": "dealer: acid in back room, code 0420"
+   "start": 189.5,
+   "end": 194.5,
+   "focus": 0.42,
+   "note": "dealer: acid in back room, code 0420",
+   "pan": [
+    0.35,
+    0.5
+   ]
   },
   {
    "file": "../footage/lab_fees_gameplay.mp4",
    "start": 204.0,
    "end": 206.0,
-   "focus": 1.0,
-   "note": "'Safe code 0420' saved to Notes"
+   "focus": 0.45,
+   "note": "'Safe code 0420' saved to Notes",
+   "hud": true
   },
   {
    "file": "../footage/lab_fees_gameplay.mp4",
    "start": 212.0,
    "end": 214.7,
    "focus": 0.5,
-   "note": "punch in keypad"
+   "note": "punch in keypad",
+   "pan": [
+    0.44,
+    0.56
+   ]
   },
   {
    "file": "../footage/lab_fees_gameplay.mp4",
@@ -70,36 +84,52 @@
    "file": "../footage/lab_fees_gameplay.mp4",
    "start": 226.0,
    "end": 230.2,
-   "focus": 1.0,
-   "note": "acid pickup +$150"
+   "focus": 0.25,
+   "note": "acid pickup +$150",
+   "pan": [
+    0.2,
+    0.32
+   ],
+   "hud": true
   },
   {
    "file": "../footage/lab_fees_gameplay.mp4",
    "start": 233.6,
    "end": 237.3,
-   "focus": 1.0,
-   "note": "desk by printer"
+   "focus": 0.3,
+   "note": "desk by printer",
+   "pan": [
+    0.25,
+    0.38
+   ],
+   "hud": true
   },
   {
    "file": "../footage/lab_fees_gameplay.mp4",
    "start": 245.0,
    "end": 247.8,
-   "focus": 1.0,
-   "note": "+$27 loose cash"
+   "focus": 0.4,
+   "note": "+$27 loose cash",
+   "hud": true
   },
   {
    "file": "../footage/lab_fees_gameplay.mp4",
    "start": 250.5,
    "end": 252.9,
-   "focus": 1.0,
-   "note": "stash $600"
+   "focus": 0.45,
+   "note": "stash $600",
+   "hud": true
   },
   {
    "file": "../footage/lab_fees_gameplay.mp4",
    "start": 273.0,
    "end": 276.5,
-   "focus": 0.5,
-   "note": "back to the car"
+   "focus": 0.35,
+   "note": "back to the car",
+   "pan": [
+    0.3,
+    0.45
+   ]
   },
   {
    "file": "../footage/lab_fees_gameplay.mp4",
@@ -119,21 +149,26 @@
    "file": "../footage/lab_fees_gameplay.mp4",
    "start": 393.0,
    "end": 395.0,
-   "focus": 0.5,
-   "note": "bag into strongbox"
+   "focus": 0.4,
+   "note": "bag into strongbox",
+   "pan": [
+    0.35,
+    0.45
+   ]
   },
   {
    "file": "../footage/lab_fees_gameplay.mp4",
    "start": 397.8,
    "end": 400.8,
-   "focus": 1.0,
-   "note": "'Stash bag -> Brian's Lockup'"
+   "focus": 0.35,
+   "note": "'Stash bag -> Brian's Lockup'",
+   "hud": true
   },
   {
    "file": "../footage/lab_fees_gameplay.mp4",
    "start": 409.8,
    "end": 413.0,
-   "focus": 0.0,
+   "focus": 0.03,
    "note": "drop-off tooltip"
   },
   {
@@ -147,12 +182,13 @@
    "file": "../footage/lab_fees_gameplay.mp4",
    "start": 252.9,
    "end": 256.6,
-   "focus": 1.0,
-   "note": "recap: $600 stash"
+   "focus": 0.45,
+   "note": "recap: $600 stash",
+   "hud": true
   }
  ],
- "fps": 30,
- "band_height": 1920,
+ "fps": 60,
+ "band_height": 1400,
  "game_audio_volume": 0.12,
  "hype_words": [
   "0420",
@@ -160,66 +196,72 @@
   "stash"
  ],
  "captions": {
-  "y": 640,
-  "y_overrides": [
-   {
-    "from": 49.0,
-    "to": 52.3,
-    "y": 1180
-   }
-  ]
+  "y": 820,
+  "y_overrides": []
  },
  "callouts": [
   {
    "t": 0.3,
    "dur": 1.8,
-   "x": 800,
-   "y": 760,
-   "rotate": 0,
-   "note": "hook +$150 pops"
+   "x": 400,
+   "y": 342,
+   "rotate": 180,
+   "note": "hook $600 total"
   },
   {
-   "t": 16.6,
-   "dur": 1.7,
-   "x": 560,
-   "y": 763,
-   "rotate": 0,
+   "t": 16.5,
+   "dur": 1.8,
+   "x": 400,
+   "y": 640,
+   "rotate": 180,
    "note": "Safe code 0420"
   },
   {
-   "t": 26.95,
-   "dur": 1.4,
-   "x": 800,
-   "y": 760,
-   "rotate": 0,
+   "t": 26.6,
+   "dur": 1.5,
+   "x": 400,
+   "y": 640,
+   "rotate": 180,
    "note": "+$150"
   },
   {
    "t": 31.8,
    "dur": 2.0,
-   "x": 800,
-   "y": 760,
-   "rotate": 0,
+   "x": 400,
+   "y": 640,
+   "rotate": 180,
    "note": "+$27"
   },
   {
    "t": 35.1,
    "dur": 1.9,
-   "x": 720,
-   "y": 85,
-   "rotate": 0,
+   "x": 400,
+   "y": 342,
+   "rotate": 180,
    "note": "$600 total"
   },
   {
-   "t": 46.5,
+   "t": 46.4,
    "dur": 2.4,
-   "x": 310,
-   "y": 763,
-   "rotate": 0,
+   "x": 400,
+   "y": 640,
+   "rotate": 180,
    "note": "stash bag to lockup"
   }
  ],
  "preset": "medium",
  "fg_eq": "brightness=0.04:contrast=1.08:saturation=1.15:gamma=1.1",
- "maxrate": "5M"
+ "maxrate": "6M",
+ "interpolate": 60,
+ "hud_inset": {
+  "src": [
+   1540,
+   0,
+   380,
+   480
+  ],
+  "scale": 0.85,
+  "x": 16,
+  "y": 16
+ }
 }

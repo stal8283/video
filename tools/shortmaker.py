@@ -236,6 +236,44 @@ def render(cfg_path):
     clip_has_audio = []
     fps = cfg.get("fps", 60)
     fg_eq = f",eq={cfg['fg_eq']}" if cfg.get("fg_eq") else ""
+    # optional motion interpolation (e.g. 30 -> 60 fps): each clip is cut and
+    # interpolated once into the work dir, in parallel, and reused on re-renders.
+    interp = cfg.get("interpolate")
+    if interp:
+        clips = [dict(c) for c in clips]
+        jobs = []
+        for k, c in enumerate(clips):
+            src = rel(c["file"])
+            key = f"{Path(src).stem}_{c.get('start', 0)}_{c.get('end', 'end')}_{interp}"
+            dst = work / f"interp_{key}.mp4"
+            if not dst.exists():
+                cmd = ["ffmpeg", "-v", "error", "-y"]
+                if "start" in c:
+                    cmd += ["-ss", str(c["start"])]
+                if "end" in c:
+                    cmd += ["-to", str(c["end"])]
+                cmd += ["-i", src, "-vf",
+                        f"minterpolate=fps={interp}:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1",
+                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "14",
+                        "-c:a", "aac", "-b:a", "192k", str(dst) + ".tmp.mp4"]
+                jobs.append((cmd, dst))
+            dur = c["end"] - c["start"] if "end" in c else None
+            c["file"], c.pop("start", None), c.pop("end", None)
+            c["file"] = str(dst)
+            if dur:
+                c["start"], c["end"] = 0, dur
+        from concurrent.futures import ThreadPoolExecutor
+        def run(job):
+            cmd, dst = job
+            subprocess.run(cmd, check=True)
+            os.replace(str(dst) + ".tmp.mp4", dst)
+        if jobs:
+            print(f"interpolating {len(jobs)} clips to {interp} fps ...")
+            with ThreadPoolExecutor(max_workers=os.cpu_count() or 4) as ex:
+                list(ex.map(run, jobs))
+        fps = interp
+
+    hud = cfg.get("hud_inset", {})
     for i, c in enumerate(clips):
         f = rel(c["file"])
         if "start" in c:
@@ -246,25 +284,43 @@ def render(cfg_path):
         clip_has_audio.append(has_audio(f))
         pre = f"crop={c['crop']}," if c.get("crop") else ""
         spd = c.get("speed", 1.0)
+        dur = (c["end"] - c["start"]) / spd if "end" in c else 1
         # per-clip vertical composition: blurred fill + 1080xBAND window.
-        # `focus` (0=left, 0.5=centre, 1=right) pans the window, e.g. to keep the
-        # HUD money counter (top-right) in frame; `zoom` punches in.
+        # `focus` (0=left, 0.5=centre, 1=right) positions the window; `pan`
+        # [from, to] drifts it across the clip (adds motion to still shots);
+        # `zoom` punches in; `hud` overlays an inset of the HUD money area.
         focus = c.get("focus", 0.5)
+        if c.get("pan"):
+            f0, f1 = c["pan"]
+            fx = f"({f0}+({f1}-{f0})*min(t/{dur:.3f}\\,1))"
+        else:
+            fx = str(focus)
         z = c.get("zoom", cfg.get("zoom", 1.0))
         bh = int(band * z)
+        nsplit = 3 if c.get("hud") else 2
+        outs = "[bs{0}][fs{0}]".format(i) + ("[hs{0}]".format(i) if c.get("hud") else "")
         fg.append(f"[{i}:v]{pre}scale=1920:1080:force_original_aspect_ratio=increase,"
                   f"crop=1920:1080,setsar=1,fps={fps},setpts=(PTS-STARTPTS)/{spd},"
-                  f"split=2[bs{i}][fs{i}]")
+                  f"split={nsplit}{outs}")
         fg.append(f"[bs{i}]scale={W}:{H}:force_original_aspect_ratio=increase,"
                   f"crop={W}:{H},gblur=sigma=35,eq=brightness=-0.08:saturation=1.1[bg{i}]")
-        fg.append(f"[fs{i}]scale=-2:{bh},crop={W}:{band}:(iw-{W})*{focus}:(ih-{band})*{c.get('focus_y', 0.5)}{fg_eq}[fv{i}]")
-        fg.append(f"[bg{i}][fv{i}]overlay=0:{(H - band) // 2},setsar=1[v{i}]")
+        fg.append(f"[fs{i}]scale=-2:{bh},crop={W}:{band}:(iw-{W})*{fx}:(ih-{band})*{c.get('focus_y', 0.5)}{fg_eq}[fv{i}]")
+        top = (H - band) // 2
+        if c.get("hud"):
+            hx, hy, hw, hh = hud.get("src", [1600, 0, 320, 470])
+            sc = hud.get("scale", 0.9)
+            ow, oh = int(hw * sc) // 2 * 2, int(hh * sc) // 2 * 2
+            fg.append(f"[hs{i}]crop={hw}:{hh}:{hx}:{hy},scale={ow}:{oh},"
+                      f"drawbox=x=0:y=0:w=iw:h=ih:color=white@0.85:t=4[hud{i}]")
+            fg.append(f"[bg{i}][fv{i}]overlay=0:{top}[pre{i}]")
+            fg.append(f"[pre{i}][hud{i}]overlay={hud.get('x', 16)}:{top + hud.get('y', 16)},setsar=1[v{i}]")
+        else:
+            fg.append(f"[bg{i}][fv{i}]overlay=0:{top},setsar=1[v{i}]")
         if clip_has_audio[i]:
             atempo = f",atempo={spd}" if spd != 1.0 else ""
             fg.append(f"[{i}:a]asetpts=PTS-STARTPTS{atempo},aresample=48000,"
                       f"aformat=channel_layouts=stereo[a{i}]")
         else:
-            dur = (c.get("end", 0) - c.get("start", 0)) / spd if "end" in c else 1
             fg.append(f"anullsrc=r=48000:cl=stereo,atrim=0:{dur}[a{i}]")
     n = len(clips)
     fg.append("".join(f"[v{i}][a{i}]" for i in range(n)) +
