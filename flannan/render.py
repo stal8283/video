@@ -94,12 +94,12 @@ SCENES = [
     (20.15, "boat_arrives", [(20.15, 1.35, 1.5, .35, .72)], []),
     (22.15, "landing", [(22.15, 1.0, 1.05, .5, .5), (23.55, 1.45, 1.5, .75, .2), (24.35, 1.2, 1.26, .5, .45), (25.25, 1.0, 1.03, .5, .5)], []),
     (26.65, "climb", [(26.65, 1.1, 1.3, .4, .45)], []),
-    (28.55, "door", [(28.55, 1.0, 1.05, .5, .5), (29.35, 1.3, 1.36, .5, .45)], []),
+    (28.55, "door", [(28.55, 1.0, 1.05, .5, .5), (29.35, 1.35, 1.4, .3, .45)], []),
     (30.95, "beds", [(30.95, 1.0, 1.08, .5, .55)], []),
     (32.55, "clock", [(32.55, 1.0, 1.08, .5, .45), (33.15, 1.25, 1.28, .5, .45)], []),
     (33.85, "fireplace", [(33.85, 1.0, 1.12, .5, .55)], ["frost"]),
     (36.25, "shocked", [(36.25, 1.0, 1.4, .5, .35)], ["pulse"]),
-    (38.25, "coats", [(38.25, 1.0, 1.05, .5, .5), (40.65, 1.3, 1.4, .7, .45)], []),
+    (38.25, "coats", [(38.25, 1.0, 1.05, .55, .45), (40.65, 1.35, 1.45, .62, .5)], []),
     (43.25, "running", [(43.25, 1.0, 1.08, .5, .5), (45.55, 1.2, 1.28, .5, .4)], ["rain_heavy", "lightning"]),
     (47.75, "railings", [(47.75, 1.0, 1.06, .5, .5), (48.85, 1.3, 1.35, .45, .45), (50.5, 1.15, 1.2, .55, .5), (51.45, 1.0, 1.05, .5, .6)], []),
     (54.05, "investigators", [(54.05, 1.15, 1.25, .5, .45)], []),
@@ -124,11 +124,15 @@ def caption(img, gt):
     if txt == "1900" and gt < 7.95:
         return img  # the big date card replaces the caption, like "1959" in the reference
     k = 1.0 + 0.08 * (1 - ease((gt - s) / 0.08))
-    f = ImageFont.truetype(FONT, int(98 * k))
+    f = ImageFont.truetype(FONT, int(124 * k))
     d = ImageDraw.Draw(img)
     bb = d.textbbox((0, 0), txt, font=f, stroke_width=7)
     tw, th = bb[2] - bb[0], bb[3] - bb[1]
-    x, y = (OW - tw) / 2 - bb[0], 190 - th / 2 - bb[1]
+    if tw > 980:  # shrink long words to fit
+        f = ImageFont.truetype(FONT, int(124 * k * 980 / tw))
+        bb = d.textbbox((0, 0), txt, font=f, stroke_width=7)
+        tw, th = bb[2] - bb[0], bb[3] - bb[1]
+    x, y = (OW - tw) / 2 - bb[0], 200 - th / 2 - bb[1]
     d.text((x + 3, y + 5), txt, font=f, fill=(0, 0, 0, 140), stroke_width=7, stroke_fill=(0, 0, 0, 140))
     d.text((x, y), txt, font=f, fill=(255, 255, 255, 255), stroke_width=7, stroke_fill=(10, 10, 10, 255))
     return img
