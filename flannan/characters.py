@@ -31,8 +31,8 @@ CHARS = {
     "C7": dict(box=(333, 165, 108, 122), hat_y=168, scale=1.8,
                ident=dict(skin=4, brow_col=0, stubble=True, nose="lines", wrinkles=1, eye_sz=0.92, long=1.12, wide=0.9)),
     # sailor
-    "C8": dict(box=(333, 196, 108, 118), hat_y=188, scale=1.8,
-               ident=dict(skin=3, brow_col=4, stubble=True, nose="bulb", eye_sz=1.02, long=1.02)),
+    "C8": dict(box=(326, 112, 122, 210), hat_y=None, scale=1.75,
+               ident=dict(skin=3, brow_col=4, hair=(96, 62, 34), stubble=True, nose="bulb", eye_sz=1.02, long=1.02)),
 }
 BASE_IDENT = dict(wide=1.0, long=1.04, jaw=0.4, skin=0, brow_col=0, brow_th=1.15, eye_sz=1.0, eye_gap=0.2, eye_y=0.4,
                   nose="lines", wrinkles=1, mustache=False, stubble=False, mole=False, bags=0.9, mouth_w=1.0)
