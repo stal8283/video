@@ -195,17 +195,117 @@ def expr_at(track, gt):
     return cur
 
 
+
+# ---------------- vanish effect ----------------
+V_GLITCH, V_DISSOLVE, V_END = 3.7, 3.95, 4.95
+_KEEPERS = None
+
+
+def keepers_layer():
+    """The three shocked keepers on a transparent layer + their particle set (cached)."""
+    global _KEEPERS
+    if _KEEPERS is None:
+        import numpy as np
+        lay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        place(lay, "C2", "shock", 250, 1880, 1180, 9.0)
+        place(lay, "C3", "shock", 835, 1880, 1180, 9.0)
+        place(lay, "C1", "shock", 540, 1940, 1260, 9.0)
+        arr = np.asarray(lay)
+        rnd = np.random.default_rng(7)
+        # blotchy noise: low-res random upscaled, so they break apart in chunks; top dissolves slightly first
+        nz = Image.fromarray((rnd.random((H // 40, W // 40)) * 255).astype(np.uint8)).resize((W, H), Image.BICUBIC)
+        nz = np.asarray(nz).astype(np.float32) / 255
+        yy = np.mgrid[0:H, 0:W][0] / H
+        v = 0.65 * nz + 0.35 * yy
+        v = (v - v.min()) / (v.max() - v.min())
+        ys, xs = np.nonzero(arr[..., 3] > 200)
+        pick = rnd.choice(len(xs), size=min(4200, len(xs)), replace=False)
+        px, py = xs[pick].astype(float), ys[pick].astype(float)
+        parts = dict(x=px, y=py, v=v[ys[pick], xs[pick]], col=arr[ys[pick], xs[pick], :3],
+                     vx=rnd.uniform(180, 620, len(pick)), vy=rnd.uniform(-520, -120, len(pick)),
+                     sz=rnd.uniform(2.5, 7, len(pick)), life=rnd.uniform(0.7, 1.4, len(pick)))
+        _KEEPERS = (lay, v, parts)
+    return _KEEPERS
+
+
+def vanish_fx(gt):
+    import numpy as np
+    lay, v, P = keepers_layer()
+    # background: day -> night
+    k_night = ease_out((gt - 3.9) / 0.8)
+    img = Image.blend(bg("B1"), bg("B1", "night"), k_night)
+    t = gt - V_GLITCH
+    rnd = random.Random(int(gt * FPS))
+    if gt < V_DISSOLVE:
+        # glitch: RGB split + horizontal slice jitter + flicker
+        r, g, b, a = lay.split()
+        off = rnd.randint(14, 34)
+        split = Image.merge("RGBA", (r, g, b, a))
+        red = Image.merge("RGBA", (r, Image.new("L", lay.size, 0), Image.new("L", lay.size, 0), a.point(lambda q: q // 2)))
+        cyan = Image.merge("RGBA", (Image.new("L", lay.size, 0), g, b, a.point(lambda q: q // 2)))
+        g_l = Image.new("RGBA", lay.size, (0, 0, 0, 0))
+        g_l.alpha_composite(red, (-off, 0)); g_l.alpha_composite(cyan, (off, 0))
+        if int(gt * FPS) % 3 != 1:  # flicker frames
+            g_l.alpha_composite(split)
+        out = Image.new("RGBA", lay.size, (0, 0, 0, 0))
+        y = 0
+        while y < H:
+            hgt = rnd.randint(20, 140)
+            dx = rnd.choice([0, 0, rnd.randint(-70, 70)])
+            out.alpha_composite(g_l.crop((0, y, W, min(H, y + hgt))), (dx, y))
+            y += hgt
+        img.alpha_composite(out)
+    elif gt < V_END + 1.2:
+        p = (gt - V_DISSOLVE) / (V_END - V_DISSOLVE)   # 0..1 dissolve progress
+        if p < 1:
+            keep = (v > p * 1.05).astype(np.uint8) * 255
+            # glowing burn edge just ahead of the dissolve front
+            edge = ((v > p * 1.05) & (v < p * 1.05 + 0.025)).astype(np.uint8) * 255
+            body = lay.copy()
+            body.putalpha(Image.fromarray(np.minimum(np.asarray(lay)[..., 3], keep)))
+            img.alpha_composite(body)
+            glow = Image.new("RGBA", lay.size, (255, 200, 150, 0))
+            glow.putalpha(Image.fromarray(np.minimum(np.asarray(lay)[..., 3], edge)).filter(ImageFilter.GaussianBlur(3)))
+            img.alpha_composite(glow)
+        # dust particles fly off on the wind once their spot dissolves
+        dt = gt - (V_DISSOLVE + P["v"] / 1.05 * (V_END - V_DISSOLVE))
+        live = (dt > 0) & (dt < P["life"])
+        if live.any():
+            d = Image.new("RGBA", lay.size, (0, 0, 0, 0))
+            dd = ImageDraw.Draw(d)
+            idx = np.nonzero(live)[0]
+            tt = dt[idx]
+            x = P["x"][idx] + P["vx"][idx] * tt + 60 * np.sin(tt * 6 + idx)
+            y = P["y"][idx] + P["vy"][idx] * tt - 120 * tt * tt
+            fade = 1 - tt / P["life"][idx]
+            sz = P["sz"][idx] * (1 - 0.5 * tt / P["life"][idx])
+            col = np.clip(P["col"][idx] * 0.6 + 110, 0, 255).astype(int)
+            for xi, yi, s_, c, f in zip(x, y, sz, col, fade):
+                dd.ellipse([xi - s_, yi - s_, xi + s_, yi + s_], fill=(int(c[0]), int(c[1]), int(c[2]), int(230 * f)))
+            img.alpha_composite(d)
+    # white flash on "vanish"
+    if 0 <= gt - 3.8 < 0.12:
+        img = flash(img, int(170 * (1 - (gt - 3.8) / 0.12)))
+    # camera shake during the glitch
+    if V_GLITCH <= gt < V_DISSOLVE + 0.1:
+        dx, dy = rnd.randint(-14, 14), rnd.randint(-10, 10)
+        img = img.transform(img.size, Image.AFFINE, (1, 0, dx, 0, 1, dy), resample=Image.BILINEAR)
+        img = img.resize((int(W * 1.03), int(H * 1.03))).crop((int(W * 0.015), int(H * 0.015), int(W * 0.015) + W, int(H * 0.015) + H))
+    return img
+
+
 # ---------------- the edit ----------------
 def SHOT(gt, f):
-    # 1. hook: one keeper, then the other two slide in on "three"
-    if gt < 3.75:
+    # 1. hook: one keeper, then the other two slide in on "three"; shocked on "all three of you"
+    if gt < 3.7:
         img = bg("B1").copy()
-        img = place(img, "C2", "neutral", 250, 1880, 1180, gt, enter="left", t_enter=0.75)
-        img = place(img, "C3", "neutral", 835, 1880, 1180, gt, enter="right", t_enter=0.95)
-        return place(img, "C1", "neutral", 540, 1940, 1260, gt)
-    # 2. "...vanish without a trace" -> same place, dark and empty
+        e = expr_at([(0, "neutral"), (3.3, "shock")], gt)
+        img = place(img, "C2", e, 250, 1880, 1180, gt, enter="left", t_enter=0.75)
+        img = place(img, "C3", e, 835, 1880, 1180, gt, enter="right", t_enter=0.95)
+        return place(img, "C1", e, 540, 1940, 1260, gt)
+    # 2. "...vanish without a trace": glitch, flash, disintegrate into dust, island goes dark
     if gt < 5.7:
-        return bg("B1", "night").copy()
+        return vanish_fx(gt)
     # 3. "this actually happened in 1900" -> wide, keepers small, big date
     if gt < 7.95:
         img = bg("B1").copy()
