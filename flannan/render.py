@@ -266,13 +266,13 @@ def SHOT(gt, f):
         return marker(img, "circle", (580, 360, 1040, 1700), 41.0, gt, 3)
     # 17. one man ran outside into the storm in just his shirt
     if gt < 47.75:
-        img = place(bg("B13").copy(), "C5", "scared", 560, 1500, 700, gt, move=(43.35, 47.6, 480, 2150, 1700), bob=22)
+        img = place(bg("B13").copy(), "C5", "scared", 480, 1480, 640, gt, move=(43.35, 47.6, 520, 2150, 1700), bob=22)
         img = rain(img, f, 380, 110)
         return flash(img, 140) if 0 <= gt - 45.65 < 0.15 else img
     # 18. bent railings, missing ropes 110 ft up
     if gt < 54.05:
-        img = marker(bg("B14").copy(), "circle", (520, 1150, 1060, 1700), 49.2, gt, 4)
-        return soft_text(img, "110 FT", W / 2, 520, 140, 51.8, 53.9, gt)
+        img = marker(bg("B14").copy(), "circle", (560, 330, 1075, 800), 49.2, gt, 4)
+        return soft_text(img, "110 FT", W / 2 - 160, 1100, 140, 51.8, 53.9, gt)
     # 19. investigators slide in, arms crossed, smug
     if gt < 55.05:
         img = place(bg("B16").copy(), "C7", "smug", 760, 2000, 1450, gt, enter="right", t_enter=54.45)
