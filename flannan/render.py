@@ -56,7 +56,8 @@ def plate(name):
         x, y, w, h = f["box"]
         box = ((x * k - cx0) * sx, (y * k - cy0) * sy, w * k * sx, h * k * sy)
         im = paste_face(im, box, f.get("expr", "worried"), f.get("seed", 0), hat=f.get("hat", 0.13),
-                        look=tuple(f.get("look", (0, 0))), scale=f.get("scale", 1.6), yoff=f.get("yoff", 0.0))
+                        look=tuple(f.get("look", (0, 0))), scale=f.get("scale", 1.6), yoff=f.get("yoff", 0.0),
+                        hat_y=((f["hat_y"] * k - cy0) * sy) if "hat_y" in f else None)
     _PLATES[name] = im
     return im
 

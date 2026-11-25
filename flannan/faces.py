@@ -112,7 +112,7 @@ def face_image(W, expr="worried", seed=0, look=(0, 0), age=1.0):
     return img.resize((int(W), int(W * 1.08)), Image.LANCZOS)
 
 
-def paste_face(plate, box, expr="worried", seed=0, hat=0.0, look=(0, 0), scale=1.45, yoff=0.0, alpha=255):
+def paste_face(plate, box, expr="worried", seed=0, hat=0.0, look=(0, 0), scale=1.45, yoff=0.0, alpha=255, hat_y=None):
     """box = (x, y, w, h) of the real face in plate coords. hat = fraction of the cartoon face (from top)
     that the original hat/hair is restored over, so the hat sits on top like the reference."""
     x, y, bw, bh = box
@@ -124,6 +124,8 @@ def paste_face(plate, box, expr="worried", seed=0, hat=0.0, look=(0, 0), scale=1
         f.putalpha(f.getchannel("A").point(lambda v: v * alpha // 255))
     orig = plate.copy()
     plate.alpha_composite(f, (max(0, fx), max(0, fy)), (max(0, -fx), max(0, -fy)))
+    if hat_y is not None:
+        hat = max(0.0, (hat_y - fy) / f.height)
     if hat > 0:
         m = Image.new("L", plate.size, 0)
         md = ImageDraw.Draw(m)
