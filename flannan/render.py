@@ -197,7 +197,7 @@ def expr_at(track, gt):
 
 
 # ---------------- vanish effect: bodies vanish, clothes drop ----------------
-KEEPERS = [("C2", 250, 1880, 1180, 3.86, -1), ("C3", 835, 1880, 1180, 3.98, 1), ("C1", 540, 1940, 1260, 3.80, 1)]
+KEEPERS = [("C2", 250, 1700, 1080, 3.86, -1), ("C3", 835, 1700, 1080, 3.98, 1), ("C1", 540, 1760, 1150, 3.80, 1)]
 FALL = 0.5
 _PARTS = {}
 
@@ -242,7 +242,7 @@ def crumple(im, p, seed, wf=1.3, hf=0.34):
 
 
 def vanish_fx(gt):
-    img = Image.blend(bg("B1"), bg("B1", "night"), 0.55 * ease_out((gt - 4.4) / 1.2))
+    img = Image.blend(bg("B1"), bg("B1", "night"), 0.3 * ease_out((gt - 4.4) / 1.2))
     puffs = []
     for name, x, feet, height, ts, side in KEEPERS:
         if gt < ts:
@@ -299,93 +299,197 @@ def vanish_fx(gt):
     return img
 
 
+# ---------------- extra atmosphere ----------------
+_FOG = None
+
+
+def fog(img, gt, alpha=70, speed=40):
+    """Slow drifting fog/sea-mist layer."""
+    global _FOG
+    if _FOG is None:
+        import numpy as np
+        rnd = np.random.default_rng(3)
+        n = Image.fromarray((rnd.random((24, 30)) * 255).astype("uint8")).resize((int(W * 1.6), H), Image.BICUBIC)
+        n = n.filter(ImageFilter.GaussianBlur(40))
+        _FOG = n
+    x = int((gt * speed) % (W * 0.6))
+    m = _FOG.crop((x, 0, x + W, H)).point(lambda v: int(max(0, v - 90) * alpha / 165))
+    lay = Image.new("RGBA", img.size, (225, 230, 235, 0))
+    lay.putalpha(m)
+    return Image.alpha_composite(img, lay)
+
+
+def pointing_hand(img, tip, t_in, gt, sleeve=(62, 48, 40)):
+    """Cartoon pointing hand sliding in from the left edge (the reference's pointing inserts)."""
+    if gt < t_in:
+        return img
+    k = ease_out((gt - t_in) / 0.3)
+    tx, ty = tip
+    shift = int((k - 1) * (tx + 60))
+    lay = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay)
+    SK, LN = (226, 192, 160, 255), (18, 16, 14, 255)
+    fx0 = tx - 150                                     # finger base
+    d.rounded_rectangle([-40, ty - 20, fx0 - 120, ty + 150], 30, fill=sleeve + (255,), outline=LN, width=6)   # sleeve
+    d.rounded_rectangle([fx0 - 160, ty - 10, fx0 + 10, ty + 140], 50, fill=SK, outline=LN, width=6)           # fist
+    d.rounded_rectangle([fx0 - 20, ty - 4, tx, ty + 40], 22, fill=SK, outline=LN, width=6)                    # index finger
+    for i in range(3):                                                                                       # curled fingers
+        d.arc([fx0 - 70, ty + 40 + i * 30, fx0 + 10, ty + 80 + i * 30], 270, 90, fill=LN, width=5)
+    d.arc([fx0 - 110, ty - 30, fx0 - 20, ty + 40], 200, 330, fill=LN, width=5)                                # thumb
+    if shift:
+        lay = lay.transform(lay.size, Image.AFFINE, (1, 0, -shift, 0, 1, 0))
+    return Image.alpha_composite(img, lay)
+
+
+def walkers(img, gt, t0, t1, pts, height, names=("C2", "C1", "C3"), spread=34):
+    """Tiny figures walking along a path (the reference's tiny hikers on the aerial shot)."""
+    k = max(0.0, min(1.0, (gt - t0) / (t1 - t0)))
+    (x0, y0), (x1, y1) = pts
+    for i, n in enumerate(names):
+        x = x0 + (x1 - x0) * k + (i - 1) * spread
+        y = y0 + (y1 - y0) * k + (i - 1) * 6 - abs(math.sin(gt * 10 + i)) * 3
+        place(img, n, "neutral", x, y, height, gt)
+    return img
+
+
+_END = None
+
+
+def ending_plate():
+    """Callback: the opening island, with the three empty uniforms still lying there."""
+    global _END
+    if _END is None:
+        _END = vanish_fx(5.6)
+    return _END
+
+
 # ---------------- the edit ----------------
+NIGHT = set()
+
+
 def SHOT(gt, f):
+    """Returns (frame, is_day)."""
     # 1. hook: one keeper, then the other two slide in on "three"; shocked on "all three of you"
     if gt < 3.7:
-        img = bg("B1").copy()
-        e = expr_at([(0, "neutral"), (3.3, "shock")], gt)
-        img = place(img, "C2", e, 250, 1880, 1180, gt, enter="left", t_enter=0.75)
-        img = place(img, "C3", e, 835, 1880, 1180, gt, enter="right", t_enter=0.95)
-        return place(img, "C1", e, 540, 1940, 1260, gt)
-    # 2. "...vanish without a trace": glitch, flash, disintegrate into dust, island goes dark
+        img = fog(bg("B1").copy(), gt, 45)
+        e = expr_at([(0, "content"), (1.25, "neutral"), (3.3, "shock")], gt)
+        (n2, x2, f2, h2, *_), (n3, x3, f3, h3, *_), (n1, x1, f1, h1, *_) = KEEPERS
+        img = place(img, n2, e, x2, f2, h2, gt, enter="left", t_enter=0.75)
+        img = place(img, n3, e, x3, f3, h3, gt, enter="right", t_enter=0.95)
+        return place(img, n1, e, x1, f1, h1, gt), True
+    # 2. "...vanish without a trace": bodies vanish, clothes drop
     if gt < 5.7:
-        return vanish_fx(gt)
+        return fog(vanish_fx(gt), gt, 45), True
     # 3. "this actually happened in 1900" -> wide, keepers small, big date
     if gt < 7.95:
-        img = bg("B1").copy()
+        img = fog(bg("B1").copy(), gt, 45)
         for nm, x in (("C2", 330), ("C1", 540), ("C3", 750)):
             img = place(img, nm, "neutral", x, 1700, 560, gt)
-        return soft_text(img, "1900", W / 2, 520, 230, 7.05, 7.85, gt)
-    # 4. location, curved label
+        return soft_text(img, "1900", W / 2, 520, 230, 7.05, 7.85, gt), True
+    # 4. location, curved label, tiny keepers walking up to the lighthouse
     if gt < 11.2:
-        return arc_text(bg("B2").copy(), "“FLANNAN ISLES”", W / 2, 470, 900, 74, 8.3, 11.0, gt)
-    # 5. passing ship: sailor slides in, squints on "noticed"
+        img = walkers(bg("B2").copy(), gt, 7.95, 11.2, ((470, 905), (530, 815)), 58)
+        return arc_text(fog(img, gt, 35), "\u201cFLANNAN ISLES\u201d", W / 2, 470, 900, 74, 8.3, 11.0, gt), True
+    # 5. passing ship: sailor slides in, squints on "noticed", eyes wide on "strange"
     if gt < 14.2:
-        e = expr_at([(0, "neutral"), (12.4, "suspicious")], gt)
-        return place(bg("B4").copy(), "C8", e, 400, 2050, 1500, gt, enter="right", t_enter=11.35)
+        e = expr_at([(0, "neutral"), (12.4, "suspicious"), (13.0, "shock")], gt)
+        return place(bg("B4").copy(), "C8", e, 400, 2050, 1500, gt, enter="right", t_enter=11.35), False
     # 6. lighthouse dark
     if gt < 16.45:
-        return bg("B3").copy()
+        return rain(bg("B3").copy(), f, 140, 70), False
     # 7. storm, eleven days
     if gt < 20.15:
         img = rain(bg("B5").copy(), f, 320)
         if 0 <= gt - 17.0 < 0.15 or 0 <= gt - 18.4 < 0.12:
             img = flash(img)
-        return soft_text(img, "11 DAYS", W / 2, 560, 120, 18.75, 20.0, gt)
-    # 8. relief keeper arrives at the landing, worried on "nobody came down"
-    if gt < 23.55:
-        e = expr_at([(0, "neutral"), (22.2, "worried")], gt)
-        return place(bg("B6").copy(), "C4", e, 300, 2020, 1350, gt, enter="left", t_enter=20.3)
-    # 9. no flag, no signal, nothing
+        return soft_text(img, "11 DAYS", W / 2, 560, 120, 18.75, 20.0, gt), False
+    # 8-9. relief keeper arrives at the landing: no flag, no signal, nothing
     if gt < 26.65:
-        return marker(bg("B6").copy(), "circle", (450, 230, 640, 520), 23.65, gt, 1)
+        img = fog(bg("B6").copy(), gt, 55)
+        e = expr_at([(0, "neutral"), (22.2, "worried"), (23.6, "suspicious"), (24.4, "worried"), (25.3, "scared")], gt)
+        img = place(img, "C4", e, 300, 2020, 1350, gt, enter="left", t_enter=20.3)
+        return marker(img, "circle", (450, 230, 640, 520), 23.65, gt, 1), True
     # 10. climbs up alone
     if gt < 28.55:
-        return place(bg("B7").copy(), "C4", "worried", 420, 1950, 900, gt, move=(26.65, 28.55, 520, 1650, 700), bob=10)
+        img = fog(bg("B7").copy(), gt, 55)
+        return place(img, "C4", "worried", 420, 1950, 900, gt, move=(26.65, 28.55, 520, 1650, 700), bob=10), True
     # 11. gate and door shut tight
     if gt < 30.95:
         e = expr_at([(0, "worried"), (29.75, "suspicious")], gt)
-        return place(bg("B8").copy(), "C4", e, 250, 2050, 1500, gt, enter="left", t_enter=28.6)
-    # 12. beds empty
+        return place(bg("B8").copy(), "C4", e, 250, 2050, 1500, gt, enter="left", t_enter=28.6), True
+    # 12. beds empty: he leans in, confused
     if gt < 32.55:
-        return bg("B9").copy()
-    # 13. clock stopped
+        e = expr_at([(0, "neutral"), (31.6, "confused")], gt)
+        return place(bg("B9").copy(), "C4", e, 220, 2250, 1650, gt, enter="left", t_enter=31.0), False
+    # 13. clock stopped: shocked
     if gt < 33.85:
-        return marker(bg("B10").copy(), "circle", (140, 520, 720, 1360), 33.2, gt, 2)
+        img = marker(bg("B10").copy(), "circle", (140, 520, 720, 1360), 33.2, gt, 2)
+        e = expr_at([(0, "worried"), (33.2, "shock")], gt)
+        return place(img, "C4", e, 880, 2250, 1650, gt, enter="right", t_enter=32.6), False
     # 14. fireplace stone cold
     if gt < 36.25:
-        return bg("B11").copy()
+        e = expr_at([(0, "worried"), (35.2, "sad")], gt)
+        return place(bg("B11").copy(), "C4", e, 170, 2250, 1600, gt, enter="left", t_enter=33.95), False
     # 15. "here's where it gets weird" -> close-up reaction, everyone shocked
     if gt < 38.25:
         img = bg("B1", "blur").copy()
-        e = expr_at([(0, "neutral"), (37.15, "shock")], gt)
+        e = expr_at([(0, "suspicious"), (36.9, "deadpan"), (37.15, "shock")], gt)
         img = place(img, "C2", e, 120, 4300, 3900, gt)
         img = place(img, "C3", e, 980, 4300, 3900, gt)
-        return place(img, "C1", e, 560, 4600, 4100, gt)
-    # 16. coats: two gone, one still there
+        return place(img, "C1", e, 560, 4600, 4100, gt), True
+    # 16. coats: two gone, one still there (pointing hand on "third")
     if gt < 43.25:
         img = bg("B12").copy()
-        img = marker(img, "dashed", (150, 560, 390, 1350), 39.6, gt)
-        img = marker(img, "dashed", (420, 560, 660, 1350), 39.8, gt)
-        return marker(img, "circle", (580, 360, 1040, 1700), 41.0, gt, 3)
+        img = marker(img, "dashed", (150, 470, 345, 1250), 39.6, gt)
+        img = marker(img, "dashed", (445, 470, 640, 1250), 39.8, gt)
+        img = marker(img, "circle", (600, 360, 1040, 1700), 41.0, gt, 3)
+        return pointing_hand(img, (610, 1050), 41.1, gt), True
     # 17. one man ran outside into the storm in just his shirt
     if gt < 47.75:
-        img = place(bg("B13").copy(), "C5", "scared", 480, 1480, 640, gt, move=(43.35, 47.6, 520, 2150, 1700), bob=22)
+        e = expr_at([(0, "scared"), (45.65, "shock"), (46.0, "scared")], gt)
+        img = place(bg("B13").copy(), "C5", e, 480, 1480, 640, gt, move=(43.35, 47.6, 520, 2150, 1700), bob=22)
         img = rain(img, f, 380, 110)
-        return flash(img, 140) if 0 <= gt - 45.65 < 0.15 else img
-    # 18. bent railings, missing ropes 110 ft up
+        return (flash(img, 140) if 0 <= gt - 45.65 < 0.15 else img), False
+    # 18. bent railings, missing ropes 110 ft up: relief keeper looks on
     if gt < 54.05:
-        img = marker(bg("B14").copy(), "circle", (560, 330, 1075, 800), 49.2, gt, 4)
-        return soft_text(img, "110 FT", W / 2 - 160, 1100, 140, 51.8, 53.9, gt)
-    # 19. investigators slide in, arms crossed, smug, in front of the giant wave they blamed
+        img = fog(bg("B14").copy(), gt, 60, 55)
+        img = marker(img, "circle", (560, 330, 1075, 800), 49.2, gt, 4)
+        e = expr_at([(0, "worried"), (49.7, "scared"), (53.0, "shock")], gt)
+        img = place(img, "C4", e, 820, 2300, 1350, gt, enter="right", t_enter=47.9)
+        return soft_text(img, "110 FT", W / 2 - 160, 1100, 140, 51.8, 53.9, gt), True
+    # 19. investigators slide in, arms crossed, smug, in front of the giant wave; grin on "giant wave"
     if gt < 55.95:
-        img = place(bg("B15").copy(), "C7", "smug", 760, 2000, 1450, gt, enter="right", t_enter=54.45)
-        return place(img, "C6", "smug", 330, 2000, 1400, gt, enter="left", t_enter=54.1)
-    # 21. not a single body was ever found
-    img = bg("B16").copy()
-    k = min(1.0, max(0.0, (gt - 56.2) / 1.6))
-    return Image.alpha_composite(img, Image.new("RGBA", img.size, (0, 0, 0, int(110 * k))))
+        e = expr_at([(0, "smug"), (55.1, "smugsmile")], gt)
+        img = place(bg("B15").copy(), "C7", e, 760, 2000, 1450, gt, enter="right", t_enter=54.45)
+        return place(img, "C6", e, 330, 2000, 1400, gt, enter="left", t_enter=54.1), True
+    # 20. callback ending: the empty uniforms still lying on the island, fading to dusk
+    img = fog(ending_plate().copy(), gt, 55)
+    k = min(1.0, max(0.0, (gt - 56.4) / 1.8))
+    return Image.alpha_composite(img, Image.new("RGBA", img.size, (0, 0, 10, int(120 * k)))), True
+
+
+SHOT_STARTS = [0.0, 3.7, 5.7, 7.95, 11.2, 14.2, 16.45, 20.15, 26.65, 28.55, 30.95, 32.55, 33.85, 36.25, 38.25, 43.25, 47.75, 54.05, 55.95, DUR]
+
+
+def camera(img, gt):
+    """Slow push-in on every shot so nothing is ever frozen."""
+    i = max(j for j, t in enumerate(SHOT_STARTS[:-1]) if t <= gt)
+    s0, s1 = SHOT_STARTS[i], SHOT_STARTS[i + 1]
+    z = 1 + 0.055 * (gt - s0) / (s1 - s0)
+    if z <= 1.001:
+        return img
+    cw, ch = W / z, H / z
+    x0, y0 = (W - cw) / 2, (H - ch) * 0.45
+    return img.resize((W, H), Image.BILINEAR, box=(x0, y0, x0 + cw, y0 + ch))
+
+
+def grade(img, day):
+    """Reference look: bright, flat, desaturated daylight; night/storm scenes keep their mood."""
+    img = ImageEnhance.Color(img).enhance(0.78 if day else 0.88)
+    if day:
+        img = ImageEnhance.Brightness(img).enhance(1.12)
+        img = ImageEnhance.Contrast(img).enhance(0.94)
+    return img
 
 
 def caption(img, gt):
@@ -413,7 +517,9 @@ def caption(img, gt):
 
 def frame(fi):
     gt = fi / FPS
-    return caption(SHOT(gt, fi), gt).convert("RGB")
+    img, day = SHOT(gt, fi)
+    img = grade(camera(img, gt).convert("RGB"), day).convert("RGBA")
+    return caption(img, gt).convert("RGB")
 
 
 def render_bytes(fi):

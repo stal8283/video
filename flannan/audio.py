@@ -89,6 +89,13 @@ put("wind", 55.95, -26, length=2.5, fade_out=1.5)
 for t in (0.75, 0.95, 11.35, 20.3, 28.6, 54.1, 54.45):                        # character slide-ins
     put("swoosh", t - 0.05, -16)
 
+for t in (3.3, 12.4, 13.0, 22.2, 23.6, 24.4, 25.3, 29.75, 31.6, 33.2, 35.2, 37.15, 49.7, 53.0, 55.1):  # face changes
+    put("pop", t - 0.02, -19)
+put("swoosh", 41.05, -15)                                                    # pointing hand
+for t in (31.0, 32.6, 33.95, 47.9):                                           # relief keeper steps in
+    put("swoosh", t - 0.05, -17)
+put("drone", 7.9, -24, length=14.3, fade_in=0.8, fade_out=0.5, loop=True)    # low bed under the setup too
+
 peak = np.abs(out).max()
 if peak > 0.98:
     out *= 0.98 / peak
