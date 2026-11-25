@@ -7,13 +7,34 @@
     70,
     80
    ],
-   "expr": "worried",
    "seed": 1,
    "hat_y": 250,
    "look": [
     0.3,
     0
-   ]
+   ],
+   "acts": [
+    [
+     0,
+     "happy"
+    ],
+    [
+     0.9,
+     "suspicious"
+    ],
+    [
+     3.7,
+     "confused"
+    ],
+    [
+     3.95,
+     "scared"
+    ]
+   ],
+   "ident": {
+    "long": 1.12,
+    "brow_col": 2
+   }
   },
   {
    "box": [
@@ -22,13 +43,35 @@
     62,
     80
    ],
-   "expr": "scared",
    "seed": 2,
    "hat_y": 246,
    "look": [
     -0.3,
     0
-   ]
+   ],
+   "acts": [
+    [
+     0,
+     "neutral"
+    ],
+    [
+     0.6,
+     "content"
+    ],
+    [
+     3.7,
+     "shock"
+    ],
+    [
+     4.05,
+     "deadpan"
+    ]
+   ],
+   "ident": {
+    "wide": 0.95,
+    "nose": "bulb",
+    "brow_col": 1
+   }
   },
   {
    "box": [
@@ -37,9 +80,32 @@
     125,
     120
    ],
-   "expr": "worried",
    "seed": 3,
-   "hat_y": 208
+   "hat_y": 208,
+   "acts": [
+    [
+     0,
+     "content"
+    ],
+    [
+     1.0,
+     "happy"
+    ],
+    [
+     3.7,
+     "worried"
+    ],
+    [
+     3.9,
+     "shock"
+    ]
+   ],
+   "ident": {
+    "wrinkles": 2,
+    "brow_col": 3,
+    "mustache": false,
+    "long": 1.02
+   }
   }
  ],
  "keeper1": [
@@ -50,9 +116,18 @@
     150,
     140
    ],
-   "expr": "worried",
    "seed": 4,
-   "hat_y": 262
+   "hat_y": 262,
+   "acts": [
+    [
+     1.55,
+     "content"
+    ],
+    [
+     2.1,
+     "smug"
+    ]
+   ]
   }
  ],
  "ship_night": [
@@ -63,12 +138,29 @@
     125,
     110
    ],
-   "expr": "worried",
    "seed": 5,
    "hat_y": 250,
    "look": [
     0.8,
     0
+   ],
+   "acts": [
+    [
+     11.2,
+     "neutral"
+    ],
+    [
+     12.4,
+     "suspicious"
+    ],
+    [
+     13.0,
+     "shock"
+    ],
+    [
+     13.6,
+     "worried"
+    ]
    ]
   }
  ],
@@ -80,9 +172,22 @@
     66,
     58
    ],
-   "expr": "worried",
    "seed": 6,
-   "hat_y": 380
+   "hat_y": 380,
+   "acts": [
+    [
+     26.65,
+     "worried"
+    ],
+    [
+     27.6,
+     "confused"
+    ],
+    [
+     28.1,
+     "sad"
+    ]
+   ]
   }
  ],
  "shocked": [
@@ -93,9 +198,26 @@
     148,
     140
    ],
-   "expr": "shock",
    "seed": 7,
-   "hat_y": 243
+   "hat_y": 243,
+   "acts": [
+    [
+     36.25,
+     "suspicious"
+    ],
+    [
+     36.9,
+     "deadpan"
+    ],
+    [
+     37.2,
+     "shock"
+    ],
+    [
+     37.8,
+     "scared"
+    ]
+   ]
   }
  ],
  "running": [
@@ -106,12 +228,25 @@
     82,
     88
    ],
-   "expr": "scared",
    "seed": 8,
    "hat_y": 232,
    "look": [
     0,
     0.3
+   ],
+   "acts": [
+    [
+     43.25,
+     "scared"
+    ],
+    [
+     45.6,
+     "shock"
+    ],
+    [
+     46.0,
+     "scared"
+    ]
    ]
   }
  ],
@@ -123,9 +258,18 @@
     95,
     82
    ],
-   "expr": "smug",
    "seed": 9,
-   "hat_y": 402
+   "hat_y": 402,
+   "acts": [
+    [
+     54.05,
+     "smug"
+    ],
+    [
+     54.6,
+     "smugsmile"
+    ]
+   ]
   },
   {
    "box": [
@@ -134,9 +278,22 @@
     64,
     64
    ],
-   "expr": "smug",
    "seed": 10,
-   "hat_y": 423
+   "hat_y": 423,
+   "acts": [
+    [
+     54.05,
+     "suspicious"
+    ],
+    [
+     54.4,
+     "smug"
+    ],
+    [
+     54.8,
+     "happy"
+    ]
+   ]
   }
  ],
  "door": [
@@ -147,12 +304,29 @@
     76,
     72
    ],
-   "expr": "worried",
    "seed": 11,
    "hat_y": 398,
    "look": [
     0.4,
     0
+   ],
+   "acts": [
+    [
+     28.55,
+     "neutral"
+    ],
+    [
+     29.2,
+     "confused"
+    ],
+    [
+     29.9,
+     "worried"
+    ],
+    [
+     30.4,
+     "deadpan"
+    ]
    ]
   }
  ]

@@ -4,7 +4,7 @@ Usage: python3 render.py [--preview T1,T2,...]"""
 import json, math, random, subprocess, sys, os
 from multiprocessing import Pool
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance, ImageFilter
-from faces import paste_face
+from faces import paste_face, state_at, random_identity
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OW, OH = 1080, 1920
@@ -52,14 +52,28 @@ def plate(name):
     im = Image.merge("RGB", (r, g, b)).convert("RGBA")
     sx = CW / (cx1 - cx0)
     sy = CH / (cy1 - cy0)
+    faces = []
     for f in FACES.get(name, []):
         x, y, w, h = f["box"]
-        box = ((x * k - cx0) * sx, (y * k - cy0) * sy, w * k * sx, h * k * sy)
-        im = paste_face(im, box, f.get("expr", "worried"), f.get("seed", 0), hat=f.get("hat", 0.13),
-                        look=tuple(f.get("look", (0, 0))), scale=f.get("scale", 1.6), yoff=f.get("yoff", 0.0),
-                        hat_y=((f["hat_y"] * k - cy0) * sy) if "hat_y" in f else None)
-    _PLATES[name] = im
-    return im
+        bx, by, bw, bh = (x * k - cx0) * sx, (y * k - cy0) * sy, w * k * sx, h * k * sy
+        ident = random_identity(f.get("seed", 0))
+        ident.update(f.get("ident", {}))
+        W = bw * f.get("scale", 1.6)
+        faces.append(dict(spec=f, ident=ident, cx=bx + bw / 2, cy=by + bh * (0.55 + f.get("yoff", 0.0)), W=W,
+                          hat_y=((f["hat_y"] * k - cy0) * sy) if "hat_y" in f else None))
+    _PLATES[name] = (im, faces)
+    return _PLATES[name]
+
+
+def plate_at(name, gt):
+    """Plate with its cartoon faces animated for global time gt."""
+    base, faces = plate(name)
+    img = base.copy()
+    for fc in faces:
+        st, tilt, pop = state_at(fc["spec"], gt)
+        paste_face(img, base, fc["cx"], fc["cy"], fc["W"] * pop, fc["ident"], st, fc["spec"].get("seed", 0),
+                   hat_y=fc["hat_y"], tilt=tilt)
+    return img
 
 
 def rain(img, f, n=260, ang=0.25, alpha=90, length=80):
@@ -83,7 +97,8 @@ def tint(img, col, a):
 
 # scene: (start, plate, shots[(t, z0, z1, fx, fy)], fx_list)
 SCENES = [
-    (0.0, "keepers3", [(0.0, 1.0, 1.05, .5, .45), (1.55, 1.45, 1.5, .52, .3)], []),
+    (0.0, "keepers3", [(0.0, 1.0, 1.05, .5, .45), (0.95, 1.3, 1.35, .45, .3)], []),
+    (1.55, "keeper1", [(1.55, 1.05, 1.15, .5, .35)], []),
     (2.45, "island_aerial", [(2.45, 1.0, 1.1, .5, .5)], []),
     (3.7, "keepers3", [(3.7, 1.1, 1.18, .5, .4)], ["vanish"]),
     (5.7, "lighthouse_storm", [(5.7, 1.0, 1.1, .5, .45), (7.05, 1.12, 1.18, .5, .4)], ["rain", "1900"]),
@@ -181,11 +196,11 @@ def frame(fi):
     gt = fi / FPS
     idx = max(i for i, s in enumerate(SCENES) if s[0] <= gt)
     st, pname, shots, fx = SCENES[idx]
-    img = plate(pname).copy()
+    img = plate_at(pname, gt)
     if "vanish" in fx:  # keepers glitch out and the island is left empty
         p = ease((gt - 3.85) / 0.8)
         flick = gt > 3.85 and int(gt * 20) % 3 == 0 and p < 1
-        img = Image.blend(img, plate("empty_island"), 1.0 if flick else p)
+        img = Image.blend(img, plate("empty_island")[0], 1.0 if flick else p)
     if "darken" in fx:
         img = tint(img, (0, 0, 10), 120 * ease((gt - 14.8) / 0.6))
     if "frost" in fx:
