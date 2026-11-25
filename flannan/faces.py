@@ -85,6 +85,29 @@ def draw_face(W, ident, st, seed):
             x *= 1 - (0.04 + 0.12 * ident["jaw"]) * (y / ry) ** 3
         pts.append((cx + x, cy + y))
     d.polygon(pts, fill=skin + (255,))
+    if ident.get("hair"):  # drawn hair cap like the reference's hatless characters
+        hc = tuple(ident["hair"])
+        hp = [p for p in pts if p[1] < h * 0.34]
+        hp.sort(key=lambda p: p[0])
+        edge = []
+        for i in range(9):
+            f = i / 8
+            x = cx - w * 0.47 * ident["wide"] + f * w * 0.94 * ident["wide"]
+            edge.append((x, h * (0.30 + 0.05 * math.sin(f * math.pi * 3 + seed)) - (0.08 * h if 0.3 < f < 0.7 else 0)))
+        top = [(cx + math.cos(math.radians(a)) * w * 0.49 * ident["wide"], cy + math.sin(math.radians(a)) * h * 0.49) for a in range(185, 356, 5)]
+        d.polygon(top + edge[::-1], fill=hc + (255,))
+        for side in (-1, 1):  # sideburns
+            sx = cx + side * w * 0.44 * ident["wide"]
+            d.polygon([(sx, h * 0.28), (sx - side * w * 0.07, h * 0.3), (sx - side * w * 0.05, h * 0.46), (sx + side * w * 0.01, h * 0.45)], fill=hc + (255,))
+    if ident.get("beard"):
+        bc = tuple(ident["beard"])
+        bp = [(cx + math.cos(math.radians(a)) * w * 0.47 * ident["wide"] * (1 - 0.1 * ident["jaw"] * max(0, math.sin(math.radians(a))) ** 3),
+               cy + math.sin(math.radians(a)) * h * 0.47) for a in range(-5, 186, 5)]
+        inner = [(cx + math.cos(math.radians(a)) * w * 0.2, h * 0.75 + math.sin(math.radians(a)) * h * 0.06) for a in range(180, -1, -10)]
+        d.polygon(bp + [(cx - w * 0.4, h * 0.56)] + inner + [(cx + w * 0.4, h * 0.56)], fill=bc + (255,))
+        for _ in range(40):
+            x0 = rnd.uniform(cx - w * 0.36, cx + w * 0.36); y0 = rnd.uniform(h * 0.74, h * 0.93)
+            d.line([(x0, y0), (x0 + rnd.uniform(-4, 4), y0 + rnd.uniform(6, 14))], fill=tuple(max(0, c - 40) for c in bc) + (255,), width=2)
     if ident["stubble"]:
         for _ in range(160):
             a = rnd.uniform(0.15, 0.85) * math.pi

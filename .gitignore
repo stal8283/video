@@ -1,5 +1,6 @@
 flannan/previews/
 flannan/video_only.mp4
 flannan/sfx.wav
-__pycache__/
 flannan/gen.log
+__pycache__/
+flannan/__pycache__/

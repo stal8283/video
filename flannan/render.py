@@ -1,89 +1,152 @@
-"""Flannan Isles short, reference style: photoreal AI plates + hand-drawn cartoon faces.
-Renders 1080x1920 @30fps raw frames into ffmpeg.
+"""Flannan Isles short in the reference style.
+
+Still photo backgrounds + full-body cutout characters with full-head cartoon faces.
+Characters slide in on cue; faces only change on story beats; ~3s shots with hard cuts;
+one-word captions; soft fade-in titles; red marker icons on clues.
 Usage: python3 render.py [--preview T1,T2,...]"""
-import json, math, random, subprocess, sys, os
+import json, math, os, random, subprocess, sys
 from multiprocessing import Pool
-from PIL import Image, ImageDraw, ImageFont, ImageEnhance, ImageFilter
-from faces import paste_face, state_at, random_identity
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
+import characters as CH
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OW, OH = 1080, 1920
-CW, CH = 1242, 2208
+W, H = 1080, 1920
 FPS = 30
 DUR = 58.4
-FONT = "/usr/share/fonts/opentype/inter/Inter-Bold.otf"
-FONT_B = "/usr/share/fonts/opentype/inter/InterDisplay-Black.otf"
 WORDS = json.load(open(os.path.join(HERE, "words.json")))
-
-# source plates are 580x1015 with a watermark bottom-right and a thin border on top: crop to 9:16
-SRC_CROP = (19, 12, 561, 975)
-
-# real-face boxes in SOURCE pixel coords: (x, y, w, h), expression, seed, hat fraction, look
-FACES = json.load(open(os.path.join(HERE, "faces.json")))
+F_CAP = "/usr/share/fonts/opentype/inter/Inter-Bold.otf"
+F_TITLE = "/usr/share/fonts/opentype/inter/Inter-SemiBold.otf"
+RED = (232, 30, 30)
 
 
-def ease(x):
+def ease_out(x):
     x = max(0.0, min(1.0, x))
-    return x * x * (3 - 2 * x)
+    return 1 - (1 - x) ** 3
 
 
-def lerp(a, b, x):
-    return a + (b - a) * x
+def font(p, s, _c={}):
+    if (p, s) not in _c:
+        _c[(p, s)] = ImageFont.truetype(p, s)
+    return _c[(p, s)]
 
 
-_PLATES = {}
+# ---------------- backgrounds ----------------
+FALLBACK = {"B13": "B3", "B14": "B7", "B15": "B5", "B16": "B1"}
+_BG = {}
 
 
-def plate(name):
-    if name in _PLATES:
-        return _PLATES[name]
-    src = Image.open(os.path.join(HERE, "img", name + ".jpg")).convert("RGB")
-    sw, sh = src.size
-    k = sw / 580
-    cx0, cy0, cx1, cy1 = [v * k for v in SRC_CROP]
-    im = src.crop((int(cx0), int(cy0), int(cx1), int(cy1))).resize((CW, CH), Image.LANCZOS)
-    im = im.filter(ImageFilter.UnsharpMask(radius=2, percent=60, threshold=2))
-    # cold, slightly desaturated grade like the reference
-    im = ImageEnhance.Color(im).enhance(0.82)
-    im = ImageEnhance.Contrast(im).enhance(1.06)
-    r, g, b = im.split()
-    b = b.point(lambda v: min(255, int(v * 1.04 + 4)))
-    r = r.point(lambda v: int(v * 0.97))
-    im = Image.merge("RGB", (r, g, b)).convert("RGBA")
-    sx = CW / (cx1 - cx0)
-    sy = CH / (cy1 - cy0)
-    faces = []
-    for f in FACES.get(name, []):
-        x, y, w, h = f["box"]
-        bx, by, bw, bh = (x * k - cx0) * sx, (y * k - cy0) * sy, w * k * sx, h * k * sy
-        ident = random_identity(f.get("seed", 0))
-        ident.update(f.get("ident", {}))
-        W = bw * f.get("scale", 1.6)
-        faces.append(dict(spec=f, ident=ident, cx=bx + bw / 2, cy=by + bh * (0.55 + f.get("yoff", 0.0)), W=W,
-                          hat_y=((f["hat_y"] * k - cy0) * sy) if "hat_y" in f else None))
-    _PLATES[name] = (im, faces)
-    return _PLATES[name]
+def bg(name, mode=""):
+    k = (name, mode)
+    if k in _BG:
+        return _BG[k]
+    for d in ("bgfix", "leo"):
+        path = os.path.join(HERE, d, name + ".jpg")
+        if os.path.exists(path):
+            break
+    else:
+        return bg(FALLBACK[name], mode)
+    im = Image.open(path).convert("RGB").resize((W, H), Image.LANCZOS)
+    im = im.filter(ImageFilter.UnsharpMask(2, 50, 2))
+    if mode == "night":   # same place, dark and empty (the reference's "dies" shot)
+        im = ImageEnhance.Brightness(im).enhance(0.42)
+        r, g, b = im.split()
+        im = Image.merge("RGB", (r.point(lambda v: int(v * 0.8)), g.point(lambda v: int(v * 0.9)), b.point(lambda v: min(255, int(v * 1.15)))))
+    if mode == "blur":    # close-up reaction shot background
+        im = im.resize((int(W * 1.3), int(H * 1.3))).crop((int(W * 0.15), int(H * 0.1), int(W * 1.15), int(H * 1.1))).resize((W, H))
+        im = im.filter(ImageFilter.GaussianBlur(14))
+    _BG[k] = im.convert("RGBA")
+    return _BG[k]
 
 
-def plate_at(name, gt):
-    """Plate with its cartoon faces animated for global time gt."""
-    base, faces = plate(name)
-    img = base.copy()
-    for fc in faces:
-        st, tilt, pop = state_at(fc["spec"], gt)
-        paste_face(img, base, fc["cx"], fc["cy"], fc["W"] * pop, fc["ident"], st, fc["spec"].get("seed", 0),
-                   hat_y=fc["hat_y"], tilt=tilt)
-    return img
+# ---------------- text & icons ----------------
+def soft_text(img, text, cx, cy, size, t_in, t_out=None, gt=0.0, fnt=F_TITLE, col=(255, 255, 255)):
+    """Reference-style title: fades in with a blur, drifts slightly, fades out."""
+    if gt < t_in or (t_out is not None and gt > t_out + 0.3):
+        return img
+    a = min(1.0, (gt - t_in) / 0.35)
+    if t_out is not None and gt > t_out:
+        a *= max(0.0, 1 - (gt - t_out) / 0.3)
+    blur = 8 * (1 - min(1.0, (gt - t_in) / 0.35))
+    f = font(fnt, size)
+    lay = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay)
+    bb = d.textbbox((0, 0), text, font=f, stroke_width=3)
+    x = cx - (bb[2] - bb[0]) / 2 - bb[0]
+    y = cy - (bb[3] - bb[1]) / 2 - bb[1] - 6 * min(1.0, (gt - t_in) / 2)
+    d.text((x + 3, y + 4), text, font=f, fill=(0, 0, 0, 120))
+    d.text((x, y), text, font=f, fill=col + (255,), stroke_width=2, stroke_fill=(30, 30, 30, 200))
+    if blur > 0.3:
+        lay = lay.filter(ImageFilter.GaussianBlur(blur))
+    lay.putalpha(lay.getchannel("A").point(lambda v: int(v * a)))
+    return Image.alpha_composite(img, lay)
 
 
-def rain(img, f, n=260, ang=0.25, alpha=90, length=80):
+def arc_text(img, text, cx, cy, radius, size, t_in, t_out, gt):
+    """Curved label like the reference's “URAL MOUNTAINS”."""
+    if gt < t_in or gt > t_out + 0.3:
+        return img
+    a = min(1.0, (gt - t_in) / 0.35) * (max(0.0, 1 - (gt - t_out) / 0.3) if gt > t_out else 1)
+    f = font(F_TITLE, size)
+    lay = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    widths = [f.getbbox(ch)[2] - f.getbbox(ch)[0] + (size * 0.28 if ch == " " else size * 0.06) for ch in text]
+    total = sum(widths)
+    ang = -total / radius / 2
+    for ch, wch in zip(text, widths):
+        mid = ang + wch / radius / 2
+        g = Image.new("RGBA", (size * 2, size * 2), (0, 0, 0, 0))
+        gd = ImageDraw.Draw(g)
+        gd.text((size, size), ch, font=f, anchor="mm", fill=(255, 255, 255, 255), stroke_width=2, stroke_fill=(30, 30, 30, 220))
+        g = g.rotate(-math.degrees(mid), resample=Image.BICUBIC)
+        px = cx + radius * math.sin(mid)
+        py = cy - radius * math.cos(mid) + radius
+        lay.alpha_composite(g, (int(px - size), int(py - size)))
+        ang += wch / radius
+    blur = 6 * (1 - min(1.0, (gt - t_in) / 0.35))
+    if blur > 0.3:
+        lay = lay.filter(ImageFilter.GaussianBlur(blur))
+    lay.putalpha(lay.getchannel("A").point(lambda v: int(v * a)))
+    return Image.alpha_composite(img, lay)
+
+
+def marker(img, kind, box, t_in, gt, seed=0):
+    """Red hand-drawn marker icons (circle / dashed box / X) that draw on quickly."""
+    if gt < t_in:
+        return img
+    p = min(1.0, (gt - t_in) / 0.25)
+    x0, y0, x1, y1 = box
+    lay = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    d = ImageDraw.Draw(lay)
+    if kind == "circle":
+        cx, cy, rx, ry = (x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0) / 2, (y1 - y0) / 2
+        n = int(64 * p * 1.08)
+        pts = [(cx + rx * (1 + 0.04 * math.sin(i * 0.4 + seed)) * math.cos(-math.pi / 2 + i / 60 * 2 * math.pi),
+                cy + ry * (1 + 0.04 * math.cos(i * 0.3)) * math.sin(-math.pi / 2 + i / 60 * 2 * math.pi)) for i in range(n)]
+        if len(pts) > 1:
+            d.line(pts, fill=RED + (255,), width=11, joint="curve")
+    elif kind == "dashed":
+        edges = [((x0, y0), (x1, y0)), ((x1, y0), (x1, y1)), ((x1, y1), (x0, y1)), ((x0, y1), (x0, y0))]
+        for (ax, ay), (bx, by) in edges:
+            L = math.hypot(bx - ax, by - ay); n = max(2, int(L // 34))
+            for i in range(0, int(n * p), 2):
+                f0, f1 = i / n, (i + 1) / n
+                d.line([(ax + (bx - ax) * f0, ay + (by - ay) * f0), (ax + (bx - ax) * f1, ay + (by - ay) * f1)], fill=RED + (255,), width=9)
+    elif kind == "x":
+        q1 = min(1, p * 2)
+        d.line([(x0, y0), (x0 + (x1 - x0) * q1, y0 + (y1 - y0) * q1)], fill=RED + (255,), width=13)
+        if p > 0.5:
+            q = (p - 0.5) * 2
+            d.line([(x1, y0), (x1 - (x1 - x0) * q, y0 + (y1 - y0) * q)], fill=RED + (255,), width=13)
+    return Image.alpha_composite(img, lay)
+
+
+def rain(img, f, n=300, alpha=95):
     rnd = random.Random(f * 7919)
     lay = Image.new("RGBA", img.size, (0, 0, 0, 0))
     d = ImageDraw.Draw(lay)
     for _ in range(n):
-        x, y = rnd.uniform(-200, img.width), rnd.uniform(-100, img.height)
-        L = rnd.uniform(length * 0.6, length)
-        d.line([(x, y), (x + L * ang, y + L)], fill=(210, 220, 235, alpha), width=2)
+        x, y = rnd.uniform(-200, W), rnd.uniform(-100, H)
+        L = rnd.uniform(50, 95)
+        d.line([(x, y), (x + L * 0.35, y + L)], fill=(215, 222, 235, alpha), width=2)
     return Image.alpha_composite(img, lay)
 
 
@@ -91,39 +154,136 @@ def flash(img, a=150):
     return Image.alpha_composite(img, Image.new("RGBA", img.size, (225, 232, 255, a)))
 
 
-def tint(img, col, a):
-    return Image.alpha_composite(img, Image.new("RGBA", img.size, col + (int(a),)))
+# ---------------- characters on screen ----------------
+def _paste_clip(img, s, px, py):
+    x0, y0 = max(0, px), max(0, py)
+    x1, y1 = min(img.width, px + s.width), min(img.height, py + s.height)
+    if x1 > x0 and y1 > y0:
+        img.alpha_composite(s.crop((x0 - px, y0 - py, x1 - px, y1 - py)), (x0, y0))
 
 
-# scene: (start, plate, shots[(t, z0, z1, fx, fy)], fx_list)
-SCENES = [
-    (0.0, "keepers3", [(0.0, 1.0, 1.05, .5, .45), (0.95, 1.3, 1.35, .45, .3)], []),
-    (1.55, "keeper1", [(1.55, 1.05, 1.15, .5, .35)], []),
-    (2.45, "island_aerial", [(2.45, 1.0, 1.1, .5, .5)], []),
-    (3.7, "keepers3", [(3.7, 1.1, 1.18, .5, .4)], ["vanish"]),
-    (5.7, "lighthouse_storm", [(5.7, 1.0, 1.1, .5, .45), (7.05, 1.12, 1.18, .5, .4)], ["rain", "1900"]),
-    (7.95, "map", [(7.95, 1.0, 1.1, .45, .5), (10.0, 1.25, 1.3, .5, .45)], []),
-    (11.2, "ship_night", [(11.2, 1.0, 1.06, .5, .5), (12.6, 1.45, 1.5, .55, .3)], []),
-    (14.2, "lantern_dark", [(14.2, 1.0, 1.2, .5, .4)], ["darken"]),
-    (16.45, "storm_waves", [(16.45, 1.0, 1.08, .5, .5), (18.7, 1.2, 1.26, .5, .45)], ["rain_heavy", "lightning"]),
-    (20.15, "boat_arrives", [(20.15, 1.35, 1.5, .35, .72)], []),
-    (22.15, "landing", [(22.15, 1.0, 1.05, .5, .5), (23.55, 1.45, 1.5, .75, .2), (24.35, 1.2, 1.26, .5, .45), (25.25, 1.0, 1.03, .5, .5)], []),
-    (26.65, "climb", [(26.65, 1.1, 1.3, .4, .45)], []),
-    (28.55, "door", [(28.55, 1.0, 1.05, .5, .5), (29.35, 1.35, 1.4, .3, .45)], []),
-    (30.95, "beds", [(30.95, 1.0, 1.08, .5, .55)], []),
-    (32.55, "clock", [(32.55, 1.0, 1.08, .5, .45), (33.15, 1.25, 1.28, .5, .45)], []),
-    (33.85, "fireplace", [(33.85, 1.0, 1.12, .5, .55)], ["frost"]),
-    (36.25, "shocked", [(36.25, 1.0, 1.4, .5, .35)], ["pulse"]),
-    (38.25, "coats", [(38.25, 1.0, 1.05, .55, .45), (40.65, 1.35, 1.45, .62, .5)], []),
-    (43.25, "running", [(43.25, 1.0, 1.08, .5, .5), (45.55, 1.2, 1.28, .5, .4)], ["rain_heavy", "lightning"]),
-    (47.75, "railings", [(47.75, 1.0, 1.06, .5, .5), (48.85, 1.3, 1.35, .45, .45), (50.5, 1.15, 1.2, .55, .5), (51.45, 1.0, 1.05, .5, .6)], []),
-    (54.05, "investigators", [(54.05, 1.15, 1.25, .5, .45)], []),
-    (55.05, "giant_wave", [(55.05, 1.0, 1.15, .5, .5)], ["rain"]),
-    (55.95, "empty_island", [(55.95, 1.0, 1.1, .5, .5)], ["fade_end"]),
-]
-CUTS = sorted({s[0] for s in SCENES} | {sh[0] for s in SCENES for sh in s[2]})
-LIGHTNING = (17.0, 18.35, 45.65)
-SHAKE = (7.1, 17.0, 18.35, 45.65, 55.4)
+def place(img, name, expr, x, feet, height, gt, enter=None, t_enter=0.0, move=None, bob=0.0):
+    """Draw a character with feet at (x, feet) and body height `height`.
+    enter = 'left' | 'right' | 'up' slide-in starting at t_enter (the reference's pop-ins);
+    move = (t0, t1, x1, feet1, height1) for walking/running, bob = step bob in px."""
+    if gt < t_enter:
+        return img
+    if move:
+        t0, t1, x1, f1, h1 = move
+        k = max(0.0, min(1.0, (gt - t0) / (t1 - t0)))
+        x, feet, height = x + (x1 - x) * k, feet + (f1 - feet) * k, height + (h1 - height) * k
+        if bob and 0 < k < 1:
+            feet -= abs(math.sin((gt - t0) * 9)) * bob
+    if enter:
+        k = ease_out((gt - t_enter) / 0.35)
+        if enter == "left":
+            x = -W * 0.45 + (x + W * 0.45) * k
+        elif enter == "right":
+            x = W * 1.45 + (x - W * 1.45) * k
+        elif enter == "up":
+            feet = feet + (1 - k) * height * 0.6
+    s, _ = CH.sprite_h(name, expr, int(height))
+    _paste_clip(img, s, int(x - s.width / 2), int(feet - s.height))
+    return img
+
+
+def expr_at(track, gt):
+    cur = track[0][1]
+    for t, e in track:
+        if gt >= t:
+            cur = e
+    return cur
+
+
+# ---------------- the edit ----------------
+def SHOT(gt, f):
+    # 1. hook: one keeper, then the other two slide in on "three"
+    if gt < 3.75:
+        img = bg("B1").copy()
+        img = place(img, "C2", "neutral", 250, 1880, 1180, gt, enter="left", t_enter=0.75)
+        img = place(img, "C3", "neutral", 835, 1880, 1180, gt, enter="right", t_enter=0.95)
+        return place(img, "C1", "neutral", 540, 1940, 1260, gt)
+    # 2. "...vanish without a trace" -> same place, dark and empty
+    if gt < 5.7:
+        return bg("B1", "night").copy()
+    # 3. "this actually happened in 1900" -> wide, keepers small, big date
+    if gt < 7.95:
+        img = bg("B1").copy()
+        for nm, x in (("C2", 330), ("C1", 540), ("C3", 750)):
+            img = place(img, nm, "neutral", x, 1700, 560, gt)
+        return soft_text(img, "1900", W / 2, 520, 230, 7.05, 7.85, gt)
+    # 4. location, curved label
+    if gt < 11.2:
+        return arc_text(bg("B2").copy(), "“FLANNAN ISLES”", W / 2, 470, 900, 74, 8.3, 11.0, gt)
+    # 5. passing ship: sailor slides in, squints on "noticed"
+    if gt < 14.2:
+        e = expr_at([(0, "neutral"), (12.4, "suspicious")], gt)
+        return place(bg("B4").copy(), "C8", e, 400, 2050, 1500, gt, enter="right", t_enter=11.35)
+    # 6. lighthouse dark
+    if gt < 16.45:
+        return bg("B3").copy()
+    # 7. storm, eleven days
+    if gt < 20.15:
+        img = rain(bg("B5").copy(), f, 320)
+        if 0 <= gt - 17.0 < 0.15 or 0 <= gt - 18.4 < 0.12:
+            img = flash(img)
+        return soft_text(img, "11 DAYS", W / 2, 560, 120, 18.75, 20.0, gt)
+    # 8. relief keeper arrives at the landing, worried on "nobody came down"
+    if gt < 23.55:
+        e = expr_at([(0, "neutral"), (22.2, "worried")], gt)
+        return place(bg("B6").copy(), "C4", e, 300, 2020, 1350, gt, enter="left", t_enter=20.3)
+    # 9. no flag, no signal, nothing
+    if gt < 26.65:
+        return marker(bg("B6").copy(), "circle", (450, 230, 640, 520), 23.65, gt, 1)
+    # 10. climbs up alone
+    if gt < 28.55:
+        return place(bg("B7").copy(), "C4", "worried", 420, 1950, 900, gt, move=(26.65, 28.55, 520, 1650, 700), bob=10)
+    # 11. gate and door shut tight
+    if gt < 30.95:
+        e = expr_at([(0, "worried"), (29.75, "suspicious")], gt)
+        return place(bg("B8").copy(), "C4", e, 250, 2050, 1500, gt, enter="left", t_enter=28.6)
+    # 12. beds empty
+    if gt < 32.55:
+        return bg("B9").copy()
+    # 13. clock stopped
+    if gt < 33.85:
+        return marker(bg("B10").copy(), "circle", (140, 520, 720, 1360), 33.2, gt, 2)
+    # 14. fireplace stone cold
+    if gt < 36.25:
+        return bg("B11").copy()
+    # 15. "here's where it gets weird" -> close-up reaction, everyone shocked
+    if gt < 38.25:
+        img = bg("B1", "blur").copy()
+        e = expr_at([(0, "neutral"), (37.15, "shock")], gt)
+        img = place(img, "C2", e, 120, 4300, 3900, gt)
+        img = place(img, "C3", e, 980, 4300, 3900, gt)
+        return place(img, "C1", e, 560, 4600, 4100, gt)
+    # 16. coats: two gone, one still there
+    if gt < 43.25:
+        img = bg("B12").copy()
+        img = marker(img, "dashed", (150, 560, 390, 1350), 39.6, gt)
+        img = marker(img, "dashed", (420, 560, 660, 1350), 39.8, gt)
+        return marker(img, "circle", (580, 360, 1040, 1700), 41.0, gt, 3)
+    # 17. one man ran outside into the storm in just his shirt
+    if gt < 47.75:
+        img = place(bg("B13").copy(), "C5", "scared", 560, 1500, 700, gt, move=(43.35, 47.6, 480, 2150, 1700), bob=22)
+        img = rain(img, f, 380, 110)
+        return flash(img, 140) if 0 <= gt - 45.65 < 0.15 else img
+    # 18. bent railings, missing ropes 110 ft up
+    if gt < 54.05:
+        img = marker(bg("B14").copy(), "circle", (520, 1150, 1060, 1700), 49.2, gt, 4)
+        return soft_text(img, "110 FT", W / 2, 520, 140, 51.8, 53.9, gt)
+    # 19. investigators slide in, arms crossed, smug
+    if gt < 55.05:
+        img = place(bg("B16").copy(), "C7", "smug", 760, 2000, 1450, gt, enter="right", t_enter=54.45)
+        return place(img, "C6", "smug", 330, 2000, 1400, gt, enter="left", t_enter=54.1)
+    # 20. giant wave
+    if gt < 55.95:
+        return bg("B15").copy()
+    # 21. not a single body was ever found
+    img = bg("B16").copy()
+    k = min(1.0, max(0.0, (gt - 56.2) / 1.6))
+    return Image.alpha_composite(img, Image.new("RGBA", img.size, (0, 0, 0, int(110 * k))))
 
 
 def caption(img, gt):
@@ -131,109 +291,27 @@ def caption(img, gt):
     for i, (w, s, e) in enumerate(WORDS):
         nxt = WORDS[i + 1][1] if i + 1 < len(WORDS) else e + 0.6
         if s - 0.02 <= gt < min(nxt, e + 0.6):
-            cur = (w, s)
+            cur = w
     if not cur:
         return img
-    w, s = cur
-    txt = w.upper().strip(".,!?")
-    if txt == "1900" and gt < 7.95:
-        return img  # the big date card replaces the caption, like "1959" in the reference
-    k = 1.0 + 0.08 * (1 - ease((gt - s) / 0.08))
-    f = ImageFont.truetype(FONT, int(124 * k))
+    txt = cur.upper().strip(".,!?")
+    if txt == "1900" and 7.05 <= gt < 7.95:
+        return img
+    f = font(F_CAP, 70)
     d = ImageDraw.Draw(img)
-    bb = d.textbbox((0, 0), txt, font=f, stroke_width=7)
-    tw, th = bb[2] - bb[0], bb[3] - bb[1]
-    if tw > 980:  # shrink long words to fit
-        f = ImageFont.truetype(FONT, int(124 * k * 980 / tw))
-        bb = d.textbbox((0, 0), txt, font=f, stroke_width=7)
-        tw, th = bb[2] - bb[0], bb[3] - bb[1]
-    x, y = (OW - tw) / 2 - bb[0], 200 - th / 2 - bb[1]
-    d.text((x + 3, y + 5), txt, font=f, fill=(0, 0, 0, 140), stroke_width=7, stroke_fill=(0, 0, 0, 140))
-    d.text((x, y), txt, font=f, fill=(255, 255, 255, 255), stroke_width=7, stroke_fill=(10, 10, 10, 255))
+    bb = d.textbbox((0, 0), txt, font=f, stroke_width=6)
+    tw = bb[2] - bb[0]
+    if tw > 1000:
+        f = font(F_CAP, int(70 * 1000 / tw)); bb = d.textbbox((0, 0), txt, font=f, stroke_width=6); tw = bb[2] - bb[0]
+    x, y = (W - tw) / 2 - bb[0], 185 - (bb[3] - bb[1]) / 2 - bb[1]
+    d.text((x + 2, y + 4), txt, font=f, fill=(0, 0, 0, 110), stroke_width=6, stroke_fill=(0, 0, 0, 110))
+    d.text((x, y), txt, font=f, fill=(255, 255, 255, 255), stroke_width=6, stroke_fill=(12, 12, 12, 255))
     return img
-
-
-def big_date(img, gt):
-    t = gt - 7.1
-    k = 1.0 + 0.3 * (1 - ease(t / 0.15))
-    f = ImageFont.truetype(FONT, int(190 * k))
-    d = ImageDraw.Draw(img)
-    bb = d.textbbox((0, 0), "1900", font=f, stroke_width=9)
-    tw, th = bb[2] - bb[0], bb[3] - bb[1]
-    d.text(((OW - tw) / 2 - bb[0], 470 - th / 2 - bb[1]), "1900", font=f, fill=(255, 255, 255, 255), stroke_width=9, stroke_fill=(10, 10, 10, 255))
-    return img
-
-
-_GRAIN = None
-
-
-def grain(i):
-    global _GRAIN
-    if _GRAIN is None:
-        _GRAIN = []
-        for _ in range(6):
-            g = Image.effect_noise((OW // 2, OH // 2), 38).resize((OW, OH)).convert("L")
-            _GRAIN.append(Image.merge("RGBA", (g, g, g, Image.new("L", (OW, OH), 12))))
-    return _GRAIN[i % 6]
-
-
-_VIG = None
-
-
-def vignette():
-    global _VIG
-    if _VIG is None:
-        m = Image.new("L", (OW // 4, OH // 4), 0)
-        d = ImageDraw.Draw(m)
-        for i in range(60):
-            d.ellipse([-OW // 8 + i * 4, -OH // 8 + i * 6, OW // 4 + OW // 8 - i * 4, OH // 4 + OH // 8 - i * 6], outline=int(170 * (1 - i / 60) ** 2), width=6)
-        m = m.filter(ImageFilter.GaussianBlur(10)).resize((OW, OH))
-        _VIG = Image.merge("RGBA", (Image.new("L", (OW, OH), 0),) * 3 + (m,))
-    return _VIG
 
 
 def frame(fi):
     gt = fi / FPS
-    idx = max(i for i, s in enumerate(SCENES) if s[0] <= gt)
-    st, pname, shots, fx = SCENES[idx]
-    img = plate_at(pname, gt)
-    if "vanish" in fx:  # keepers glitch out and the island is left empty
-        p = ease((gt - 3.85) / 0.8)
-        flick = gt > 3.85 and int(gt * 20) % 3 == 0 and p < 1
-        img = Image.blend(img, plate("empty_island")[0], 1.0 if flick else p)
-    if "darken" in fx:
-        img = tint(img, (0, 0, 10), 120 * ease((gt - 14.8) / 0.6))
-    if "frost" in fx:
-        img = tint(img, (150, 190, 235), 55 * ease((gt - 34.1) / 1.2))
-    if "pulse" in fx:
-        img = tint(img, (120, 0, 0), 50 + 35 * abs(math.sin(gt * 4.5)))
-    if "fade_end" in fx:
-        img = tint(img, (0, 0, 0), 120 * ease((gt - 56.6) / 1.5))
-    # camera
-    sh = max((s for s in shots if s[0] <= gt), key=lambda s: s[0])
-    nxt = [s[0] for s in shots if s[0] > sh[0]] + [SCENES[idx + 1][0] if idx + 1 < len(SCENES) else DUR]
-    p = (gt - sh[0]) / max(0.1, min(nxt) - sh[0])
-    z = lerp(sh[1], sh[2], p) * (1 + 0.04 * (1 - ease((gt - sh[0]) / 0.2)))
-    cw, ch = CW / z, CH / z
-    cx = min(max(sh[3] * CW, cw / 2), CW - cw / 2)
-    cy = min(max(sh[4] * CH, ch / 2), CH - ch / 2)
-    if any(0 <= gt - c < 0.14 for c in SHAKE):
-        rr = random.Random(fi)
-        cx = min(max(cx + rr.uniform(-16, 16), cw / 2), CW - cw / 2)
-        cy = min(max(cy + rr.uniform(-16, 16), ch / 2), CH - ch / 2)
-    img = img.crop((int(cx - cw / 2), int(cy - ch / 2), int(cx - cw / 2) + int(cw), int(cy - ch / 2) + int(ch))).resize((OW, OH), Image.BILINEAR)
-    if "rain" in fx:
-        img = rain(img, fi, n=160)
-    if "rain_heavy" in fx:
-        img = rain(img, fi, n=380, ang=0.45, alpha=120, length=110)
-    if "lightning" in fx and any(0 <= gt - lt < 0.16 for lt in LIGHTNING):
-        img = flash(img)
-    img = Image.alpha_composite(img, vignette())
-    img = Image.alpha_composite(img, grain(fi))
-    if "1900" in fx and gt >= 7.1:
-        img = big_date(img, gt)
-    img = caption(img, gt)
-    return img.convert("RGB")
+    return caption(SHOT(gt, fi), gt).convert("RGB")
 
 
 def render_bytes(fi):
@@ -248,7 +326,7 @@ if __name__ == "__main__":
         sys.exit()
     n = int(DUR * FPS)
     out = os.path.join(HERE, "video_only.mp4")
-    ff = subprocess.Popen(["ffmpeg", "-loglevel", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{OW}x{OH}",
+    ff = subprocess.Popen(["ffmpeg", "-loglevel", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
                            "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "19",
                            "-pix_fmt", "yuv420p", out], stdin=subprocess.PIPE)
     with Pool(4) as pool:
