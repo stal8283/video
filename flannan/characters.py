@@ -44,6 +44,9 @@ def ident_for(name):
     return i
 
 
+PADS = {}
+
+
 @lru_cache(maxsize=64)
 def sprite(name, expr):
     """Full-resolution RGBA sprite of character `name` with the cartoon head in expression `expr`."""
@@ -62,6 +65,7 @@ def sprite(name, expr):
         fy = int(y + h * 0.5 - face.height / 2)
     # make room if the head pokes outside the cutout
     pad_l, pad_t = max(0, -fx), max(0, -fy)
+    PADS[name] = (pad_l, pad_t)
     pad_r = max(0, fx + face.width - cut.width)
     if pad_l or pad_t or pad_r:
         big = Image.new("RGBA", (cut.width + pad_l + pad_r, cut.height + pad_t), (0, 0, 0, 0))
@@ -102,3 +106,45 @@ if __name__ == "__main__":
         row.alpha_composite(s, (x, 900 - s.height - 10))
         x += s.width + 10
     row.convert("RGB").save("/tmp/claude-0/-home-user-video/18fe20f0-4620-537c-b127-40cecd611e8a/scratchpad/chars.jpg")
+
+
+@lru_cache(maxsize=16)
+def clothes_parts(name):
+    """Split the real cutout into (hat, clothes, boots) RGBA layers at cutout resolution, with the
+    head, beard and hands removed - for the 'body vanishes, clothes drop' effect.
+    Returns hat, clothes, boots, collar_y, boots_y (rows in cutout coords)."""
+    import numpy as np
+    c = CHARS[name]
+    cut = Image.open(os.path.join(HERE, "cut", name + ".png")).convert("RGBA")
+    a = np.asarray(cut).astype(np.float32)
+    r, g, b, al = a[..., 0], a[..., 1], a[..., 2], a[..., 3]
+    oy = OFFS[name][1]
+    H_, W_ = al.shape
+    yy = np.mgrid[0:H_, 0:W_][0]
+    x, y, w, h = c["box"]
+    collar = int(y + h - oy + 16)
+    hat_line = int(c["hat_y"] - oy) if c["hat_y"] is not None else 0
+    lum = 0.3 * r + 0.59 * g + 0.11 * b
+    skin = (r > 90) & (g / (r + 1) > 0.6) & (g / (r + 1) < 0.95) & (b / (r + 1) > 0.42) & (b / (r + 1) < 0.88) & (r > b + 18)
+    beard = (lum > 105) & ((np.max(a[..., :3], -1) - np.min(a[..., :3], -1)) < 40) & (yy < collar + 120)
+    hat_m = yy < hat_line
+    head_m = (yy >= hat_line) & (yy < collar)
+    boots_y = int(H_ * 0.83)
+    warm = (r > 70) & (r > b + 25) & ((r - b) < 95) & (g < r)   # hands (gold buttons have r-b > 100)
+    pale = ((lum > 85) & (r >= b) & ((r - b) < 55)) | warm          # pale/old skin and grey beard (buttons are saturated)
+    from scipy import ndimage
+    cand = (skin | beard | pale) & (yy >= collar)
+    lab, n = ndimage.label(cand)
+    sizes = ndimage.sum(cand, lab, range(1, n + 1))
+    big = np.isin(lab, np.nonzero(sizes > 500)[0] + 1)          # hands / beard, not buttons
+    clothes_m = (yy >= collar) & (yy < boots_y) & ~big
+    boots_m = yy >= boots_y
+
+    def layer(m):
+        out = a.copy()
+        out[..., 3] = np.where(m, al, 0)
+        return Image.fromarray(out.astype(np.uint8), "RGBA")
+    # also drop soft fringe left around removed skin
+    clothes_m = clothes_m & ~ndimage.binary_dilation(big, iterations=3)
+    hat_m = hat_m & ~(skin | warm)
+    return layer(hat_m), layer(clothes_m), layer(boots_m & ~skin), collar, boots_y

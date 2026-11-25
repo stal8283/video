@@ -196,101 +196,106 @@ def expr_at(track, gt):
 
 
 
-# ---------------- vanish effect ----------------
-V_GLITCH, V_DISSOLVE, V_END = 3.7, 4.15, 5.45
-_KEEPERS = None
+# ---------------- vanish effect: bodies vanish, clothes drop ----------------
+KEEPERS = [("C2", 250, 1880, 1180, 3.86, -1), ("C3", 835, 1880, 1180, 3.98, 1), ("C1", 540, 1940, 1260, 3.80, 1)]
+FALL = 0.5
+_PARTS = {}
 
 
-def keepers_layer():
-    """The three shocked keepers on a transparent layer + their particle set (cached)."""
-    global _KEEPERS
-    if _KEEPERS is None:
-        import numpy as np
-        lay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-        place(lay, "C2", "shock", 250, 1880, 1180, 9.0)
-        place(lay, "C3", "shock", 835, 1880, 1180, 9.0)
-        place(lay, "C1", "shock", 540, 1940, 1260, 9.0)
-        arr = np.asarray(lay)
-        rnd = np.random.default_rng(7)
-        # blotchy noise: low-res random upscaled, so they break apart in chunks; top dissolves slightly first
-        nz = Image.fromarray((rnd.random((H // 40, W // 40)) * 255).astype(np.uint8)).resize((W, H), Image.BICUBIC)
-        nz = np.asarray(nz).astype(np.float32) / 255
-        yy = np.mgrid[0:H, 0:W][0] / H
-        v = 0.65 * nz + 0.35 * yy
-        v = (v - v.min()) / (v.max() - v.min())
-        ys, xs = np.nonzero(arr[..., 3] > 200)
-        pick = rnd.choice(len(xs), size=min(4200, len(xs)), replace=False)
-        px, py = xs[pick].astype(float), ys[pick].astype(float)
-        parts = dict(x=px, y=py, v=v[ys[pick], xs[pick]], col=arr[ys[pick], xs[pick], :3],
-                     vx=rnd.uniform(90, 320, len(pick)), vy=rnd.uniform(-260, -60, len(pick)),
-                     sz=rnd.uniform(2.5, 7, len(pick)), life=rnd.uniform(1.2, 2.2, len(pick)))
-        _KEEPERS = (lay, v, parts)
-    return _KEEPERS
+def scaled_parts(name, height):
+    k = (name, height)
+    if k not in _PARTS:
+        hat, clo, boots, collar, boots_y = CH.clothes_parts(name)
+        sc = height / hat.height
+        size = (max(1, int(hat.width * sc)), int(height))
+        hat_s, clo_s, boots_s = (im.resize(size, Image.LANCZOS) for im in (hat, clo, boots))
+        _PARTS[k] = (sc, hat_s.crop(hat_s.getbbox()), hat_s.getbbox(), clo_s.crop((0, int(collar * sc), size[0], int(boots_y * sc))),
+                     int(collar * sc), int(boots_y * sc), boots_s)
+    return _PARTS[k]
+
+
+def crumple(im, p, seed, wf=1.3, hf=0.34):
+    """Squash a clothing layer into a slumped pile: shorter, wider, soft wavy folds, slight tilt."""
+    import numpy as np
+    w0, h0 = im.size
+    nw, nh = max(1, int(w0 * (1 + (wf - 1) * p))), max(1, int(h0 * (1 - (1 - hf) * p)))
+    sq = np.asarray(im.resize((nw, nh), Image.BILINEAR))
+    pad = 40
+    out = np.zeros((nh, nw + 2 * pad, 4), np.uint8)
+    for y in range(nh):
+        dx = int(pad + 16 * p * math.sin(y / max(1, nh) * 9 + seed) + 8 * p * math.sin(y / max(1, nh) * 23 + seed * 2))
+        out[y, dx:dx + nw] = sq[y]
+    o = Image.fromarray(out, "RGBA")
+    if p > 0.05:  # fold shading
+        sh = Image.new("L", o.size, 0)
+        sd = ImageDraw.Draw(sh)
+        rnd = random.Random(seed)
+        for i in range(1, 5):
+            yy = int(nh * i / 5)
+            sd.line([(0, yy + rnd.randint(-6, 6)), (o.width, yy + rnd.randint(-6, 6))], fill=int(120 * p), width=max(2, int(nh * 0.06)))
+        sh = sh.filter(ImageFilter.GaussianBlur(4))
+        dark = Image.new("RGBA", o.size, (0, 0, 0, 0))
+        dark.putalpha(Image.fromarray(np.minimum(np.asarray(sh), np.asarray(o.getchannel("A")))))
+        o.alpha_composite(dark)
+        o = o.rotate(4 * p * (1 if seed % 2 else -1), resample=Image.BICUBIC, expand=True)
+    return o
 
 
 def vanish_fx(gt):
-    import numpy as np
-    lay, v, P = keepers_layer()
-    # background: day -> night
-    k_night = ease_out((gt - 4.1) / 1.4)
-    img = Image.blend(bg("B1"), bg("B1", "night"), k_night)
-    t = gt - V_GLITCH
-    rnd = random.Random(int(gt * FPS))
-    if gt < V_DISSOLVE:
-        # glitch: RGB split + horizontal slice jitter + flicker
-        r, g, b, a = lay.split()
-        off = rnd.randint(14, 34)
-        split = Image.merge("RGBA", (r, g, b, a))
-        red = Image.merge("RGBA", (r, Image.new("L", lay.size, 0), Image.new("L", lay.size, 0), a.point(lambda q: q // 2)))
-        cyan = Image.merge("RGBA", (Image.new("L", lay.size, 0), g, b, a.point(lambda q: q // 2)))
-        g_l = Image.new("RGBA", lay.size, (0, 0, 0, 0))
-        g_l.alpha_composite(red, (-off, 0)); g_l.alpha_composite(cyan, (off, 0))
-        if int(gt * FPS) % 3 != 1:  # flicker frames
-            g_l.alpha_composite(split)
-        out = Image.new("RGBA", lay.size, (0, 0, 0, 0))
-        y = 0
-        while y < H:
-            hgt = rnd.randint(20, 140)
-            dx = rnd.choice([0, 0, rnd.randint(-70, 70)])
-            out.alpha_composite(g_l.crop((0, y, W, min(H, y + hgt))), (dx, y))
-            y += hgt
-        img.alpha_composite(out)
-    elif gt < V_END + 1.2:
-        p = (gt - V_DISSOLVE) / (V_END - V_DISSOLVE)   # 0..1 dissolve progress
-        if p < 1:
-            keep = (v > p * 1.05).astype(np.uint8) * 255
-            # glowing burn edge just ahead of the dissolve front
-            edge = ((v > p * 1.05) & (v < p * 1.05 + 0.025)).astype(np.uint8) * 255
-            body = lay.copy()
-            body.putalpha(Image.fromarray(np.minimum(np.asarray(lay)[..., 3], keep)))
-            img.alpha_composite(body)
-            glow = Image.new("RGBA", lay.size, (255, 200, 150, 0))
-            glow.putalpha(Image.fromarray(np.minimum(np.asarray(lay)[..., 3], edge)).filter(ImageFilter.GaussianBlur(3)))
-            img.alpha_composite(glow)
-        # dust particles fly off on the wind once their spot dissolves
-        dt = gt - (V_DISSOLVE + P["v"] / 1.05 * (V_END - V_DISSOLVE))
-        live = (dt > 0) & (dt < P["life"])
-        if live.any():
-            d = Image.new("RGBA", lay.size, (0, 0, 0, 0))
-            dd = ImageDraw.Draw(d)
-            idx = np.nonzero(live)[0]
-            tt = dt[idx]
-            x = P["x"][idx] + P["vx"][idx] * tt + 40 * np.sin(tt * 3 + idx)
-            y = P["y"][idx] + P["vy"][idx] * tt - 45 * tt * tt
-            fade = 1 - tt / P["life"][idx]
-            sz = P["sz"][idx] * (1 - 0.5 * tt / P["life"][idx])
-            col = np.clip(P["col"][idx] * 0.6 + 110, 0, 255).astype(int)
-            for xi, yi, s_, c, f in zip(x, y, sz, col, fade):
-                dd.ellipse([xi - s_, yi - s_, xi + s_, yi + s_], fill=(int(c[0]), int(c[1]), int(c[2]), int(230 * f)))
-            img.alpha_composite(d)
-    # white flash on "vanish"
-    if 0 <= gt - 3.8 < 0.12:
-        img = flash(img, int(170 * (1 - (gt - 3.8) / 0.12)))
-    # camera shake during the glitch
-    if V_GLITCH <= gt < V_DISSOLVE + 0.1:
-        dx, dy = rnd.randint(-14, 14), rnd.randint(-10, 10)
-        img = img.transform(img.size, Image.AFFINE, (1, 0, dx, 0, 1, dy), resample=Image.BILINEAR)
-        img = img.resize((int(W * 1.03), int(H * 1.03))).crop((int(W * 0.015), int(H * 0.015), int(W * 0.015) + W, int(H * 0.015) + H))
+    img = Image.blend(bg("B1"), bg("B1", "night"), 0.55 * ease_out((gt - 4.4) / 1.2))
+    puffs = []
+    for name, x, feet, height, ts, side in KEEPERS:
+        if gt < ts:
+            place(img, name, "shock", x, feet, height, gt)
+            continue
+        S = CH.sprite(name, "shock")
+        sc, hat, hat_bb, clo, collar, boots_y, boots = scaled_parts(name, height)
+        pad_l = CH.PADS.get(name, (0, 0))[0]
+        left = x - S.width * sc / 2 + pad_l * sc
+        top = feet - boots.height
+        tau = gt - ts
+        p = min(1.0, (tau / FALL) ** 2)                      # gravity
+        bounce = 0.06 * math.sin(min(1.0, max(0.0, (tau - FALL) / 0.18)) * math.pi) if tau > FALL else 0
+        # shadow under the pile
+        sh = Image.new("RGBA", img.size, (0, 0, 0, 0))
+        ImageDraw.Draw(sh).ellipse([left + 10, feet - 40, left + boots.width - 10, feet + 25], fill=(0, 0, 0, int(110 * p)))
+        img.alpha_composite(sh.filter(ImageFilter.GaussianBlur(14)))
+        # boots stay standing; clothes collapse down over the boot shafts, only toes poke out
+        img.alpha_composite(boots, (int(left), int(top)))
+        pile = crumple(clo, min(1.0, p * (1 + bounce)), hash(name) % 13, wf=1.4, hf=0.3)
+        bottom0 = top + boots_y
+        bottom1 = top + boots.height - (boots.height - boots_y) * 0.22
+        bot = bottom0 + (bottom1 - bottom0) * p
+        cx = left + boots.width / 2 + side * 18 * p
+        _paste_clip(img, pile, int(cx - pile.width / 2), int(bot - pile.height))
+        pile_top_final = bottom1 - clo.height * 0.3
+        # cap tumbles down onto the pile
+        th = gt - ts - 0.04
+        q = min(1.0, (max(0.0, th) / (FALL + 0.1)) ** 2)
+        hx0, hy0 = left + hat_bb[0], top + hat_bb[1]
+        hy1 = pile_top_final - hat.height * 0.45
+        rot = side * 28 * q
+        hh = hat.rotate(rot, resample=Image.BICUBIC, expand=True)
+        hx = hx0 + side * 30 * q - (hh.width - hat.width) / 2
+        hy = hy0 + (hy1 - hy0) * q
+        _paste_clip(img, hh, int(hx), int(hy))
+        if tau < 0.4:
+            puffs.append((left + boots.width / 2, top + collar - 0.55 * (collar), tau, name))
+    # white puffs where the bodies were
+    if puffs:
+        lay = Image.new("RGBA", img.size, (0, 0, 0, 0))
+        d = ImageDraw.Draw(lay)
+        for px, py, tau, name in puffs:
+            rnd = random.Random(hash(name) % 1000)
+            k = tau / 0.4
+            for _ in range(18):
+                ang = rnd.uniform(0, 2 * math.pi); dist = rnd.uniform(30, 150) * ease_out(k)
+                r_ = rnd.uniform(14, 34) * (1 - 0.3 * k)
+                cx_, cy_ = px + math.cos(ang) * dist, py + math.sin(ang) * dist * 0.8 + rnd.uniform(0, 120)
+                d.ellipse([cx_ - r_, cy_ - r_, cx_ + r_, cy_ + r_], fill=(245, 245, 245, int(150 * (1 - k))))
+        img.alpha_composite(lay.filter(ImageFilter.GaussianBlur(6)))
+    if 0 <= gt - 3.8 < 0.1:
+        img = flash(img, int(110 * (1 - (gt - 3.8) / 0.1)))
     return img
 
 
