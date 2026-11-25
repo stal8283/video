@@ -197,7 +197,7 @@ def expr_at(track, gt):
 
 
 # ---------------- vanish effect ----------------
-V_GLITCH, V_DISSOLVE, V_END = 3.7, 3.95, 4.95
+V_GLITCH, V_DISSOLVE, V_END = 3.7, 4.15, 5.45
 _KEEPERS = None
 
 
@@ -222,8 +222,8 @@ def keepers_layer():
         pick = rnd.choice(len(xs), size=min(4200, len(xs)), replace=False)
         px, py = xs[pick].astype(float), ys[pick].astype(float)
         parts = dict(x=px, y=py, v=v[ys[pick], xs[pick]], col=arr[ys[pick], xs[pick], :3],
-                     vx=rnd.uniform(180, 620, len(pick)), vy=rnd.uniform(-520, -120, len(pick)),
-                     sz=rnd.uniform(2.5, 7, len(pick)), life=rnd.uniform(0.7, 1.4, len(pick)))
+                     vx=rnd.uniform(90, 320, len(pick)), vy=rnd.uniform(-260, -60, len(pick)),
+                     sz=rnd.uniform(2.5, 7, len(pick)), life=rnd.uniform(1.2, 2.2, len(pick)))
         _KEEPERS = (lay, v, parts)
     return _KEEPERS
 
@@ -232,7 +232,7 @@ def vanish_fx(gt):
     import numpy as np
     lay, v, P = keepers_layer()
     # background: day -> night
-    k_night = ease_out((gt - 3.9) / 0.8)
+    k_night = ease_out((gt - 4.1) / 1.4)
     img = Image.blend(bg("B1"), bg("B1", "night"), k_night)
     t = gt - V_GLITCH
     rnd = random.Random(int(gt * FPS))
@@ -275,8 +275,8 @@ def vanish_fx(gt):
             dd = ImageDraw.Draw(d)
             idx = np.nonzero(live)[0]
             tt = dt[idx]
-            x = P["x"][idx] + P["vx"][idx] * tt + 60 * np.sin(tt * 6 + idx)
-            y = P["y"][idx] + P["vy"][idx] * tt - 120 * tt * tt
+            x = P["x"][idx] + P["vx"][idx] * tt + 40 * np.sin(tt * 3 + idx)
+            y = P["y"][idx] + P["vy"][idx] * tt - 45 * tt * tt
             fade = 1 - tt / P["life"][idx]
             sz = P["sz"][idx] * (1 - 0.5 * tt / P["life"][idx])
             col = np.clip(P["col"][idx] * 0.6 + 110, 0, 255).astype(int)
@@ -373,13 +373,10 @@ def SHOT(gt, f):
     if gt < 54.05:
         img = marker(bg("B14").copy(), "circle", (560, 330, 1075, 800), 49.2, gt, 4)
         return soft_text(img, "110 FT", W / 2 - 160, 1100, 140, 51.8, 53.9, gt)
-    # 19. investigators slide in, arms crossed, smug
-    if gt < 55.05:
-        img = place(bg("B16").copy(), "C7", "smug", 760, 2000, 1450, gt, enter="right", t_enter=54.45)
-        return place(img, "C6", "smug", 330, 2000, 1400, gt, enter="left", t_enter=54.1)
-    # 20. giant wave
+    # 19. investigators slide in, arms crossed, smug, in front of the giant wave they blamed
     if gt < 55.95:
-        return bg("B15").copy()
+        img = place(bg("B15").copy(), "C7", "smug", 760, 2000, 1450, gt, enter="right", t_enter=54.45)
+        return place(img, "C6", "smug", 330, 2000, 1400, gt, enter="left", t_enter=54.1)
     # 21. not a single body was ever found
     img = bg("B16").copy()
     k = min(1.0, max(0.0, (gt - 56.2) / 1.6))

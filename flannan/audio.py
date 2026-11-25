@@ -56,7 +56,7 @@ put("bed", 0.0, -24, length=3.9, fade_in=0.3, fade_out=0.3)                   # 
 put("riser", 3.8 - 2.4, -10, fade_out=0.02)                                  # into "vanish"
 put("impact", 3.8, -4)
 put("glitch", 3.7, -9, fade_out=0.05)                                       # vanish glitch
-put("dissolve", 3.95, -8, fade_out=0.4)                                     # disintegrate into dust
+put("dissolve", 4.15, -8, fade_out=0.6)                                     # disintegrate into dust
 put("drone", 3.8, -17, length=4.3, fade_out=1.0)                             # dark until the date card
 put("bed", 7.9, -23, length=14.4, fade_in=0.6, fade_out=0.5, loop=True)      # mystery setup
 put("riser", 22.2 - 2.4, -10, fade_out=0.02)                                 # into "nobody came down"
